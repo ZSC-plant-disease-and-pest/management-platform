@@ -25,7 +25,11 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button class="button" type="primary" @click="submitForm">
+            <el-button
+              class="button"
+              type="primary"
+              @click="submitForm"
+            >
               登录
             </el-button>
           </el-form-item>
@@ -61,11 +65,11 @@ export default defineComponent({
       rules: {
         username: [
           { required: true, message: '请输入账号', trigger: 'change' },
-          { min: 4, max: 14, message: '账号长度为 4-16 位', trigger: 'change' }
+          { min: 4, max: 16, message: '账号长度为 4-16 位', trigger: 'change' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'change' },
-          { min: 4, max: 14, message: '密码长度为 4-16 位', trigger: 'change' }
+          { min: 4, max: 16, message: '密码长度为 4-16 位', trigger: 'change' }
         ]
       }
     });
