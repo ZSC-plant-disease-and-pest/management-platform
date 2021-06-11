@@ -46,6 +46,7 @@ import {
   reactive,
   defineComponent
 } from 'vue';
+import { ElMessage } from 'element-plus';
 
 interface userForm {
   username: string;
@@ -79,6 +80,7 @@ export default defineComponent({
         if (valid) {
           // 登陆
           console.log(state.loginForm);
+          ElMessage.success('登录成功');
         }
       });
     };
