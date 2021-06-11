@@ -16,8 +16,6 @@ export default defineComponent({});
 
 <style lang="scss" scoped>
 .main {
-  min-width: 100%;
-  min-height: 100%;
   background-color: #f2f4f6;
 }
 </style>
