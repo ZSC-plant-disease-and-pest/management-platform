@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
-const Login = () => import('@/views/login/index.vue');
+const login = () => import('@/views/login/index.vue');
+const layout = () => import('@/layout/index.vue');
+const test = () => import('@/views/management/test/index.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -19,8 +21,21 @@ const routes: Array<RouteRecordRaw> = [
   // },
   {
     path: '/login',
-    name: 'Login',
-    component: Login
+    name: 'login',
+    component: login
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    redirect: '/admin/test',
+    component: layout,
+    children: [
+      {
+        path: 'test',
+        name: 'test',
+        component: test
+      }
+    ]
   }
 ];
 
