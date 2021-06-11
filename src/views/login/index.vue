@@ -47,6 +47,7 @@ import {
   defineComponent
 } from 'vue';
 import { ElMessage } from 'element-plus';
+import { useRouter } from 'vue-router';
 
 interface userForm {
   username: string;
@@ -57,6 +58,7 @@ export default defineComponent({
   prop: {},
   components: {},
   setup () {
+    const router = useRouter();
     const state = reactive({
       loginForm: {
         username: 'root',
@@ -80,6 +82,7 @@ export default defineComponent({
         if (valid) {
           // 登陆
           console.log(state.loginForm);
+          router.push('/admin/test');
           ElMessage.success('登录成功');
         }
       });
