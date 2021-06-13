@@ -7,16 +7,18 @@ const resolve = (dir) => {
 module.exports = {
 	productionSourceMap: false,
 	chainWebpack: config => {
-		// 移除 prefetch 插件
 		config.plugins.delete('prefetch')
 	},
 	devServer: {
 		port: 8081,
 		proxy: {
 			"/api": {
-				target: "https://tx.techial.cc/",
+				target: "http://210.38.224.106:8765/",
 				changeOrigin: true,
-				ws: true
+				ws: true,
+				pathRewrite: {
+					'^/api': ''
+				}
 			}
 		}
 	},

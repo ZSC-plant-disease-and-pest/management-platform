@@ -4,7 +4,6 @@ import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 // import { getToken, removeInfo, removeToken } from "@/utils/cookie"
 
 const service = axios.create({
-  baseURL: '',
   timeout: 10000
 });
 
@@ -33,14 +32,14 @@ service.interceptors.response.use(
   }
 );
 
-export default function request(reqData: any) {
+export default function request (reqData: any): any {
   return new Promise((resolve, reject) => {
-    let tempData = reqData;
+    const tempData = reqData;
     tempData.timeoutErrorMessage = 'Network Error';
 
     // set default request headers
     if (tempData.headers === undefined) {
-      tempData.headers = {}
+      tempData.headers = {};
     }
 
     console.log('send request: %o', tempData.url, tempData.method, tempData);
@@ -76,7 +75,7 @@ export default function request(reqData: any) {
           result = err;
         }
         console.log(result);
-        // reject(result);
+        reject(result);
         // Message.error(result);
       });
   });
