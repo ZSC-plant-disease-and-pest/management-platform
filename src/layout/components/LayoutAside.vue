@@ -1,32 +1,63 @@
 <template>
   <el-menu
     class="aside"
-    default-active="2"
+    default-active="test"
     background-color="#545c64"
     text-color="#bfcbd9"
     active-text-color="#fff"
   >
-    <el-submenu index="1">
+    <el-menu-item
+      v-for="item in menuList"
+      :key="item.name"
+      :index="item.name"
+      @click="changeRouter(item.name)"
+    >
+      <i :class="item.icon"></i>
       <template #title>
-        <i class="el-icon-location"></i>
-        <span>导航一</span>
+        {{ item.label }}
       </template>
-      <el-menu-item-group>
-        <el-menu-item index="1-1">选项1</el-menu-item>
-        <el-menu-item index="1-2">选项2</el-menu-item>
-      </el-menu-item-group>
-    </el-submenu>
-    <el-menu-item index="2">
-      <i class="el-icon-menu"></i>
-      <template #title>导航二</template>
     </el-menu-item>
   </el-menu>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default defineComponent({});
+export default defineComponent({
+  setup () {
+    const router = useRouter();
+    const menuList: any[] = [
+      {
+        name: '1',
+        icon: 'el-icon-location',
+        label: '选项一'
+      },
+      {
+        name: '2',
+        icon: 'el-icon-location',
+        label: '选项二'
+      },
+      {
+        name: '3',
+        icon: 'el-icon-location',
+        label: '选项三'
+      },
+      {
+        name: 'test',
+        icon: 'el-icon-menu',
+        label: '接口测试'
+      }
+    ];
+    const changeRouter = (name: string) => {
+      router.push(`/admin/${name}`);
+    };
+    return {
+      menuList,
+      changeRouter
+    };
+  }
+});
 </script>
 
 <style lang="scss" scoped>
