@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
-// import { Message } from 'element-ui'
+import { ElMessage } from 'element-plus';
 // import router from '@/router';
-// import { getToken, removeInfo, removeToken } from "@/utils/cookie"
+// import { getToken, removeInfo, removeToken } from "@/utils/cookie";
 
 const service = axios.create({
   timeout: 10000
@@ -9,7 +9,6 @@ const service = axios.create({
 
 service.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    // set token of the headers
     // if (getToken()) {
     //   config.headers['X-Access-Token'] = getToken()
     // }
@@ -33,11 +32,10 @@ service.interceptors.response.use(
 );
 
 export default function request (reqData: any): any {
-  return new Promise((resolve, reject) => {
-    const tempData = reqData;
+  return new Promise((resolve) => {
+    const { ...tempData } = reqData;
     tempData.timeoutErrorMessage = 'Network Error';
 
-    // set default request headers
     if (tempData.headers === undefined) {
       tempData.headers = {};
     }
@@ -50,7 +48,7 @@ export default function request (reqData: any): any {
         resolve(response.data);
       })
       .catch((err) => {
-        console.error('error response: %o', tempData.url, tempData.method, err.response.status, err.message);
+        console.log('error response: %o', err);
         let result = '';
         if (err.message === 'Network Error') {
           result = '请求超时';
@@ -60,8 +58,6 @@ export default function request (reqData: any): any {
               result = '登录状态失效，请重新登录';
               // removeToken();
               // removeInfo();
-
-              // jump to login page
               // router.push('/login');
               break;
             case 404:
@@ -74,9 +70,8 @@ export default function request (reqData: any): any {
         } else {
           result = err;
         }
-        console.log(result);
-        reject(result);
-        // Message.error(result);
+        // console.log(result);
+        ElMessage.error(result);
       });
   });
 }
