@@ -1,5 +1,11 @@
 <template>
   <div class="header">
+    <div class="logo">
+      <img class="img" src="~@/assets/images/plant.png" />
+      <span class="title">
+        植物病虫害管理
+      </span>
+    </div>
     <div class="dropdown">
     <el-dropdown>
       <el-avatar
@@ -55,6 +61,29 @@ export default defineComponent({
   display: flex;
   flex-direction: row-reverse;
   border-bottom: 1px solid #d8dce5;
+
+  .logo {
+    left: 0px;
+    width: 200px;
+    height: 59px;
+    display: flex;
+    position: fixed;
+    line-height: 59px;
+    justify-content: space-between;
+
+    .img {
+      top: 11px;
+      left: 23px;
+      width: 38px;
+      height: 38px;
+      position: relative;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+  }
 
   .dropdown {
     top: 6px;
