@@ -9,16 +9,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     redirect: '/login'
   },
-  // {
-  //   path: '/home',
-  //   name: 'Home',
-  //   meta: {
-  //     icon: 'home',
-  //     title: '首页',
-  //     otherSetting: true
-  //   },
-  //   component: Home
-  // },
   {
     path: '/login',
     name: 'login',
