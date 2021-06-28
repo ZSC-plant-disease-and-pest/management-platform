@@ -2,21 +2,28 @@
   <el-menu
     class="aside"
     default-active="test"
-    background-color="#545c64"
-    text-color="#bfcbd9"
-    active-text-color="#fff"
+    background-color="#ffffff"
+    text-color="#606266"
+    active-text-color="#000"
   >
-    <el-menu-item
+    <el-submenu
       v-for="item in menuList"
       :key="item.name"
       :index="item.name"
-      @click="changeRouter(item.name)"
     >
-      <i :class="item.icon"></i>
       <template #title>
+        <i :class="item.icon"></i>
         {{ item.label }}
       </template>
-    </el-menu-item>
+      <el-menu-item
+        v-for="list in item.list"
+        :key="list.name"
+        :index="list.name"
+        @click="changeRouter(item.name + '/' + list.name)"
+      >
+        {{ list.label }}
+      </el-menu-item>
+    </el-submenu>
   </el-menu>
 </template>
 
@@ -29,25 +36,43 @@ export default defineComponent({
     const router = useRouter();
     const menuList: any[] = [
       {
-        name: '1',
+        name: 'info',
         icon: 'el-icon-location',
-        label: '选项一'
-      },
-      {
-        name: '2',
-        icon: 'el-icon-location',
-        label: '选项二'
-      },
-      {
-        name: '3',
-        icon: 'el-icon-location',
-        label: '选项三'
-      },
-      {
-        name: 'test',
-        icon: 'el-icon-menu',
-        label: '接口测试'
+        label: '信息管理',
+        list: [
+          {
+            name: 'plantDiseasesAndInsectPests',
+            label: '植物病虫害'
+          },
+          {
+            name: 'plantInsectPests',
+            label: '虫害'
+          },
+          {
+            name: 'plantDiseases',
+            label: '植物病'
+          },
+          {
+            name: 'plantImages',
+            label: '植物图片库'
+          },
+          {
+            name: 'plantsInfo',
+            label: '植物信息'
+          }
+        ]
       }
+      // {
+      //   name: 'info',
+      //   icon: 'el-icon-location',
+      //   label: '信息管理',
+      //   list: [
+      //     {
+      //       name: 'plantDiseasesAndInsectPests',
+      //       label: '植物病虫害'
+      //     }
+      //   ]
+      // }
     ];
     const changeRouter = (name: string) => {
       router.push(`/admin/${name}`);
