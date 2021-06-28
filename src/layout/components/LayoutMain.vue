@@ -16,6 +16,9 @@ export default defineComponent({});
 
 <style lang="scss" scoped>
 .main {
-  background-color: #f2f4f6;
+  padding: 15px;
+  background-color: #fff;
+  width: calc(100% - 30px);
+  min-height: calc(100vh - 130px);
 }
 </style>
