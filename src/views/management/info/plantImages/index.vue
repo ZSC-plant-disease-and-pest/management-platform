@@ -22,16 +22,39 @@ export default defineComponent({
   setup () {
     const tableData = reactive([
       {
-        name: '标签一'
+        id: '1',
+        name: '介壳虫',
+        path: '/root/image1/1.jpg',
+        labeldb_id: '1',
+        label_id: '1'
       },
       {
-        name: '标签二'
+        id: '1',
+        name: '吹棉介壳虫',
+        path: '/root/image1/2.jpg',
+        labeldb_id: '2',
+        label_id: '2'
       }
     ]);
     const tableColumn = reactive([
       {
         prop: 'name',
         label: '名称',
+        width: 'auto'
+      },
+      {
+        prop: 'path',
+        label: '路径',
+        width: 'auto'
+      },
+      {
+        prop: 'labeldb_id',
+        label: '标签库类型',
+        width: 'auto'
+      },
+      {
+        prop: 'label_id',
+        label: '标签 id',
         width: 'auto'
       }
     ]);
