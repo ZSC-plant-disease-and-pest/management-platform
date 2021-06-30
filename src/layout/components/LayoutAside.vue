@@ -41,38 +41,68 @@ export default defineComponent({
         label: '信息管理',
         list: [
           {
-            name: 'plantDiseasesAndInsectPests',
+            name: 'appear',
             label: '植物病虫害'
           },
           {
-            name: 'plantInsectPests',
-            label: '虫害'
-          },
-          {
-            name: 'plantDiseases',
+            name: 'disease',
             label: '植物病'
           },
           {
-            name: 'plantImages',
-            label: '植物图片库'
+            name: 'pest',
+            label: '虫害'
           },
           {
-            name: 'plantsInfo',
+            name: 'species',
             label: '植物信息'
+          },
+          {
+            name: 'picture',
+            label: '植物图片库'
+          }
+        ]
+      },
+      {
+        name: 'label',
+        icon: 'el-icon-location',
+        label: '标签管理',
+        list: [
+          {
+            name: 'tag',
+            label: '图片标注信息'
+          },
+          {
+            name: 'collection',
+            label: '标签集'
+          },
+          {
+            name: 'library',
+            label: '标签库'
+          }
+        ]
+      },
+      {
+        name: 'dataset',
+        icon: 'el-icon-location',
+        label: '数据集管理',
+        list: [
+          {
+            name: 'info',
+            label: '信息管理'
+          }
+        ]
+      },
+      {
+        name: 'model',
+        icon: 'el-icon-location',
+        label: '模型管理',
+        list: [
+          {
+            name: 'version',
+            label: '版本管理'
           }
         ]
       }
-      // {
-      //   name: 'info',
-      //   icon: 'el-icon-location',
-      //   label: '信息管理',
-      //   list: [
-      //     {
-      //       name: 'plantDiseasesAndInsectPests',
-      //       label: '植物病虫害'
-      //     }
-      //   ]
-      // }
     ];
     const changeRouter = (name: string) => {
       router.push(`/admin/${name}`);

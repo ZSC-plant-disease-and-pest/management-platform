@@ -2,12 +2,22 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 const login = () => import('@/views/login/index.vue');
 const layout = () => import('@/layout/index.vue');
+
 const test = () => import('@/views/management/test/index.vue');
-const plantDiseasesAndInsectPests = () => import('@/views/management/info/plantDiseasesAndInsectPests/index.vue');
-const plantInsectPests = () => import('@/views/management/info/plantInsectPests/index.vue');
-const plantDiseases = () => import('@/views/management/info/plantDiseases/index.vue');
-const plantImages = () => import('@/views/management/info/plantImages/index.vue');
-const plantsInfo = () => import('@/views/management/info/plantsInfo/index.vue');
+
+const appear = () => import('@/views/management/info/appear/index.vue');
+const disease = () => import('@/views/management/info/disease/index.vue');
+const pest = () => import('@/views/management/info/pest/index.vue');
+const species = () => import('@/views/management/info/species/index.vue');
+const picture = () => import('@/views/management/info/picture/index.vue');
+
+const tag = () => import('@/views/management/label/tag/index.vue');
+const collection = () => import('@/views/management/label/collection/index.vue');
+const library = () => import('@/views/management/label/library/index.vue');
+
+const version = () => import('@/views/management/model/version/index.vue');
+
+const info = () => import('@/views/management/dataset/info/index.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -31,29 +41,54 @@ const routes: Array<RouteRecordRaw> = [
         component: test
       },
       {
-        path: 'info/plantDiseasesAndInsectPests',
-        name: 'plantDiseasesAndInsectPests',
-        component: plantDiseasesAndInsectPests
+        path: 'info/appear',
+        name: 'appear',
+        component: appear
       },
       {
-        path: 'info/plantInsectPests',
-        name: 'plantInsectPests',
-        component: plantInsectPests
+        path: 'info/disease',
+        name: 'disease',
+        component: disease
       },
       {
-        path: 'info/plantDiseases',
-        name: 'plantDiseases',
-        component: plantDiseases
+        path: 'info/pest',
+        name: 'pest',
+        component: pest
       },
       {
-        path: 'info/plantImages',
-        name: 'plantImages',
-        component: plantImages
+        path: 'info/species',
+        name: 'species',
+        component: species
       },
       {
-        path: 'info/plantsInfo',
-        name: 'plantsInfo',
-        component: plantsInfo
+        path: 'info/picture',
+        name: 'picture',
+        component: picture
+      },
+      {
+        path: 'label/tag',
+        name: 'tag',
+        component: tag
+      },
+      {
+        path: 'label/collection',
+        name: 'collection',
+        component: collection
+      },
+      {
+        path: 'label/library',
+        name: 'library',
+        component: library
+      },
+      {
+        path: 'dataset/info',
+        name: 'info',
+        component: info
+      },
+      {
+        path: 'model/version',
+        name: 'version',
+        component: version
       }
     ]
   }
