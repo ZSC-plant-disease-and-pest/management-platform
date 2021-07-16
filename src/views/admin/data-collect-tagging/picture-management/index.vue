@@ -1,4 +1,5 @@
 <template>
+  <Search :searchList="searchList" @search="search" @reset="reset" />
   <Table
     :tableData="tableData"
     :tableColumn="tableColumn"
@@ -11,6 +12,7 @@
 
 <script lang="ts">
 import Table from '@/components/common/table/Table.vue';
+import Search from '@/components/common/search/Search.vue';
 import {
   defineComponent,
   reactive
@@ -18,7 +20,7 @@ import {
 
 export default defineComponent({
   props: {},
-  components: { Table },
+  components: { Table, Search },
   setup () {
     const tableData = reactive([
       {
@@ -29,7 +31,7 @@ export default defineComponent({
         label_id: '1'
       },
       {
-        id: '1',
+        id: '2',
         name: '吹棉介壳虫',
         path: '/root/image1/2.jpg',
         labeldb_id: '2',
@@ -37,6 +39,11 @@ export default defineComponent({
       }
     ]);
     const tableColumn = reactive([
+      {
+        prop: 'id',
+        label: 'id',
+        width: '75px'
+      },
       {
         prop: 'name',
         label: '名称',
@@ -70,13 +77,46 @@ export default defineComponent({
     const check = (data: any) => {
       console.log(data);
     };
+    const search = (data: any) => {
+      console.log(data);
+    };
+    const reset = () => {
+      for (const index in searchList) {
+        searchList[index].value = '';
+      }
+    };
+    const searchList = reactive([
+      {
+        name: 'name',
+        placeholder: '名称',
+        value: ''
+      },
+      {
+        name: 'path',
+        placeholder: '路径',
+        value: ''
+      },
+      {
+        name: 'labeldb_id',
+        placeholder: '标签库类型',
+        value: ''
+      },
+      {
+        name: 'label_id',
+        placeholder: '标签 id',
+        value: ''
+      }
+    ]);
     return {
       tableData,
       tableColumn,
       add,
       remove,
       edit,
-      check
+      check,
+      search,
+      reset,
+      searchList
     };
   }
 });

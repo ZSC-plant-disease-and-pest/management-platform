@@ -1,4 +1,5 @@
 <template>
+  <Search :searchList="searchList" @search="search" @reset="reset" />
   <Table
     :tableData="tableData"
     :tableColumn="tableColumn"
@@ -11,6 +12,7 @@
 
 <script lang="ts">
 import Table from '@/components/common/table/Table.vue';
+import Search from '@/components/common/search/Search.vue';
 import {
   defineComponent,
   reactive
@@ -18,31 +20,42 @@ import {
 
 export default defineComponent({
   props: {},
-  components: { Table },
+  components: { Table, Search },
   setup () {
     const tableData = reactive([
       {
         id: '1',
-        name: 'model_defalut',
-        data_source: 'default'
+        name: 'default',
+        labeldb_id: '1',
+        labels: '1',
+        datasets: 'default'
       },
       {
         id: '2',
-        name: 'model_1',
-        data_source: 'dataset_1'
+        name: 'label_collection_1',
+        labeldb_id: '1',
+        labels: '1',
+        datasets: 'default'
       }
     ]);
     const tableColumn = reactive([
+      {
+        prop: 'id',
+        label: 'id',
+        width: '75px'
+      },
       {
         prop: 'name',
         label: '名称',
         width: 'auto'
       },
       {
-        prop: 'data_source',
-        label: '数据源',
+        prop: 'labeldb_id',
+        label: '标签库类型',
         width: 'auto'
       }
+      // 包含标签
+      // 包含数据集
     ]);
     const add = (data: any) => {
       console.log(data);
@@ -56,13 +69,31 @@ export default defineComponent({
     const check = (data: any) => {
       console.log(data);
     };
+    const search = (data: any) => {
+      console.log(data);
+    };
+    const reset = () => {
+      for (const index in searchList) {
+        searchList[index].value = '';
+      }
+    };
+    const searchList = reactive([
+      {
+        name: 'name',
+        placeholder: '名称',
+        value: ''
+      }
+    ]);
     return {
       tableData,
       tableColumn,
       add,
       remove,
       edit,
-      check
+      check,
+      search,
+      reset,
+      searchList
     };
   }
 });

@@ -19,7 +19,7 @@
         v-for="list in item.list"
         :key="list.name"
         :index="list.name"
-        @click="changeRouter(item.name + '/' + list.name)"
+        @click="changeRouter(list.name)"
       >
         {{ list.label }}
       </el-menu-item>
@@ -36,69 +36,76 @@ export default defineComponent({
     const router = useRouter();
     const menuList: any[] = [
       {
-        name: 'info',
-        icon: 'el-icon-location',
-        label: '信息管理',
+        name: 'plant-database',
+        icon: 'el-icon-watermelon',
+        label: '植物数据库',
         list: [
           {
-            name: 'appear',
-            label: '植物病虫害'
+            name: 'classificationManagement',
+            label: '植物分类管理'
           },
           {
-            name: 'disease',
-            label: '植物病'
-          },
-          {
-            name: 'pest',
-            label: '虫害'
-          },
-          {
-            name: 'species',
-            label: '植物信息'
-          },
-          {
-            name: 'picture',
-            label: '植物图片库'
+            name: 'plantData',
+            label: '植物资料'
           }
         ]
       },
       {
-        name: 'label',
-        icon: 'el-icon-location',
-        label: '标签管理',
+        name: 'pest-database',
+        icon: 'el-icon-soccer',
+        label: '病虫害数据库',
         list: [
           {
-            name: 'tag',
-            label: '图片标注信息'
+            name: 'diseaseManagement',
+            label: '病害管理'
           },
           {
-            name: 'collection',
-            label: '标签集'
+            name: 'pestManagement',
+            label: '虫害管理'
           },
           {
-            name: 'library',
-            label: '标签库'
+            name: 'protectiveMeasures',
+            label: '病虫害防护措施'
           }
         ]
       },
       {
-        name: 'dataset',
-        icon: 'el-icon-location',
+        name: 'data-set-management',
+        icon: 'el-icon-data-board',
         label: '数据集管理',
         list: [
           {
-            name: 'info',
-            label: '信息管理'
+            name: 'dataSetInfo',
+            label: '数据集信息管理'
+          },
+          {
+            name: 'labelSet',
+            label: '标签集管理'
           }
         ]
       },
       {
-        name: 'model',
-        icon: 'el-icon-location',
+        name: 'data-collect-tagging',
+        icon: 'el-icon-picture-outline',
+        label: '数据采集和标注',
+        list: [
+          {
+            name: 'pictureManagement',
+            label: '图片管理'
+          },
+          {
+            name: 'pictureTagging',
+            label: '图片标注'
+          }
+        ]
+      },
+      {
+        name: 'model-management',
+        icon: 'el-icon-house',
         label: '模型管理',
         list: [
           {
-            name: 'version',
+            name: 'versionManagement',
             label: '版本管理'
           }
         ]

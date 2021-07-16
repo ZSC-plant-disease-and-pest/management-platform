@@ -5,19 +5,40 @@ const layout = () => import('@/layout/index.vue');
 
 const test = () => import('@/views/management/test/index.vue');
 
-const appear = () => import('@/views/management/info/appear/index.vue');
-const disease = () => import('@/views/management/info/disease/index.vue');
-const pest = () => import('@/views/management/info/pest/index.vue');
-const species = () => import('@/views/management/info/species/index.vue');
-const picture = () => import('@/views/management/info/picture/index.vue');
+// 1 系统管理
+// 1.1 用户管理
+// 1.2 系统用户
+// 1.3 系统角色
 
-const tag = () => import('@/views/management/label/tag/index.vue');
-const collection = () => import('@/views/management/label/collection/index.vue');
-const library = () => import('@/views/management/label/library/index.vue');
+// 2 植物数据库
+// 2.1 植物分类管理
+const classificationManagement = () => import('@/views/admin/plant-database/classification-management/index.vue');
+// 2.2 植物资料
+const plantData = () => import('@/views/admin/plant-database/plant-data/index.vue');
 
-const version = () => import('@/views/management/model/version/index.vue');
+// 3 病虫害数据库
+// 3.1 病害管理
+const diseaseManagement = () => import('@/views/admin/pest-database/disease-management/index.vue');
+// 3.2 虫害管理
+const pestManagement = () => import('@/views/admin/pest-database/pest-management/index.vue');
+// 3.3 病虫害防护措施
+const protectiveMeasures = () => import('@/views/admin/pest-database/protective-measures/index.vue');
 
-const info = () => import('@/views/management/dataset/info/index.vue');
+// 4 数据集管理
+// 4.1 数据集信息管理
+const dataSetInfo = () => import('@/views/admin/data-set-management/data-set-info/index.vue');
+// 4.2 标签集管理
+const labelSet = () => import('@/views/admin/data-set-management/label-set/index.vue');
+
+// 5 数据采集和标注
+// 5.1 图片管理
+const pictureManagement = () => import('@/views/admin/data-collect-tagging/picture-management/index.vue');
+// 5.2 图片标注
+const pictureTagging = () => import('@/views/admin/data-collect-tagging/picture-tagging/index.vue');
+
+// 6 模型管理
+// 6.1 版本管理
+const versionManagement = () => import('@/views/admin/model-management/version/index.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -36,59 +57,59 @@ const routes: Array<RouteRecordRaw> = [
     component: layout,
     children: [
       {
+        path: 'classificationManagement',
+        name: 'classificationManagement',
+        component: classificationManagement
+      },
+      {
+        path: 'plantData',
+        name: 'plantData',
+        component: plantData
+      },
+      {
+        path: 'diseaseManagement',
+        name: 'diseaseManagement',
+        component: diseaseManagement
+      },
+      {
+        path: 'pestManagement',
+        name: 'pestManagement',
+        component: pestManagement
+      },
+      {
+        path: 'protectiveMeasures',
+        name: 'protectiveMeasures',
+        component: protectiveMeasures
+      },
+      {
+        path: 'dataSetInfo',
+        name: 'dataSetInfo',
+        component: dataSetInfo
+      },
+      {
+        path: 'labelSet',
+        name: 'labelSet',
+        component: labelSet
+      },
+      {
+        path: 'pictureManagement',
+        name: 'pictureManagement',
+        component: pictureManagement
+      },
+      {
+        path: 'pictureTagging',
+        name: 'pictureTagging',
+        component: pictureTagging
+      },
+      {
+        path: 'versionManagement',
+        name: 'versionManagement',
+        component: versionManagement
+      },
+      {
         path: 'test',
         name: 'test',
         component: test
-      },
-      {
-        path: 'info/appear',
-        name: 'appear',
-        component: appear
-      },
-      {
-        path: 'info/disease',
-        name: 'disease',
-        component: disease
-      },
-      {
-        path: 'info/pest',
-        name: 'pest',
-        component: pest
-      },
-      {
-        path: 'info/species',
-        name: 'species',
-        component: species
-      },
-      {
-        path: 'info/picture',
-        name: 'picture',
-        component: picture
-      },
-      {
-        path: 'label/tag',
-        name: 'tag',
-        component: tag
-      },
-      {
-        path: 'label/collection',
-        name: 'collection',
-        component: collection
-      },
-      {
-        path: 'label/library',
-        name: 'library',
-        component: library
-      },
-      {
-        path: 'dataset/info',
-        name: 'info',
-        component: info
-      },
-      {
-        path: 'model/version',
-        name: 'version',
-        component: version
       }
     ]
   }
