@@ -3,7 +3,8 @@
     type="success"
     size="medium"
     icon="el-icon-plus"
-    style="margin-bottom: 15px"
+    class="button"
+    style="height: 40px; position: fixed; right: 35px;"
     @click="add"
   >
     添加
@@ -12,7 +13,7 @@
     :data="tableData"
     stripe
     border
-    style="width: 100%"
+    style="width: 100%; margin-top: 15px"
   >
     <el-table-column
       v-for="item in tableColumn"
@@ -78,6 +79,8 @@ export default defineComponent({
   },
   emits: ['check', 'edit', 'remove', 'add'],
   setup (props, { emit }) {
+    // 增删查改可能需要身份权限进行管理，不同身份有不同的权限
+    // 另外添加字段，然后用 v-if 来控制
     const add = () => {
       emit('add', 'add');
     };
@@ -100,4 +103,5 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
