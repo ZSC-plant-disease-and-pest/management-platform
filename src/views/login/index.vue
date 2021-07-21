@@ -82,7 +82,7 @@ export default defineComponent({
         if (valid) {
           // 登陆
           console.log(state.loginForm);
-          router.push('/admin/test');
+          router.push('/admin/home');
           ElMessage.success('登录成功');
         }
       });

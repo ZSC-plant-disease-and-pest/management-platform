@@ -1,11 +1,20 @@
 <template>
   <el-menu
     class="aside"
-    default-active="test"
+    default-active="home"
     background-color="#ffffff"
     text-color="#606266"
     active-text-color="#000"
   >
+    <el-menu-item
+      index="home"
+      @click="changeRouter('home')"
+    >
+      <i class="el-icon-menu"></i>
+      <template #title>
+        首页
+      </template>
+    </el-menu-item>
     <el-submenu
       v-for="item in menuList"
       :key="item.name"

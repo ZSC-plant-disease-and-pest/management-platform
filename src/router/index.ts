@@ -5,7 +5,11 @@ const layout = () => import('@/layout/index.vue');
 
 const test = () => import('@/views/management/test/index.vue');
 
+// 0 用户管理
+const home = () => import('@/views/admin/home/index.vue');
+
 // 1 系统管理
+
 // 1.1 用户管理
 // 1.2 系统用户
 // 1.3 系统角色
@@ -33,6 +37,7 @@ const labelSet = () => import('@/views/admin/data-set-management/label-set/index
 // 5 数据采集和标注
 // 5.1 图片管理
 const pictureManagement = () => import('@/views/admin/data-collect-tagging/picture-management/index.vue');
+const pictureAddUpdate = () => import('@/views/admin/data-collect-tagging/picture-management/components/add-update.vue');
 // 5.2 图片标注
 const pictureTagging = () => import('@/views/admin/data-collect-tagging/picture-tagging/index.vue');
 
@@ -53,9 +58,14 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/admin',
     name: 'admin',
-    redirect: '/admin/test',
+    redirect: '/admin/home',
     component: layout,
     children: [
+      {
+        path: 'home',
+        name: 'home',
+        component: home
+      },
       {
         path: 'classificationManagement',
         name: 'classificationManagement',
@@ -95,6 +105,16 @@ const routes: Array<RouteRecordRaw> = [
         path: 'pictureManagement',
         name: 'pictureManagement',
         component: pictureManagement
+      },
+      {
+        path: 'pictureManagement/add',
+        name: 'pictureManagementAdd',
+        component: pictureAddUpdate
+      },
+      {
+        path: 'pictureManagement/update',
+        name: 'pictureManagementUpdate',
+        component: pictureAddUpdate
       },
       {
         path: 'pictureTagging',
