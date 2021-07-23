@@ -6,7 +6,7 @@
           <span> 待标注图片 </span>
         </div>
       </template>
-      <el-table :data="taggingTableData" size="small" style="width: 100%">
+      <el-table :data="taggingTableData" style="width: 100%">
         <el-table-column
           v-for="item in taggingTableColumn"
           :key="item.prop"
@@ -53,7 +53,7 @@
           <span> 待标注图片 </span>
         </div>
       </template>
-      <el-table :data="taggingTableData" size="small" style="width: 100%">
+      <el-table :data="taggingTableData" style="width: 100%">
         <el-table-column
           v-for="item in taggingTableColumn"
           :key="item.prop"
