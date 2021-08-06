@@ -31,8 +31,10 @@ const protectiveMeasures = () => import('@/views/admin/pest-database/protective-
 // 4 数据集管理
 // 4.1 数据集信息管理
 const dataSetInfo = () => import('@/views/admin/data-set-management/data-set-info/index.vue');
+const dataSetInfoAddUpdate = () => import('@/views/admin/data-set-management/data-set-info/components/add-update.vue');
 // 4.2 标签集管理
 const labelSet = () => import('@/views/admin/data-set-management/label-set/index.vue');
+const labelSetAddUpdate = () => import('@/views/admin/data-set-management/label-set/components/add-update.vue');
 
 // 5 数据采集和标注
 // 5.1 图片管理
@@ -97,9 +99,29 @@ const routes: Array<RouteRecordRaw> = [
         component: dataSetInfo
       },
       {
+        path: 'dataSetInfo/add',
+        name: 'dataSetInfoAdd',
+        component: dataSetInfoAddUpdate
+      },
+      {
+        path: 'dataSetInfo/update',
+        name: 'dataSetInfoUpdate',
+        component: dataSetInfoAddUpdate
+      },
+      {
         path: 'labelSet',
         name: 'labelSet',
         component: labelSet
+      },
+      {
+        path: 'labelSet/add',
+        name: 'labelSetAdd',
+        component: labelSetAddUpdate
+      },
+      {
+        path: 'labelSet/update',
+        name: 'labelSetUpdate',
+        component: labelSetAddUpdate
       },
       {
         path: 'pictureManagement',

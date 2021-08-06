@@ -13,15 +13,24 @@
 <script lang="ts">
 import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
+import { datasetHttp, datasetParams } from '@/api/dataset';
 import {
   defineComponent,
-  reactive
+  reactive,
+  onBeforeMount
 } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   props: {},
   components: { Table, Search },
   setup () {
+    const router = useRouter();
+    onBeforeMount(() => {
+      // datasetHttp.SearchDataset().then((response: any) => {
+      //   console.log(response);
+      // });
+    });
     const tableData = reactive([
       {
         id: '1',
@@ -60,6 +69,7 @@ export default defineComponent({
     ]);
     const add = (data: any) => {
       console.log(data);
+      router.push(router.currentRoute.value.path + '/add');
     };
     const remove = (data: any) => {
       console.log(data);
