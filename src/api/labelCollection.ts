@@ -10,16 +10,16 @@ export interface labelCollectionParams {
 
 export class labelCollectionHttp {
   // 创建标签集
-  static createlabelCollection (params: labelCollectionParams) {
+  static createLabelCollection (params: labelCollectionParams) {
     return http({
       url: '/api/labelcollection/create',
       method: 'post',
-      body: params
+      data: params
     });
   }
 
   // 删除标签集
-  static deletelabelCollection (id: number) {
+  static deleteLabelCollection (id: number) {
     return http({
       url: `/api/labelcollection/delete/${id}`,
       method: 'delete'
@@ -27,20 +27,28 @@ export class labelCollectionHttp {
   }
 
   // 查询全部标签集
-  static SearchlabelCollection (params: labelCollectionParams) {
+  static searchLabelCollection (params: (labelCollectionParams | null)) {
     return http({
       url: '/api/labelcollection/search',
-      method: 'get',
-      params
+      method: 'get'
+    });
+  }
+
+  // 通过 ID 查询数据集
+  static searchLabelCollectionById (id: number) {
+    return http({
+      url: `/api/labelcollection/search/${id}`,
+      method: 'get'
     });
   }
 
   // 修改标签集
-  static UpdatelabelCollection (params: labelCollectionParams, id: number) {
+  static updateLabelCollection (params: labelCollectionParams) {
+    const { id } = params;
     return http({
       url: `/api/labelcollection/update/${id}`,
       method: 'put',
-      body: params
+      data: params
     });
   }
 }

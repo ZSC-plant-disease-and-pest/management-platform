@@ -50,7 +50,7 @@ export class plantsDataHttp {
     return http({
       url: '/api/plantsData/create',
       method: 'post',
-      body: params
+      data: params
     });
   }
 
@@ -63,7 +63,7 @@ export class plantsDataHttp {
   }
 
   // 查询全部植物信息
-  static SearchDataset (params: plantsDataParams) {
+  static SearchDataset (params: (plantsDataParams | null)) {
     return http({
       url: '/api/plantsData/search',
       method: 'get',
@@ -80,11 +80,12 @@ export class plantsDataHttp {
   }
 
   // 修改植物信息
-  static UpdateDataset (params: plantsDataParams, id: number) {
+  static UpdateDataset (params: plantsDataParams) {
+    const { id } = params;
     return http({
       url: `/api/plantsData/update/${id}`,
       method: 'put',
-      body: params
+      data: params
     });
   }
 }

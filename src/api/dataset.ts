@@ -4,11 +4,14 @@ export interface datasetParams {
   // id
   id?: number
 
+  // 名称
+  name?: string
+
   // 标签集 Id
   labelCollection?: number
 
-  // 名称
-  name?: string
+  // 路径
+  path?: string
 }
 
 export class datasetHttp {
@@ -17,7 +20,7 @@ export class datasetHttp {
     return http({
       url: '/api/dataset/create',
       method: 'post',
-      body: params
+      data: params
     });
   }
 
@@ -30,7 +33,7 @@ export class datasetHttp {
   }
 
   // 查询全部数据集
-  static SearchDataset (params: datasetParams) {
+  static searchDataset (params: (datasetParams | null)) {
     return http({
       url: '/api/dataset/search',
       method: 'get',
@@ -38,12 +41,21 @@ export class datasetHttp {
     });
   }
 
+  // 通过 ID 查询数据集
+  static searchDatasetById (id: number) {
+    return http({
+      url: `/api/dataset/search/${id}`,
+      method: 'get'
+    });
+  }
+
   // 修改数据集
-  static UpdateDataset (params: datasetParams, id: number) {
+  static updateDataset (params: datasetParams) {
+    const { id } = params;
     return http({
       url: `/api/dataset/update/${id}`,
       method: 'put',
-      body: params
+      data: params
     });
   }
 }
