@@ -3,6 +3,7 @@
   <Table
     :tableData="tableData"
     :tableColumn="tableColumn"
+    :loading="loading"
     @check="check"
     @edit="edit"
     @remove="remove"
@@ -26,29 +27,25 @@ export default defineComponent({
   components: { Table, Search },
   setup () {
     const router = useRouter();
+    let loading = false;
     onBeforeMount(() => {
-      // datasetHttp.SearchDataset().then((response: any) => {
-      //   console.log(response);
-      // });
+      loading = true;
+      datasetHttp.searchDataset(null)
+        .then((response: any) => {
+          console.log(response);
+          for (let i = 0; i < response.content.length; i++) {
+            tableData.push(response.content[i]);
+          }
+        })
+        .finally(() => {
+          loading = false;
+        });
     });
-    const tableData = reactive([
-      {
-        id: '1',
-        name: 'dataset_1',
-        label_collection: '病害数据集',
-        path: '/root/dataset/1'
-      },
-      {
-        id: '2',
-        name: 'dataset_2',
-        label_collection: '植物数据集',
-        path: '/root/dataset/2'
-      }
-    ]);
+    const tableData = reactive<any>([]);
     const tableColumn = reactive([
       {
         prop: 'id',
-        label: 'id',
+        label: 'ID',
         width: '75px'
       },
       {
@@ -57,8 +54,8 @@ export default defineComponent({
         width: 'auto'
       },
       {
-        prop: 'label_collection',
-        label: '数据集类型',
+        prop: 'labelCollection',
+        label: '标签集 ID',
         width: 'auto'
       },
       {
@@ -69,12 +66,20 @@ export default defineComponent({
     ]);
     const add = (data: any) => {
       console.log(data);
-      router.push(router.currentRoute.value.path + '/add');
+      router.push({
+        path: router.currentRoute.value.path + '/add',
+        name: 'dataSetInfoAdd'
+      });
     };
-    const remove = (data: any) => {
-      console.log(data);
+    const remove = () => {
+      console.log('remove');
     };
     const edit = (data: any) => {
+      router.push({
+        path: router.currentRoute.value.path + '/update',
+        name: 'dataSetInfoUpdate',
+        params: data
+      });
       console.log(data);
     };
     const check = (data: any) => {
@@ -95,8 +100,8 @@ export default defineComponent({
         value: ''
       },
       {
-        name: 'label_collection',
-        placeholder: '数据集类型',
+        name: 'labelCollection',
+        placeholder: '标签集ID',
         value: ''
       },
       {
@@ -108,6 +113,7 @@ export default defineComponent({
     return {
       tableData,
       tableColumn,
+      loading,
       add,
       remove,
       edit,

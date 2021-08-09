@@ -101,12 +101,18 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'dataSetInfo/add',
         name: 'dataSetInfoAdd',
-        component: dataSetInfoAddUpdate
+        component: dataSetInfoAddUpdate,
+        meta: {
+          type: 'add'
+        }
       },
       {
         path: 'dataSetInfo/update',
         name: 'dataSetInfoUpdate',
-        component: dataSetInfoAddUpdate
+        component: dataSetInfoAddUpdate,
+        meta: {
+          type: 'update'
+        }
       },
       {
         path: 'labelSet',

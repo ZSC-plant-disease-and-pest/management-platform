@@ -4,13 +4,24 @@
     size="medium"
     icon="el-icon-plus"
     class="button"
-    style="height: 40px; position: fixed; right: 35px;"
+    style="height: 40px; position: fixed; right: 135px;"
     @click="add"
   >
     添加
   </el-button>
+  <el-button
+    type="danger"
+    size="medium"
+    icon="el-icon-delete"
+    class="button"
+    style="height: 40px; position: fixed; right: 35px;"
+    @click="remove"
+  >
+    删除
+  </el-button>
   <el-table
     :data="tableData"
+    v-loading="loading"
     stripe
     border
     style="width: 100%; margin-top: 15px"
@@ -24,7 +35,7 @@
     />
     <el-table-column
       label="操作"
-      width="181"
+      width="126"
     >
       <template #default="scope">
         <el-button
@@ -44,15 +55,6 @@
           @click="edit(scope.row)"
         >
           编辑
-        </el-button>
-        <el-button
-          type="text"
-          size="small"
-          icon="el-icon-delete"
-          style="color: rgb(244, 96, 84)"
-          @click="remove(scope.row)"
-        >
-          删除
         </el-button>
       </template>
     </el-table-column>
@@ -75,6 +77,10 @@ export default defineComponent({
       default: () => {
         return {};
       }
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['check', 'edit', 'remove', 'add'],
@@ -84,8 +90,8 @@ export default defineComponent({
     const add = () => {
       emit('add', 'add');
     };
-    const remove = (row: any) => {
-      emit('remove', row);
+    const remove = () => {
+      emit('remove');
     };
     const edit = (row: any) => {
       emit('edit', row);

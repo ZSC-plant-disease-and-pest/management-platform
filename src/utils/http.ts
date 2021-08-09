@@ -21,7 +21,7 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (response: AxiosResponse) => {
-    if (response.status === 200) {
+    if (response.data.code === 200) {
       return response;
     }
     return Promise.reject(response);
@@ -45,7 +45,7 @@ export default function request (reqData: any): any {
     service.request(tempData)
       .then((response) => {
         console.log('correct response: %o', tempData.url, tempData.method, response);
-        resolve(response.data);
+        resolve(response.data.data);
       })
       .catch((err) => {
         console.log('error response: %o', err);
