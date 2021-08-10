@@ -1,6 +1,7 @@
 import http from '@/utils/http';
+import { searchByInfo } from './baseInterface';
 
-export interface labelCollectionParams {
+export interface labelCollectionParams extends searchByInfo {
   // id
   id?: number
 

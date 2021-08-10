@@ -1,6 +1,7 @@
 import http from '@/utils/http';
+import { searchByInfo } from './baseInterface';
 
-export interface datasetParams {
+export interface datasetParams extends searchByInfo {
   // id
   id?: number
 
@@ -25,7 +26,7 @@ export class datasetHttp {
   }
 
   // 删除数据集
-  static deleteDataset (id: number) {
+  static deleteDataset (id: string) {
     return http({
       url: `/api/dataset/delete/${id}`,
       method: 'delete'
