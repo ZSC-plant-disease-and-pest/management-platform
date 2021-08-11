@@ -26,9 +26,9 @@ export class datasetHttp {
   }
 
   // 删除数据集
-  static deleteDataset (id: string) {
+  static deleteDataset (ids: string) {
     return http({
-      url: `/api/dataset/delete/${id}`,
+      url: `/api/dataset/delete/${ids}`,
       method: 'delete'
     });
   }
@@ -50,7 +50,7 @@ export class datasetHttp {
     });
   }
 
-  // 修改数据集
+  // 修改数据集 (允许修改:名称, 标签集 id)
   static updateDataset (params: datasetParams) {
     const { id } = params;
     return http({

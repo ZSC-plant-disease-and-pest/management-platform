@@ -7,6 +7,12 @@ export interface labelCollectionParams extends searchByInfo {
 
   // 名称
   name?: string
+
+  // 标签库 id
+  labelDbId?: string
+
+  // 包含的标签 id
+  labelsList?: Array<number>
 }
 
 export class labelCollectionHttp {
@@ -20,9 +26,9 @@ export class labelCollectionHttp {
   }
 
   // 删除标签集
-  static deleteLabelCollection (id: number) {
+  static deleteLabelCollection (ids: number) {
     return http({
-      url: `/api/labelcollection/delete/${id}`,
+      url: `/api/labelcollection/delete/${ids}`,
       method: 'delete'
     });
   }
@@ -43,7 +49,7 @@ export class labelCollectionHttp {
     });
   }
 
-  // 修改标签集
+  // 修改标签集 (允许修改:名称, 所含标签)
   static updateLabelCollection (params: labelCollectionParams) {
     const { id } = params;
     return http({
