@@ -29,34 +29,54 @@ import {
   reactive,
   onBeforeMount,
   ref,
-  toRefs
+  toRefs,
+  onUpdated
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 
 export default defineComponent({
-  props: {},
   components: { Table, Search, Pagenum },
   setup () {
+    // 使用路由
+    const router = useRouter();
+    // 渲染前
     onBeforeMount(() => {
       getDataset();
     });
-    const router = useRouter();
+    // 发生更新时
+    onUpdated(() => {
+      // 判断是否从添加界面返回
+      if (router.currentRoute.value.params.type === 'refresh') {
+        // 是的话则重新请求数据
+        router.currentRoute.value.params.type = '';
+        getDataset();
+      }
+    });
+    // 是否加载
     const loading = ref(false);
+    // 表格信息的总数
     const total = ref(null);
+    // 表格的页数
     const page = ref(1);
+    // 表格每页的信息大小
     const size = ref(10);
+    // 数据集参数
     const datasetParams = reactive({
       page: 0,
       size: 10
     } as datasetParams);
+    // 请求数据集
     const getDataset = () => {
       loading.value = true;
       datasetHttp.searchDataset(datasetParams)
         .then((response: any) => {
           console.log(response);
+          // 将表格的总数赋值
           total.value = response.totalElements;
+          // 将表格的大小赋值
           size.value = response.size;
+          // 响应式的添加到表格中
           state.tableData = [];
           for (let i = 0; i < response.content.length; i++) {
             state.tableData.push(response.content[i]);
@@ -66,17 +86,22 @@ export default defineComponent({
           loading.value = false;
         });
     };
+    // 方便内部数据响应式的改变
     const state = reactive({
       tableData: [] as Array<any>
     });
+    // 排序
     const sortChange = (params: any) => {
       if (params.prop === null) {
+        // 无规则
         datasetParams.sort = '';
       } else {
+        // 排序规则
         datasetParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
       }
       getDataset();
     };
+    // 表头信息
     const tableColumn = reactive([
       {
         prop: 'id',
@@ -99,6 +124,7 @@ export default defineComponent({
         width: 'auto'
       }
     ]);
+    // 新增
     const add = (data: any) => {
       console.log(data);
       router.push({
@@ -106,6 +132,7 @@ export default defineComponent({
         name: 'dataSetInfoAdd'
       });
     };
+    // 删除
     const remove = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         // 提示请选择需要删除的内容
@@ -122,6 +149,7 @@ export default defineComponent({
           });
       }
     };
+    // 编辑
     const edit = (data: any) => {
       router.push({
         path: router.currentRoute.value.path + '/update',
@@ -129,28 +157,30 @@ export default defineComponent({
         params: data
       });
     };
+    // 查看
     const check = (data: any) => {
       console.log(data);
     };
+    // 搜索
     const search = (data: any) => {
-      // for (const index in data) {
-      //   if (data[index].value !== '') {
-      //     if (data[index].name === 'name') {
-      //       datasetParams.name = data[index].value;
-      //     } else if (data[index].name === 'labelCollection') {
-      //       datasetParams.labelCollection = data[index].value;
-      //     } else if (data[index].name === 'path') {
-      //       datasetParams.path = data[index].value;
-      //     }
-      //   }
-      // }
-      // getDataset();
+      for (const index in data) {
+        if (data[index].name === 'name') {
+          datasetParams.name = data[index].value === '' ? undefined : data[index].value;
+        } else if (data[index].name === 'labelCollection') {
+          datasetParams.labelCollection = data[index].value === '' ? undefined : data[index].value;
+        }
+      }
+      getDataset();
     };
+    // 重置搜索框
     const reset = () => {
       for (const index in searchList) {
         searchList[index].value = '';
+        datasetParams.name = undefined;
+        datasetParams.labelCollection = undefined;
       }
     };
+    // 搜索框信息
     const searchList = reactive([
       {
         name: 'name',
@@ -159,15 +189,11 @@ export default defineComponent({
       },
       {
         name: 'labelCollection',
-        placeholder: '标签集ID',
-        value: ''
-      },
-      {
-        name: 'path',
-        placeholder: '路径',
+        placeholder: '标签集 ID',
         value: ''
       }
     ]);
+    // 表格每页信息大小改变
     const handleSizeChange = (newSize: any) => {
       datasetParams.size = newSize;
       datasetParams.page = 0;
@@ -175,11 +201,13 @@ export default defineComponent({
       page.value = 1;
       getDataset();
     };
+    // 表格页数改变
     const handleCurrentChange = (newPage: any) => {
       datasetParams.page = newPage;
       page.value = newPage + 1;
       getDataset();
     };
+    // 导出
     return {
       ...toRefs(state),
       tableColumn,

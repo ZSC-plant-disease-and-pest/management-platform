@@ -96,6 +96,8 @@ import { illegalVisit } from '@/utils/global';
 export default defineComponent({
   name: 'add-update',
   setup () {
+    // 获取路由
+    const router = useRouter();
     // 渲染前
     onBeforeMount(() => {
       getParams();
@@ -121,8 +123,6 @@ export default defineComponent({
         ]
       }
     });
-    // 获取路由
-    const router = useRouter();
     // 界面类型：add 新增，update 更新
     const type = ref('');
     // 加载中
@@ -144,7 +144,7 @@ export default defineComponent({
           // 设置全局路由守卫，当 meta.type = 'update' 时
           // 判断 route.params.id 是否存在，不存在则返回上个界面并弹出警告提示
           // 返回上一页
-          back();
+          router.go(-1);
         }
       }
     };
@@ -181,7 +181,13 @@ export default defineComponent({
     // 返回上一个界面
     const back = () => {
       console.log('back');
-      router.go(-1);
+      router.push({
+        path: '/admin/dataSetInfo',
+        name: 'dataSetInfo',
+        params: {
+          type: 'refresh'
+        }
+      });
     };
     // 继续新增
     const keep = () => {
