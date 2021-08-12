@@ -3,108 +3,171 @@
   <Table
     :tableData="tableData"
     :tableColumn="tableColumn"
+    :loading="loading"
     @check="check"
     @edit="edit"
     @remove="remove"
     @add="add"
+    @sortChange="sortChange"
+  />
+  <Pagenum
+    :total="total"
+    :currentPage="page"
+    :pageSize="size"
+    @handleSizeChange="handleSizeChange"
+    @handleCurrentChange="handleCurrentChange"
   />
 </template>
 
 <script lang="ts">
 import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
+import Pagenum from '@/components/common/pagenum/Pagenum.vue';
+import { pestHttp, pestParams } from '@/api/pest';
 import {
   defineComponent,
-  reactive
+  reactive,
+  onBeforeMount,
+  ref,
+  toRefs,
+  onUpdated
 } from 'vue';
+import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus';
 
 export default defineComponent({
-  props: {},
-  components: { Table, Search },
+  components: { Table, Search, Pagenum },
   setup () {
-    const tableData = reactive([
-      {
-        id: '1',
-        name: '介壳虫',
-        symptom: `同翅目(homoptera)介壳虫总科昆虫的统称。雌虫无翅，足和独角均退化；雄虫有一对柔翅，足和触角发达，无口器。体外被有蜡质介壳。卵通常埋在蜡丝块中、雌体下或雌虫分泌的介壳下。每一种的宿主植物有一定的范围。侵袭植物的根、树皮、叶、枝或果实。主要害虫有梨圆蚧(san jose scale)、蛎盾蚧(oystershell scale)、皮屑长蚧、桔紫蛎蚧和红圆蚧。洋红虫、紫胶蚧和地珠有经济价值。
-                  介壳虫是柑桔、柚子上的一类重要害虫，常见的有红圆蚧、褐圆蚧、康片蚧、矢尖蚧和吹绵蚧等。介壳虫为害叶片、枝条和果实。介壳虫往往是雄性有翅，能飞，雌虫和幼虫一经羽化，终生寄居在枝叶或果实上，造成叶片发黄、枝梢枯萎、树势衰退，且易诱发煤烟病。`,
-        description: `盾介壳虫具有蜡腺，因此能分泌蜡质介壳，雌虫无眼，无脚，亦无触角。雄虫则具发达之脚，触角及翅，营孤雌或两性生殖，部分种类是重要害虫。通常是在植物之叶或茎上吸汁为生，严重时会造成枝条凋萎或全株死亡。盾介壳虫是介壳虫类中最大的科，雌雄都有扁平的卵形躯体，有腊质介壳，介壳形状因种而异。常见的外型有圆形、椭圆形、线形或牡蛎形。幼虫具短脚，幼龄可移动觅食，稍长则脚退化，营固着生活。常见的有红圆蚧、褐圆蚧、康片蚧、矢尖蚧和吹绵蚧壳虫等。此外，介壳虫的分泌物还可引起煤烟病。
-                      介壳虫是一类小型昆虫，大多数虫体上被有蜡质分泌物。雌雄异体。雌虫无翅，雄虫有1对膜质前翅，后翅特化为平衡棒。介壳虫是花卉上最常见的害虫，常群集于枝、叶、果上。成虫、若虫以针状口器插入花卉叶、枝组织中吸取汁液，造成枝叶枯萎，甚至整株枯死，并能诱发煤污病，危害极大。`,
-        regularity: '介壳虫繁殖能力强，一年发生多代。卵孵化为若虫，经过短时间爬行，营固定生活，即形成介壳。介壳虫lecanium conic，蚧的一种。抗药能力强，一般药剂难以进入体内，防治比较困难。因此，一旦发生，不易清除干净。',
-        seasons: '夏季',
-        regions: `主要有以下4种。
-                  加强植物检疫：在自然情况下，介壳虫活动性小，其自身传播扩散能力有限，分布有一定的局限性。但随着生产的发展，花卉交换、调运频繁，人为和远距离传播病虫害的机会日益增多。检疫工作规定花卉不带危险性病虫（含各种繁殖材料）方可运输。如发现病虫，应采取各种有效措施加以消灭，防止进一步传播扩散。
-                  人工防治：在栽培花卉的过程中，发现有个别枝条或叶片有介壳虫，可用软刷轻轻刷除，或结合修剪，剪去虫枝、虫叶。要求刷净、剪净、集中烧毁，切勿乱扔。
-                  药剂防治：根据介壳虫的各种发生情况，在若虫盛期喷药。因此时大多数若虫多孵化不久，体表尚未分泌蜡质，介壳更未形成，用药仍易杀死。每隔7—10天喷1次，连续2—3次。可用40%氧化乐果1000倍液，或50%马拉硫磷1500倍液，或255亚胺硫磷1000倍液，或50%敌敌畏1000倍液，或2.5%溴氰菊酯3000倍液，喷雾。保护和利用天敌：如捕食吹绵蚧的澳洲瓢虫、大红瓢虫、寄生盾蚧的金黄蚜小蜂、软蚧蚜小蜂、红点唇瓢虫等都是有效天敌，可以用来控制介壳虫的危害，应加以合理的保护和利用。
-                  家庭花卉防治介壳虫（土法防治介壳虫） ：
-                  1、用白酒对水，比例为1∶2，治虫时，浇透盆土的表层。
-                  2、用食醋(米醋)50毫升，将小棉球放入醋中浸湿后，用湿棉球在受害的花木茎、叶上轻轻地揩擦即可将介壳虫揩掉杀灭。
-                  3、用柴油、洗衣粉、水按100∶6∶60的比例调成母液，对水稀释或30%的药液后，对金橘、苏铁上的介壳虫仔细喷洒，1周后，介壳虫大部分变成干瘪状态。
-                  4、用75%酒精反复轻擦被害植株，可同时杀灭成虫和幼虫。本方法仅限虫情指数低或盆栽苗木较少的情况下使用，不适宜大面积种植、虫情指数大发生时使用。
-                  5、用洋葱或大蒜的浸出液可防治介壳虫。使用时，取2个蒜头捣烂后加入2kg的水浸泡半天时间，然后取其澄清液，喷洒被害部位，每隔3～4天1次，连续3天可杀死全部害虫。而且它还可以有杀菌的作用，抑制病菌繁殖蔓延。
-                  6、将30个左右的烟蒂加入500g水浸泡一昼夜，过滤后，加入少许肥皂液即可喷洒，它对介壳虫的若虫有效。`
-      },
-      {
-        id: '2',
-        name: '非洲大蜗牛',
-        symptom: '',
-        description: '',
-        regularity: '',
-        seasons: '雨季',
-        regions: ''
-      },
-      {
-        id: '3',
-        name: '吹棉介壳虫',
-        symptom: '',
-        description: '',
-        regularity: '',
-        seasons: '春季中旬至夏季初',
-        regions: ''
+    // 使用路由
+    const router = useRouter();
+    // 渲染前
+    onBeforeMount(() => {
+      getDataset();
+    });
+    // 发生更新时
+    onUpdated(() => {
+      // 判断是否从添加界面返回
+      if (router.currentRoute.value.params.type === 'refresh') {
+        // 是的话则重新请求数据
+        router.currentRoute.value.params.type = '';
+        getDataset();
       }
-    ]);
+    });
+    // 是否加载
+    const loading = ref(false);
+    // 表格信息的总数
+    const total = ref(null);
+    // 表格的页数
+    const page = ref(1);
+    // 表格每页的信息大小
+    const size = ref(10);
+    // 数据集参数
+    const pestParams = reactive({
+      page: 0,
+      size: 10
+    } as pestParams);
+    // 请求数据集
+    const getDataset = () => {
+      loading.value = true;
+      pestHttp.searchPest(pestParams)
+        .then((response: any) => {
+          console.log(response);
+          // 将表格的总数赋值
+          total.value = response.totalElements;
+          // 将表格的大小赋值
+          size.value = response.size;
+          // 响应式的添加到表格中
+          state.tableData = [];
+          for (let i = 0; i < response.content.length; i++) {
+            state.tableData.push(response.content[i]);
+          }
+        })
+        .finally(() => {
+          loading.value = false;
+        });
+    };
+    // 方便内部数据响应式的改变
+    const state = reactive({
+      tableData: [] as Array<any>
+    });
+    // 表头信息
     const tableColumn = reactive([
       {
         prop: 'id',
-        label: 'id',
+        label: 'ID',
         width: '75px'
       },
       {
         prop: 'name',
         label: '名称',
         width: 'auto'
-      },
-      // {
-      //   prop: 'symptom',
-      //   label: '虫子类型',
-      //   width: 'auto'
-      // },
-      {
-        prop: 'seasons',
-        label: '发病季节',
-        width: 'auto'
       }
     ]);
+    // 排序
+    const sortChange = (params: any) => {
+      if (params.prop === null) {
+        // 无规则
+        pestParams.sort = '';
+      } else {
+        // 排序规则
+        pestParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
+      }
+      getDataset();
+    };
+    // 新增
     const add = (data: any) => {
       console.log(data);
+      router.push({
+        path: router.currentRoute.value.path + '/add',
+        name: 'pestManagementAdd'
+      });
     };
-    const remove = (data: any) => {
-      console.log(data);
+    // 删除
+    const remove = (selectedIds: any) => {
+      if (selectedIds.length === 0) {
+        // 提示请选择需要删除的内容
+        ElMessage.warning('请选择需要删除的内容');
+      } else {
+        loading.value = true;
+        pestHttp.deletePest(selectedIds.join(','))
+          .then(() => {
+            ElMessage.success('删除成功');
+            getDataset();
+          })
+          .finally(() => {
+            loading.value = false;
+          });
+      }
     };
+    // 编辑
     const edit = (data: any) => {
-      console.log(data);
+      router.push({
+        path: router.currentRoute.value.path + '/update',
+        name: 'pestManagementUpdate',
+        params: data
+      });
     };
+    // 查看
     const check = (data: any) => {
       console.log(data);
     };
+    // 搜索
     const search = (data: any) => {
-      console.log(data);
+      for (const index in data) {
+        if (data[index].name === 'name') {
+          pestParams.name = data[index].value === '' ? undefined : data[index].value;
+        }
+      }
+      getDataset();
     };
+    // 重置搜索框
     const reset = () => {
       for (const index in searchList) {
         searchList[index].value = '';
+        pestParams.name = undefined;
       }
     };
+    // 搜索框信息
     const searchList = reactive([
       {
         name: 'name',
@@ -112,16 +175,38 @@ export default defineComponent({
         value: ''
       }
     ]);
+    // 表格每页信息大小改变
+    const handleSizeChange = (newSize: any) => {
+      pestParams.size = newSize;
+      pestParams.page = 0;
+      size.value = newSize;
+      page.value = 1;
+      getDataset();
+    };
+    // 表格页数改变
+    const handleCurrentChange = (newPage: any) => {
+      pestParams.page = newPage;
+      page.value = newPage + 1;
+      getDataset();
+    };
+    // 导出
     return {
-      tableData,
+      loading,
+      total,
+      page,
+      size,
+      ...toRefs(state),
       tableColumn,
+      sortChange,
       add,
       remove,
       edit,
       check,
       search,
       reset,
-      searchList
+      searchList,
+      handleSizeChange,
+      handleCurrentChange
     };
   }
 });

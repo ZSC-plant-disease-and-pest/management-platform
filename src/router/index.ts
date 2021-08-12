@@ -25,6 +25,7 @@ const plantData = () => import('@/views/admin/plant-database/plant-data/index.vu
 const diseaseManagement = () => import('@/views/admin/pest-database/disease-management/index.vue');
 // 3.2 虫害管理
 const pestManagement = () => import('@/views/admin/pest-database/pest-management/index.vue');
+const pestManagementAddUpdate = () => import('@/views/admin/pest-database/pest-management/components/add-update.vue');
 // 3.3 病虫害防护措施
 const protectiveMeasures = () => import('@/views/admin/pest-database/protective-measures/index.vue');
 
@@ -89,6 +90,22 @@ const routes: Array<RouteRecordRaw> = [
         component: pestManagement
       },
       {
+        path: 'pestManagement/add',
+        name: 'pestManagementAdd',
+        component: pestManagementAddUpdate,
+        meta: {
+          type: 'add'
+        }
+      },
+      {
+        path: 'pestManagement/update',
+        name: 'pestManagementUpdate',
+        component: pestManagementAddUpdate,
+        meta: {
+          type: 'update'
+        }
+      },
+      {
         path: 'protectiveMeasures',
         name: 'protectiveMeasures',
         component: protectiveMeasures
@@ -122,12 +139,18 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'labelSet/add',
         name: 'labelSetAdd',
-        component: labelSetAddUpdate
+        component: labelSetAddUpdate,
+        meta: {
+          type: 'add'
+        }
       },
       {
         path: 'labelSet/update',
         name: 'labelSetUpdate',
-        component: labelSetAddUpdate
+        component: labelSetAddUpdate,
+        meta: {
+          type: 'update'
+        }
       },
       {
         path: 'pictureManagement',

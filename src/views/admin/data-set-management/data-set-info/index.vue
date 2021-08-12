@@ -90,17 +90,6 @@ export default defineComponent({
     const state = reactive({
       tableData: [] as Array<any>
     });
-    // 排序
-    const sortChange = (params: any) => {
-      if (params.prop === null) {
-        // 无规则
-        datasetParams.sort = '';
-      } else {
-        // 排序规则
-        datasetParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
-      }
-      getDataset();
-    };
     // 表头信息
     const tableColumn = reactive([
       {
@@ -124,6 +113,17 @@ export default defineComponent({
         width: 'auto'
       }
     ]);
+    // 排序
+    const sortChange = (params: any) => {
+      if (params.prop === null) {
+        // 无规则
+        datasetParams.sort = '';
+      } else {
+        // 排序规则
+        datasetParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
+      }
+      getDataset();
+    };
     // 新增
     const add = (data: any) => {
       console.log(data);
@@ -209,9 +209,13 @@ export default defineComponent({
     };
     // 导出
     return {
+      loading,
+      total,
+      page,
+      size,
       ...toRefs(state),
       tableColumn,
-      loading,
+      sortChange,
       add,
       remove,
       edit,
@@ -219,12 +223,8 @@ export default defineComponent({
       search,
       reset,
       searchList,
-      total,
-      page,
-      size,
       handleSizeChange,
-      handleCurrentChange,
-      sortChange
+      handleCurrentChange
     };
   }
 });

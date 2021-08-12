@@ -2,10 +2,10 @@
   <!-- <el-page-header @back="back" content="详情页面"></el-page-header> -->
   <el-header class="form_title-common">
     <span v-show="type === 'add'">
-      新增标签集
+      新增数据集
     </span>
     <span v-show="type === 'update'">
-      更新标签集
+      更新数据集
     </span>
   </el-header>
   <el-form
@@ -32,29 +32,21 @@
         placeholder="请输入名称"
       />
     </el-form-item>
-    <el-form-item label="标签库 ID：" prop="labelDbId">
+    <!-- <el-form-item label="标签集 ID：" prop="labelCollection">
       <el-input
         class="input-common"
-        v-model="form.labelDbId"
-        placeholder="请输入标签库 ID"
-        :disabled="type === 'update'"
+        v-model="form.labelCollection"
+        placeholder="请输入标签集 ID"
       />
     </el-form-item>
-    <el-form-item label="标签组 ID：" prop="labelsList">
-      <el-select
-        class="select-common"
-        v-model="form.labelsList"
-        multiple
-        placeholder="请选择"
-      >
-        <el-option
-          v-for="item in labelsListOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </el-form-item>
+    <el-form-item label="路径：" prop="path">
+      <el-input
+        class="input-common"
+        v-model="form.path"
+        placeholder="请输入路径"
+        :disabled="type === 'update'"
+      />
+    </el-form-item> -->
     <el-form-item>
       <el-button :loading="isLoading" @click="back">
         返回
@@ -97,7 +89,7 @@ import {
   onBeforeMount,
   defineComponent
 } from 'vue';
-import { labelCollectionHttp, labelCollectionParams } from '@/api/labelCollection';
+import { pestHttp, pestParams } from '@/api/pest';
 import { useRouter } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
 
@@ -110,43 +102,16 @@ export default defineComponent({
     onBeforeMount(() => {
       getParams();
     });
-    const labelsListOptions: Array<any> = reactive([
-      {
-        value: 1001,
-        label: '选项一'
-      },
-      {
-        value: 1002,
-        label: '选项二'
-      },
-      {
-        value: 1003,
-        label: '选项三'
-      },
-      {
-        value: 1004,
-        label: '选项四'
-      },
-      {
-        value: 1005,
-        label: '选项五'
-      }
-    ]);
     // 表单内容
     const state = reactive({
       form: {
         id: undefined,
-        name: undefined,
-        labelDbId: undefined,
-        labelsList: undefined
-      } as labelCollectionParams,
+        name: undefined
+      } as pestParams,
       formRef: ref(),
       rules: {
         name: [
           { required: true, message: '请输入名称', trigger: ['blur', 'change'] }
-        ],
-        labelDbId: [
-          { required: true, message: '请输入标签库 ID', trigger: ['blur', 'change'] }
         ]
       }
     });
@@ -183,7 +148,7 @@ export default defineComponent({
         if (valid) {
           isLoading.value = true;
           if (type.value === 'add') {
-            labelCollectionHttp.createLabelCollection(state.form)
+            pestHttp.createPest(state.form)
               .then((response: any) => {
                 console.log(response);
                 // 成功后进入成功界面
@@ -193,7 +158,7 @@ export default defineComponent({
                 isLoading.value = false;
               });
           } else if (type.value === 'update') {
-            labelCollectionHttp.createLabelCollection(state.form)
+            pestHttp.updatePest(state.form)
               .then((response: any) => {
                 console.log(response);
                 status.value = 'complete';
@@ -209,8 +174,8 @@ export default defineComponent({
     const back = () => {
       console.log('back');
       router.push({
-        path: '/admin/labelSet',
-        name: 'labelSet',
+        path: '/admin/dataSetInfo',
+        name: 'dataSetInfo',
         params: {
           type: 'refresh'
         }
@@ -232,8 +197,7 @@ export default defineComponent({
       status,
       submit,
       back,
-      keep,
-      labelsListOptions
+      keep
     };
   }
 });
@@ -251,9 +215,6 @@ export default defineComponent({
   flex-direction: column;
 }
 .input-common {
-  width: 30vw;
-}
-.select-common {
   width: 30vw;
 }
 </style>
