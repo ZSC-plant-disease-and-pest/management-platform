@@ -5,7 +5,7 @@ export interface labelCollectionParams extends searchByInfo {
   // id
   id?: number
 
-  // 名称
+  // 标签集名称
   name?: string
 
   // 标签库 id
@@ -37,11 +37,12 @@ export class labelCollectionHttp {
   static searchLabelCollection (params: (labelCollectionParams | null)) {
     return http({
       url: '/api/labelcollection/search',
-      method: 'get'
+      method: 'get',
+      params
     });
   }
 
-  // 通过 ID 查询数据集
+  // 通过 ID 查询标签集
   static searchLabelCollectionById (id: number) {
     return http({
       url: `/api/labelcollection/search/${id}`,

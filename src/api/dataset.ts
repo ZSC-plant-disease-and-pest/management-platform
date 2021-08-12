@@ -5,7 +5,7 @@ export interface datasetParams extends searchByInfo {
   // id
   id?: number
 
-  // 名称
+  // 数据集名称
   name?: string
 
   // 标签集 Id
