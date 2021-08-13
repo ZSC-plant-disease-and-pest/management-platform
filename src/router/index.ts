@@ -23,6 +23,7 @@ const plantData = () => import('@/views/admin/plant-database/plant-data/index.vu
 // 3 病虫害数据库
 // 3.1 病害管理
 const diseaseManagement = () => import('@/views/admin/pest-database/disease-management/index.vue');
+const diseaseManagementAddUpdate = () => import('@/views/admin/pest-database/disease-management/components/add-update.vue');
 // 3.2 虫害管理
 const pestManagement = () => import('@/views/admin/pest-database/pest-management/index.vue');
 const pestManagementAddUpdate = () => import('@/views/admin/pest-database/pest-management/components/add-update.vue');
@@ -83,6 +84,22 @@ const routes: Array<RouteRecordRaw> = [
         path: 'diseaseManagement',
         name: 'diseaseManagement',
         component: diseaseManagement
+      },
+      {
+        path: 'diseaseManagement/add',
+        name: 'diseaseManagementAdd',
+        component: diseaseManagementAddUpdate,
+        meta: {
+          type: 'add'
+        }
+      },
+      {
+        path: 'diseaseManagement/update',
+        name: 'diseaseManagementUpdate',
+        component: diseaseManagementAddUpdate,
+        meta: {
+          type: 'update'
+        }
       },
       {
         path: 'pestManagement',
