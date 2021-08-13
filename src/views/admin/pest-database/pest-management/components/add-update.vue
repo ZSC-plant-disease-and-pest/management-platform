@@ -2,10 +2,10 @@
   <!-- <el-page-header @back="back" content="详情页面"></el-page-header> -->
   <el-header class="form_title-common">
     <span v-show="type === 'add'">
-      新增数据集
+      新增虫害
     </span>
     <span v-show="type === 'update'">
-      更新数据集
+      更新虫害
     </span>
   </el-header>
   <el-form
@@ -14,7 +14,7 @@
     size="small"
     :rules="rules"
     :model="form"
-    label-width="100px"
+    label-width="140px"
     v-show="status === 'incomplete'"
   >
     <el-form-item label="ID：" prop="id">
@@ -25,28 +25,99 @@
         :disabled="true"
       />
     </el-form-item>
-    <el-form-item label="名称：" prop="name">
+    <el-form-item label="虫害名称：" prop="name">
       <el-input
         class="input-common"
         v-model="form.name"
-        placeholder="请输入名称"
+        placeholder="请输入虫害名称"
       />
     </el-form-item>
-    <!-- <el-form-item label="标签集 ID：" prop="labelCollection">
+    <el-form-item label="危害部位：" prop="damagedParts">
+      <el-select
+        class="select-common"
+        v-model="damagedPartsSelected"
+        multiple
+        placeholder="请选择"
+        @change="damaged_partsChange"
+      >
+        <el-option
+          v-for="item in damaged_partsOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="危害表现：" prop="description">
+      <el-select
+        class="select-common"
+        v-model="descriptionSelected"
+        multiple
+        placeholder="请选择"
+        @change="descriptionChange"
+      >
+        <el-option
+          v-for="item in descriptionOptions"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="发病季节：" prop="seasons">
       <el-input
+        type="textarea"
+        :autosize="{ minRows: 2 }"
         class="input-common"
-        v-model="form.labelCollection"
-        placeholder="请输入标签集 ID"
+        v-model="form.seasons"
+        placeholder="请输入发病季节"
       />
     </el-form-item>
-    <el-form-item label="路径：" prop="path">
+    <el-form-item label="分布地域：" prop="regions">
       <el-input
+        type="textarea"
+        :autosize="{ minRows: 2 }"
         class="input-common"
-        v-model="form.path"
-        placeholder="请输入路径"
-        :disabled="type === 'update'"
+        v-model="form.regions"
+        placeholder="请输入分布地域"
       />
-    </el-form-item> -->
+    </el-form-item>
+    <el-form-item label="虫害概述：" prop="overview">
+      <el-input
+        type="textarea"
+        :autosize="{ minRows: 2 }"
+        class="input-common"
+        v-model="form.overview"
+        placeholder="请输入虫害概述"
+      />
+    </el-form-item>
+    <el-form-item label="形态特征：" prop="appearance">
+      <el-input
+        type="textarea"
+        :autosize="{ minRows: 2 }"
+        class="input-common"
+        v-model="form.appearance"
+        placeholder="请输入形态特征"
+      />
+    </el-form-item>
+    <el-form-item label="发病规律：" prop="regularity">
+      <el-input
+        type="textarea"
+        :autosize="{ minRows: 2 }"
+        class="input-common"
+        v-model="form.regularity"
+        placeholder="请输入发病规律"
+      />
+    </el-form-item>
+    <el-form-item label="治理建议：" prop="suggestion">
+      <el-input
+        type="textarea"
+        :autosize="{ minRows: 2 }"
+        class="input-common"
+        v-model="form.suggestion"
+        placeholder="请输入治理建议"
+      />
+    </el-form-item>
     <el-form-item>
       <el-button :loading="isLoading" @click="back">
         返回
@@ -87,7 +158,8 @@ import {
   toRefs,
   reactive,
   onBeforeMount,
-  defineComponent
+  defineComponent,
+  computed
 } from 'vue';
 import { pestHttp, pestParams } from '@/api/pest';
 import { useRouter } from 'vue-router';
@@ -106,14 +178,64 @@ export default defineComponent({
     const state = reactive({
       form: {
         id: undefined,
-        name: undefined
+        name: undefined,
+        overview: undefined,
+        appearance: undefined,
+        damagedParts: undefined,
+        description: undefined,
+        regularity: undefined,
+        seasons: undefined,
+        regions: undefined,
+        suggestion: undefined
       } as pestParams,
       formRef: ref(),
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: ['blur', 'change'] }
+          { required: true, message: '请输入虫害名称', trigger: ['blur', 'change'] }
+        ],
+        damagedParts: [{
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            if (state.damagedPartsSelected.length === 0) {
+              callback(new Error('请选择危害部位'));
+            } else {
+              callback();
+            }
+          },
+          trigger: ['blur', 'change']
+        }],
+        description: [{
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            if (state.descriptionSelected.length === 0) {
+              callback(new Error('请选择危害表现'));
+            } else {
+              callback();
+            }
+          },
+          trigger: ['blur', 'change']
+        }],
+        seasons: [
+          { required: true, message: '请输入发病季节', trigger: ['blur', 'change'] }
+        ],
+        regions: [
+          { required: true, message: '请输入分布地域', trigger: ['blur', 'change'] }
+        ],
+        overview: [
+          { required: true, message: '请输入虫害概述', trigger: ['blur', 'change'] }
+        ],
+        appearance: [
+          { required: true, message: '请输入形态特征', trigger: ['blur', 'change'] }
+        ],
+        regularity: [
+          { required: true, message: '请输入发病规律', trigger: ['blur', 'change'] }
+        ],
+        suggestion: [
+          { required: true, message: '请输入治理建议', trigger: ['blur', 'change'] }
         ]
-      }
+      },
+      descriptionSelected: [] as Array<any>,
+      damagedPartsSelected: [] as Array<any>
     });
     // 界面类型：add 新增，update 更新
     const type = ref('');
@@ -130,6 +252,8 @@ export default defineComponent({
         if (router.currentRoute.value.params.id !== undefined) {
           const { ...tempParams } = router.currentRoute.value.params;
           state.form = tempParams;
+          state.damagedPartsSelected = state.form.damagedParts!.split(',');
+          state.descriptionSelected = state.form.description!.split(',');
         } else {
           // 非法访问更新界面
           illegalVisit();
@@ -140,6 +264,54 @@ export default defineComponent({
         }
       }
     };
+    const damaged_partsOptions: Array<any> = reactive([
+      {
+        value: 'root',
+        label: '根'
+      },
+      {
+        value: 'stem',
+        label: '茎'
+      },
+      {
+        value: 'leaf',
+        label: '叶'
+      },
+      {
+        value: 'flower',
+        label: '花'
+      },
+      {
+        value: 'fruit',
+        label: '果实'
+      }
+    ]);
+    const descriptionOptions: Array<any> = reactive([
+      {
+        value: 'corruption',
+        label: '腐败'
+      },
+      {
+        value: 'discoloration',
+        label: '变色'
+      },
+      {
+        value: 'necrosis',
+        label: '坏死'
+      },
+      {
+        value: 'wilt',
+        label: '萎蔫'
+      },
+      {
+        value: 'malformation',
+        label: '畸形'
+      },
+      {
+        value: 'eating',
+        label: '被害虫食用'
+      }
+    ]);
     // 提交表单
     const submit = () => {
       console.log('submit');
@@ -174,8 +346,8 @@ export default defineComponent({
     const back = () => {
       console.log('back');
       router.push({
-        path: '/admin/dataSetInfo',
-        name: 'dataSetInfo',
+        path: '/admin/pestManagement',
+        name: 'pestManagement',
         params: {
           type: 'refresh'
         }
@@ -188,6 +360,16 @@ export default defineComponent({
       state.formRef.resetFields();
       // 返回到新增界面
       status.value = 'incomplete';
+      state.descriptionSelected = [];
+      state.damagedPartsSelected = [];
+    };
+    const damaged_partsChange = (params: any) => {
+      state.form.damagedParts = state.damagedPartsSelected.join(',');
+      console.log(params)
+    };
+    const descriptionChange = (params: any) => {
+      state.form.description = state.descriptionSelected.join(',');
+      console.log(params)
     };
     return {
       // 解构后创建对象的响应式数据
@@ -197,7 +379,11 @@ export default defineComponent({
       status,
       submit,
       back,
-      keep
+      keep,
+      damaged_partsOptions,
+      descriptionOptions,
+      damaged_partsChange,
+      descriptionChange
     };
   }
 });
@@ -215,6 +401,9 @@ export default defineComponent({
   flex-direction: column;
 }
 .input-common {
+  width: 30vw;
+}
+.select-common {
   width: 30vw;
 }
 </style>

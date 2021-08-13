@@ -42,7 +42,7 @@ export default defineComponent({
     const router = useRouter();
     // 渲染前
     onBeforeMount(() => {
-      getDataset();
+      getPest();
     });
     // 发生更新时
     onUpdated(() => {
@@ -50,7 +50,7 @@ export default defineComponent({
       if (router.currentRoute.value.params.type === 'refresh') {
         // 是的话则重新请求数据
         router.currentRoute.value.params.type = '';
-        getDataset();
+        getPest();
       }
     });
     // 是否加载
@@ -67,7 +67,7 @@ export default defineComponent({
       size: 10
     } as pestParams);
     // 请求数据集
-    const getDataset = () => {
+    const getPest = () => {
       loading.value = true;
       pestHttp.searchPest(pestParams)
         .then((response: any) => {
@@ -99,7 +99,7 @@ export default defineComponent({
       },
       {
         prop: 'name',
-        label: '名称',
+        label: '虫害名称',
         width: 'auto'
       }
     ]);
@@ -112,7 +112,7 @@ export default defineComponent({
         // 排序规则
         pestParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
       }
-      getDataset();
+      getPest();
     };
     // 新增
     const add = (data: any) => {
@@ -132,7 +132,7 @@ export default defineComponent({
         pestHttp.deletePest(selectedIds.join(','))
           .then(() => {
             ElMessage.success('删除成功');
-            getDataset();
+            getPest();
           })
           .finally(() => {
             loading.value = false;
@@ -158,7 +158,7 @@ export default defineComponent({
           pestParams.name = data[index].value === '' ? undefined : data[index].value;
         }
       }
-      getDataset();
+      getPest();
     };
     // 重置搜索框
     const reset = () => {
@@ -166,12 +166,13 @@ export default defineComponent({
         searchList[index].value = '';
         pestParams.name = undefined;
       }
+      getPest();
     };
     // 搜索框信息
     const searchList = reactive([
       {
         name: 'name',
-        placeholder: '名称',
+        placeholder: '虫害名称',
         value: ''
       }
     ]);
@@ -181,13 +182,13 @@ export default defineComponent({
       pestParams.page = 0;
       size.value = newSize;
       page.value = 1;
-      getDataset();
+      getPest();
     };
     // 表格页数改变
     const handleCurrentChange = (newPage: any) => {
       pestParams.page = newPage;
       page.value = newPage + 1;
-      getDataset();
+      getPest();
     };
     // 导出
     return {
