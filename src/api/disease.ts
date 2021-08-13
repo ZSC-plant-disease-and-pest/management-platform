@@ -12,7 +12,7 @@ export interface diseaseParams extends searchByInfo {
   overview?: string
 
   // 危害部位
-  damaged_parts?: string
+  damagedParts?: string
 
   // 危害表现
   description?: string
