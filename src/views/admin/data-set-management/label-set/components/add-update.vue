@@ -14,7 +14,7 @@
     size="small"
     :rules="rules"
     :model="form"
-    label-width="100px"
+    label-width="140px"
     v-show="status === 'incomplete'"
   >
     <el-form-item label="ID：" prop="id">
@@ -25,11 +25,11 @@
         :disabled="true"
       />
     </el-form-item>
-    <el-form-item label="名称：" prop="name">
+    <el-form-item label="标签集名称：" prop="name">
       <el-input
         class="input-common"
         v-model="form.name"
-        placeholder="请输入名称"
+        placeholder="请输入标签集名称"
       />
     </el-form-item>
     <el-form-item label="标签库 ID：" prop="labelDbId">
@@ -51,8 +51,8 @@
           v-for="item in labelsListOptions"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
-        </el-option>
+          :value="item.value"
+        />
       </el-select>
     </el-form-item>
     <el-form-item>

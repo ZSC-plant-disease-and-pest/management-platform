@@ -99,7 +99,7 @@ export default defineComponent({
       },
       {
         prop: 'name',
-        label: '名称',
+        label: '标签集名称',
         width: 'auto'
       },
       {
@@ -171,12 +171,13 @@ export default defineComponent({
         searchList[index].value = '';
         labelCollectionParams.name = undefined;
       }
+      getLabelCollection();
     };
     // 搜索框信息
     const searchList = reactive([
       {
         name: 'name',
-        placeholder: '名称',
+        placeholder: '标签集名称',
         value: ''
       }
     ]);
