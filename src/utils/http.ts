@@ -32,7 +32,7 @@ service.interceptors.response.use(
 );
 
 export default function request (reqData: any): any {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const { ...tempData } = reqData;
     tempData.timeoutErrorMessage = 'Network Error';
 
@@ -70,6 +70,7 @@ export default function request (reqData: any): any {
         } else {
           result = err;
         }
+        reject(result);
         // console.log(result);
         ElMessage.error(result);
       });
