@@ -99,7 +99,7 @@ export default defineComponent({
       },
       {
         prop: 'name',
-        label: '名称',
+        label: '数据集名称',
         width: 'auto'
       },
       {
@@ -179,12 +179,13 @@ export default defineComponent({
         datasetParams.name = undefined;
         datasetParams.labelCollection = undefined;
       }
+      getDataset();
     };
     // 搜索框信息
     const searchList = reactive([
       {
         name: 'name',
-        placeholder: '名称',
+        placeholder: '数据集名称',
         value: ''
       },
       {

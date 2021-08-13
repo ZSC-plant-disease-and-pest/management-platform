@@ -14,7 +14,7 @@
     size="small"
     :rules="rules"
     :model="form"
-    label-width="100px"
+    label-width="140px"
     v-show="status === 'incomplete'"
   >
     <el-form-item label="ID：" prop="id">
@@ -25,11 +25,11 @@
         :disabled="true"
       />
     </el-form-item>
-    <el-form-item label="名称：" prop="name">
+    <el-form-item label="数据集名称：" prop="name">
       <el-input
         class="input-common"
         v-model="form.name"
-        placeholder="请输入名称"
+        placeholder="请输入数据集名称"
       />
     </el-form-item>
     <el-form-item label="标签集 ID：" prop="labelCollection">
@@ -113,7 +113,7 @@ export default defineComponent({
       formRef: ref(),
       rules: {
         name: [
-          { required: true, message: '请输入名称', trigger: ['blur', 'change'] }
+          { required: true, message: '请输入数据集名称', trigger: ['blur', 'change'] }
         ],
         labelCollection: [
           { required: true, message: '请输入标签集 ID', trigger: ['blur', 'change'] }
