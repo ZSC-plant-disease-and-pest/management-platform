@@ -38,10 +38,10 @@
         v-model="damagedPartsSelected"
         multiple
         placeholder="请选择"
-        @change="damaged_partsChange"
+        @change="damagedPartsChange"
       >
         <el-option
-          v-for="item in damaged_partsOptions"
+          v-for="item in damagedPartsOptions"
           :key="item.value"
           :label="item.label"
           :value="item.value">
@@ -158,8 +158,7 @@ import {
   toRefs,
   reactive,
   onBeforeMount,
-  defineComponent,
-  computed
+  defineComponent
 } from 'vue';
 import { pestHttp, pestParams } from '@/api/pest';
 import { useRouter } from 'vue-router';
@@ -252,8 +251,8 @@ export default defineComponent({
         if (router.currentRoute.value.params.id !== undefined) {
           const { ...tempParams } = router.currentRoute.value.params;
           state.form = tempParams;
-          state.damagedPartsSelected = state.form.damagedParts!.split(',');
-          state.descriptionSelected = state.form.description!.split(',');
+          state.damagedPartsSelected = state.form.damagedParts === undefined ? [] : state.form.damagedParts.split(',');
+          state.descriptionSelected = state.form.description === undefined ? [] : state.form.description.split(',');
         } else {
           // 非法访问更新界面
           illegalVisit();
@@ -264,7 +263,7 @@ export default defineComponent({
         }
       }
     };
-    const damaged_partsOptions: Array<any> = reactive([
+    const damagedPartsOptions: Array<any> = reactive([
       {
         value: 'root',
         label: '根'
@@ -363,13 +362,11 @@ export default defineComponent({
       state.descriptionSelected = [];
       state.damagedPartsSelected = [];
     };
-    const damaged_partsChange = (params: any) => {
+    const damagedPartsChange = () => {
       state.form.damagedParts = state.damagedPartsSelected.join(',');
-      console.log(params)
     };
-    const descriptionChange = (params: any) => {
+    const descriptionChange = () => {
       state.form.description = state.descriptionSelected.join(',');
-      console.log(params)
     };
     return {
       // 解构后创建对象的响应式数据
@@ -380,9 +377,9 @@ export default defineComponent({
       submit,
       back,
       keep,
-      damaged_partsOptions,
+      damagedPartsOptions,
       descriptionOptions,
-      damaged_partsChange,
+      damagedPartsChange,
       descriptionChange
     };
   }
