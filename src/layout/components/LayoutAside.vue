@@ -54,7 +54,7 @@ export default defineComponent({
             label: '植物分类管理'
           },
           {
-            name: 'plantData',
+            name: 'plantsData',
             label: '植物资料'
           }
         ]

@@ -18,7 +18,8 @@ const home = () => import('@/views/admin/home/index.vue');
 // 2.1 植物分类管理
 const classificationManagement = () => import('@/views/admin/plant-database/classification-management/index.vue');
 // 2.2 植物资料
-const plantData = () => import('@/views/admin/plant-database/plant-data/index.vue');
+const plantsData = () => import('@/views/admin/plant-database/plants-data/index.vue');
+const plantsDataAddUpdate = () => import('@/views/admin/plant-database/plants-data/components/add-update.vue');
 
 // 3 病虫害数据库
 // 3.1 病害管理
@@ -75,11 +76,29 @@ const routes: Array<RouteRecordRaw> = [
         name: 'classificationManagement',
         component: classificationManagement
       },
+      // 植物资料
       {
-        path: 'plantData',
-        name: 'plantData',
-        component: plantData
+        path: 'plantsData',
+        name: 'plantsData',
+        component: plantsData
       },
+      {
+        path: 'plantsData/add',
+        name: 'plantsDataAdd',
+        component: plantsDataAddUpdate,
+        meta: {
+          type: 'add'
+        }
+      },
+      {
+        path: 'plantsData/update',
+        name: 'plantsDataUpdate',
+        component: plantsDataAddUpdate,
+        meta: {
+          type: 'update'
+        }
+      },
+      // 病害管理
       {
         path: 'diseaseManagement',
         name: 'diseaseManagement',
@@ -101,6 +120,7 @@ const routes: Array<RouteRecordRaw> = [
           type: 'update'
         }
       },
+      // 虫害管理
       {
         path: 'pestManagement',
         name: 'pestManagement',
@@ -127,6 +147,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'protectiveMeasures',
         component: protectiveMeasures
       },
+      // 数据集信息管理
       {
         path: 'dataSetInfo',
         name: 'dataSetInfo',
@@ -148,6 +169,7 @@ const routes: Array<RouteRecordRaw> = [
           type: 'update'
         }
       },
+      // 标签集管理
       {
         path: 'labelSet',
         name: 'labelSet',
