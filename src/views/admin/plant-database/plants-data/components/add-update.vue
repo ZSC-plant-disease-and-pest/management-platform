@@ -281,12 +281,12 @@ export default defineComponent({
           woody: undefined,
           herbaceous: undefined
         },
-        appearance: undefined,
-        behaviour: undefined,
-        usages: undefined,
-        regions: undefined,
-        reproduceMethod: undefined,
-        cultureMethod: undefined
+        appearance: '',
+        behaviour: '',
+        usages: '',
+        regions: '',
+        reproduceMethod: '',
+        cultureMethod: ''
       } as plantsParams,
       formRef: ref(),
       rules: {
@@ -343,8 +343,11 @@ export default defineComponent({
         if (router.currentRoute.value.params.id !== undefined) {
           const { ...tempParams } = router.currentRoute.value.params;
           state.form = tempParams;
-          // state.familySelected = state.form.family === undefined ? [] : state.form.family.split(',');
-          // state.genusSelected = state.form.genus === undefined ? [] : state.form.genus.split(',');
+          state.functionSelected = state.form.plantsClassify?.function === undefined ? [] : state.form.plantsClassify.function.split(',');
+          state.enjoySelected = state.form.plantsClassify?.enjoy === undefined ? [] : state.form.plantsClassify.enjoy.split(',');
+          state.gardenSelected = state.form.plantsClassify?.garden === undefined ? [] : state.form.plantsClassify.garden.split(',');
+          state.woodySelected = state.form.plantsClassify?.woody === undefined ? [] : state.form.plantsClassify.woody.split(',');
+          state.herbaceousSelected = state.form.plantsClassify?.herbaceous === undefined ? [] : state.form.plantsClassify.herbaceous.split(',');
         } else {
           // 非法访问更新界面
           illegalVisit();

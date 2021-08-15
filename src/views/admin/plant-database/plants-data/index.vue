@@ -101,6 +101,26 @@ export default defineComponent({
         prop: 'name',
         label: '植物名称',
         width: 'auto'
+      },
+      {
+        prop: 'scientificName',
+        label: '植物学名',
+        width: 'auto'
+      },
+      {
+        prop: 'nickname',
+        label: '植物别名',
+        width: 'auto'
+      },
+      {
+        prop: 'family',
+        label: '植物科类',
+        width: 'auto'
+      },
+      {
+        prop: 'genus',
+        label: '植物属类',
+        width: 'auto'
       }
     ]);
     // 排序
