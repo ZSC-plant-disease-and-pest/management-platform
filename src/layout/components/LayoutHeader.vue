@@ -233,6 +233,7 @@ export default defineComponent({
 .header {
   height: 59px;
   display: flex;
+  justify-content: space-between;
   border-bottom: 1px solid #d8dce5;
 
   .logo {
@@ -259,13 +260,13 @@ export default defineComponent({
 
   .menu {
     position: relative;
-    left: 15%;
+    right: 4%;
     border: 0px;
   }
 
   .dropdown {
     top: 6px;
-    left: 30%;
+    right: 45px;
     position: relative;
   }
 }
