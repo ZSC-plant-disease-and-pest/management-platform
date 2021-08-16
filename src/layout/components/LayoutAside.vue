@@ -1,7 +1,7 @@
 <template>
   <el-menu
     class="aside"
-    default-active="home"
+    :default-active="defaultActive"
     background-color="#ffffff"
     text-color="#606266"
     active-text-color="#000"
@@ -28,11 +28,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
   props: {
+    path: {
+      type: String,
+      default: 'home'
+    },
     asideList: {
       type: Array,
       default: () => {
@@ -42,10 +46,27 @@ export default defineComponent({
   },
   setup (props) {
     const router = useRouter();
-    const changeRouter = (name: string) => {
-      router.push(`/admin/${name}`);
+    const defaultActive = computed(() => {
+      switch (props.path) {
+        case 'new':
+          return 'newManagement';
+        case 'disease':
+          return 'diseaseManagement';
+        case 'gardens':
+          return 'plantsManagement';
+        case 'recognition':
+          return 'diseaseImageManagement';
+        // case 'system':
+        //   return 'diseaseManagement';
+        default:
+          return '';
+      }
+    });
+    const changeRouter = (params: string) => {
+      router.push(`/admin/${props.path}/${params}`);
     };
     return {
+      defaultActive,
       changeRouter
     };
   }

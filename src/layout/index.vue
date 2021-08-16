@@ -4,8 +4,8 @@
       <LayoutHeadedr @menuSelect="menuSelect" />
     </el-header>
     <el-container style="height: calc(100vh - 60px)">
-      <el-aside style="width: 201px">
-        <LayoutAsider :asideList="asideList" />
+      <el-aside style="width: 201px" v-show="path !== 'home'">
+        <LayoutAsider :path="path" :asideList="asideList" />
       </el-aside>
       <el-main style="backgroundColor: #f2f4f6">
         <LayoutMain />
@@ -27,15 +27,17 @@ export default defineComponent({
   },
   setup () {
     const state = reactive({
+      path: 'home',
       asideList: [] as Array<any>
     });
-    const menuSelect = (params: any) => {
-      state.asideList = params;
+    const menuSelect = (path: string, asideList: Array<any>) => {
+      state.path = path;
+      state.asideList = asideList;
     };
     return {
       ...toRefs(state),
       menuSelect
-    }
+    };
   }
 });
 </script>

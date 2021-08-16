@@ -18,7 +18,7 @@
       <el-menu-item index="new">
         新闻公告
       </el-menu-item>
-      <el-menu-item index="diseases">
+      <el-menu-item index="disease">
         病虫害数据库
       </el-menu-item>
       <el-menu-item index="gardens">
@@ -75,8 +75,10 @@ export default defineComponent({
     });
     let asideList: any[] = [];
     const menuSelect = (params: any) => {
+      let path = '';
       if (params === 'home') {
         // 跳转到首页，隐藏 aside
+        path = '/admin/home';
       } else if (params === 'new') {
         asideList = [
           {
@@ -91,7 +93,8 @@ export default defineComponent({
             ]
           }
         ];
-      } else if (params === 'diseases') {
+        path = '/admin/new/newManagement';
+      } else if (params === 'disease') {
         asideList = [
           {
             name: 'disease',
@@ -116,6 +119,7 @@ export default defineComponent({
             ]
           }
         ];
+        path = '/admin/disease/diseaseManagement';
       } else if (params === 'gardens') {
         asideList = [
           {
@@ -145,6 +149,7 @@ export default defineComponent({
             ]
           }
         ];
+        path = '/admin/gardens/plantsManagement';
       } else if (params === 'recognition') {
         asideList = [
           {
@@ -200,10 +205,12 @@ export default defineComponent({
             ]
           }
         ];
+        path = '/admin/recognition/diseaseImageManagement';
       } else if (params === 'system') {
         // 空
       }
-      emit('menuSelect', asideList);
+      emit('menuSelect', params, asideList);
+      router.push(path);
     };
     return {
       logout,
