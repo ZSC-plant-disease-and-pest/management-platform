@@ -66,6 +66,58 @@ const routes: Array<RouteRecordRaw> = [
     name: 'admin',
     redirect: '/admin/home',
     component: layout,
+    meta: {
+      breadcrumb: [
+        {
+          name: '新闻公告/新闻管理',
+          path: '/admin/new/newManagement'
+        },
+        {
+          name: '病虫害数据库/植物病害管理',
+          path: '/admin/disease/diseaseManagement'
+        },
+        {
+          name: '病虫害数据库/植物虫害管理',
+          path: '/admin/disease/pestManagement'
+        },
+        {
+          name: '园林花卉/植物管理',
+          path: '/admin/gardens/plantsManagement'
+        },
+        {
+          name: '园林花卉/科属管理',
+          path: '/admin/gardens/familyManagement'
+        },
+        {
+          name: '园林花卉/盆景养护视频',
+          path: '/admin/gardens/videoManagement'
+        },
+        {
+          name: 'AI 智能识别/病害图像数据集管理',
+          path: '/admin/recognition/diseaseImageManagement'
+        },
+        {
+          name: 'AI 智能识别/虫害图像数据集管理',
+          path: '/admin/recognition/pestImageManagement'
+        },
+        {
+          name: 'AI 智能识别/植物图像数据集管理',
+          path: '/admin/recognition/plantsImageManagement'
+        },
+        {
+          name: 'AI 智能识别/图片标注管理',
+          path: '/admin/recognition/imagesTaggingManagement'
+        },
+        {
+          name: 'AI 智能识别/训练模型管理',
+          path: '/admin/recognition/trainingModelManagement'
+        },
+        {
+          name: 'AI 智能识别/训练参数配置',
+          path: '/admin/recognition/trainingParamManagement'
+        }
+      ]
+    },
     children: [
       {
         path: 'home',
@@ -75,218 +127,99 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'new/newManagement',
         name: 'newManagement',
-        component: newManagement
+        component: newManagement,
+        meta: {
+          title: '新闻管理'
+        }
       },
       {
         path: 'disease/diseaseManagement',
         name: 'diseaseManagement',
-        component: diseaseManagement
+        component: diseaseManagement,
+        meta: {
+          title: '植物病害管理'
+        }
       },
       {
         path: 'disease/pestManagement',
         name: 'pestManagement',
-        component: pestManagement
+        component: pestManagement,
+        meta: {
+          title: '植物虫害管理'
+        }
       },
       {
         path: 'gardens/plantsManagement',
         name: 'plantsManagement',
-        component: plantsManagement
+        component: plantsManagement,
+        meta: {
+          title: '植物管理'
+        }
       },
       {
         path: 'gardens/familyManagement',
         name: 'familyManagement',
-        component: familyManagement
+        component: familyManagement,
+        meta: {
+          title: '科属管理'
+        }
       },
       {
         path: 'gardens/videoManagement',
         name: 'videoManagement',
-        component: videoManagement
+        component: videoManagement,
+        meta: {
+          title: '盆景养护视频'
+        }
       },
       {
         path: 'recognition/diseaseImageManagement',
         name: 'diseaseImageManagement',
-        component: diseaseImageManagement
+        component: diseaseImageManagement,
+        meta: {
+          title: '病害图像数据集管理'
+        }
       },
       {
         path: 'recognition/pestImageManagement',
         name: 'pestImageManagement',
-        component: pestImageManagement
+        component: pestImageManagement,
+        meta: {
+          title: '虫害图像数据集管理'
+        }
       },
       {
         path: 'recognition/plantsImageManagement',
         name: 'plantsImageManagement',
-        component: plantsImageManagement
+        component: plantsImageManagement,
+        meta: {
+          title: '植物图像数据集管理'
+        }
       },
       {
         path: 'recognition/imagesTaggingManagement',
         name: 'imagesTaggingManagement',
-        component: imagesTaggingManagement
+        component: imagesTaggingManagement,
+        meta: {
+          title: '图片标注管理'
+        }
       },
       {
         path: 'recognition/trainingModelManagement',
         name: 'trainingModelManagement',
-        component: trainingModelManagement
+        component: trainingModelManagement,
+        meta: {
+          title: '训练模型管理'
+        }
       },
       {
         path: 'recognition/trainingParamManagement',
         name: 'trainingParamManagement',
-        component: trainingParamManagement
+        component: trainingParamManagement,
+        meta: {
+          title: '训练参数配置'
+        }
       }
-      // {
-      //   path: 'home',
-      //   name: 'home',
-      //   component: home
-      // },
-      // {
-      //   path: 'classificationManagement',
-      //   name: 'classificationManagement',
-      //   component: classificationManagement
-      // },
-      // // 植物资料
-      // {
-      //   path: 'plantsData',
-      //   name: 'plantsData',
-      //   component: plantsData
-      // },
-      // {
-      //   path: 'plantsData/add',
-      //   name: 'plantsDataAdd',
-      //   component: plantsDataAddUpdate,
-      //   meta: {
-      //     type: 'add'
-      //   }
-      // },
-      // {
-      //   path: 'plantsData/update',
-      //   name: 'plantsDataUpdate',
-      //   component: plantsDataAddUpdate,
-      //   meta: {
-      //     type: 'update'
-      //   }
-      // },
-      // // 病害管理
-      // {
-      //   path: 'diseaseManagement',
-      //   name: 'diseaseManagement',
-      //   component: diseaseManagement
-      // },
-      // {
-      //   path: 'diseaseManagement/add',
-      //   name: 'diseaseManagementAdd',
-      //   component: diseaseManagementAddUpdate,
-      //   meta: {
-      //     type: 'add'
-      //   }
-      // },
-      // {
-      //   path: 'diseaseManagement/update',
-      //   name: 'diseaseManagementUpdate',
-      //   component: diseaseManagementAddUpdate,
-      //   meta: {
-      //     type: 'update'
-      //   }
-      // },
-      // // 虫害管理
-      // {
-      //   path: 'pestManagement',
-      //   name: 'pestManagement',
-      //   component: pestManagement
-      // },
-      // {
-      //   path: 'pestManagement/add',
-      //   name: 'pestManagementAdd',
-      //   component: pestManagementAddUpdate,
-      //   meta: {
-      //     type: 'add'
-      //   }
-      // },
-      // {
-      //   path: 'pestManagement/update',
-      //   name: 'pestManagementUpdate',
-      //   component: pestManagementAddUpdate,
-      //   meta: {
-      //     type: 'update'
-      //   }
-      // },
-      // {
-      //   path: 'protectiveMeasures',
-      //   name: 'protectiveMeasures',
-      //   component: protectiveMeasures
-      // },
-      // // 数据集信息管理
-      // {
-      //   path: 'dataSetInfo',
-      //   name: 'dataSetInfo',
-      //   component: dataSetInfo
-      // },
-      // {
-      //   path: 'dataSetInfo/add',
-      //   name: 'dataSetInfoAdd',
-      //   component: dataSetInfoAddUpdate,
-      //   meta: {
-      //     type: 'add'
-      //   }
-      // },
-      // {
-      //   path: 'dataSetInfo/update',
-      //   name: 'dataSetInfoUpdate',
-      //   component: dataSetInfoAddUpdate,
-      //   meta: {
-      //     type: 'update'
-      //   }
-      // },
-      // // 标签集管理
-      // {
-      //   path: 'labelSet',
-      //   name: 'labelSet',
-      //   component: labelSet
-      // },
-      // {
-      //   path: 'labelSet/add',
-      //   name: 'labelSetAdd',
-      //   component: labelSetAddUpdate,
-      //   meta: {
-      //     type: 'add'
-      //   }
-      // },
-      // {
-      //   path: 'labelSet/update',
-      //   name: 'labelSetUpdate',
-      //   component: labelSetAddUpdate,
-      //   meta: {
-      //     type: 'update'
-      //   }
-      // },
-      // {
-      //   path: 'pictureManagement',
-      //   name: 'pictureManagement',
-      //   component: pictureManagement
-      // },
-      // {
-      //   path: 'pictureManagement/add',
-      //   name: 'pictureManagementAdd',
-      //   component: pictureAddUpdate
-      // },
-      // {
-      //   path: 'pictureManagement/update',
-      //   name: 'pictureManagementUpdate',
-      //   component: pictureAddUpdate
-      // },
-      // {
-      //   path: 'pictureTagging',
-      //   name: 'pictureTagging',
-      //   component: pictureTagging
-      // },
-      // {
-      //   path: 'versionManagement',
-      //   name: 'versionManagement',
-      //   component: versionManagement
-      // },
-      // {
-      //   path: 'test',
-      //   name: 'test',
-      //   component: test
-      // }
     ]
   }
 ];

@@ -8,14 +8,18 @@
         <LayoutAsider :path="path" :asideList="asideList" />
       </el-aside>
       <el-main style="backgroundColor: #f2f4f6">
-        <LayoutMain />
+        <LayoutMain :path="path" />
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from 'vue';
+import {
+  defineComponent,
+  reactive,
+  toRefs
+} from 'vue';
 import LayoutHeadedr from '@/layout/components/LayoutHeader.vue';
 import LayoutAsider from '@/layout/components/LayoutAside.vue';
 import LayoutMain from '@/layout/components/LayoutMain.vue';
@@ -26,12 +30,16 @@ export default defineComponent({
     LayoutMain
   },
   setup () {
+    // 生成响应式对象
     const state = reactive({
       path: 'home',
       asideList: [] as Array<any>
     });
+    // 头部菜单被点击
     const menuSelect = (path: string, asideList: Array<any>) => {
+      // 被选中头部菜单的路径
       state.path = path;
+      // 侧边导航栏列表
       state.asideList = asideList;
     };
     return {

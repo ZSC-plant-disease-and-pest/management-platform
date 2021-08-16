@@ -61,25 +61,30 @@ import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
+  // 子传父事件定义
   emits: ['menuSelect'],
   setup (props, { emit }) {
     const router = useRouter();
+    // 退出登录
     const logout = () => {
-      console.log('logout');
       router.push('/login');
       ElMessage.success('退出成功');
     };
+    // 静态头部名称(后面改成登录名称)
     const avatarColor = computed(() => {
       const colorArr = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
       return colorArr[Math.floor(Math.random() * 4)];
     });
+    // 侧边导航栏列表
     let asideList: any[] = [];
+    // 头部菜单被选择
     const menuSelect = (params: any) => {
       let path = '';
       if (params === 'home') {
         // 跳转到首页，隐藏 aside
         path = '/admin/home';
       } else if (params === 'new') {
+        // 侧边导航栏列表
         asideList = [
           {
             name: 'new',
@@ -93,6 +98,7 @@ export default defineComponent({
             ]
           }
         ];
+        // 根据头部路径(param = 'new'),跳转到他的第一个子页面
         path = '/admin/new/newManagement';
       } else if (params === 'disease') {
         asideList = [
@@ -209,7 +215,9 @@ export default defineComponent({
       } else if (params === 'system') {
         // 空
       }
+      // params 是头部路径
       emit('menuSelect', params, asideList);
+      // 点击后默认跳到头部路径的第一个子页面
       router.push(path);
     };
     return {
