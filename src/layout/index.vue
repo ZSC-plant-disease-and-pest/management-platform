@@ -23,6 +23,8 @@ import {
 import LayoutHeadedr from '@/layout/components/LayoutHeader.vue';
 import LayoutAsider from '@/layout/components/LayoutAside.vue';
 import LayoutMain from '@/layout/components/LayoutMain.vue';
+import { useRoute } from 'vue-router';
+
 export default defineComponent({
   components: {
     LayoutHeadedr,
@@ -30,9 +32,10 @@ export default defineComponent({
     LayoutMain
   },
   setup () {
+    const route = useRoute();
     // 生成响应式对象
     const state = reactive({
-      path: 'home',
+      path: route.path.split('/')[2],
       asideList: [] as Array<any>
     });
     // 头部菜单被点击

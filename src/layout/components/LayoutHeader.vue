@@ -9,7 +9,7 @@
     <el-menu
       class="menu"
       mode="horizontal"
-      default-active="home"
+      :default-active="defaultActive"
       @select="menuSelect"
     >
       <el-menu-item index="home">
@@ -56,15 +56,25 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, onBeforeMount, ref } from 'vue';
 import { ElMessage } from 'element-plus';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 export default defineComponent({
   // 子传父事件定义
   emits: ['menuSelect'],
   setup (props, { emit }) {
+    const route = useRoute();
     const router = useRouter();
+    onBeforeMount(() => {
+      // 头部菜单路径
+      const path = route.path.split('/')[2];
+      if (path) {
+        menuSelect(path);
+        defaultActive.value = path;
+      }
+    });
+    const defaultActive = ref('');
     // 退出登录
     const logout = () => {
       router.push('/login');
@@ -98,7 +108,7 @@ export default defineComponent({
             ]
           }
         ];
-        // 根据头部路径(param = 'new'),跳转到他的第一个子页面
+        // 根据头部菜单路径(param = 'new'),跳转到他的第一个子页面
         path = '/admin/new/newManagement';
       } else if (params === 'disease') {
         asideList = [
@@ -215,12 +225,13 @@ export default defineComponent({
       } else if (params === 'system') {
         // 空
       }
-      // params 是头部路径
+      // params 是头部菜单路径
       emit('menuSelect', params, asideList);
-      // 点击后默认跳到头部路径的第一个子页面
+      // 点击后默认跳到头部菜单路径的第一个子页面
       router.push(path);
     };
     return {
+      defaultActive,
       logout,
       avatarColor,
       menuSelect

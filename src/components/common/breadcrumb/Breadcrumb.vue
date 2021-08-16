@@ -13,6 +13,7 @@
 <script lang="ts">
 import {
   defineComponent,
+  onBeforeMount,
   reactive,
   toRefs,
   watch
@@ -22,6 +23,11 @@ import { useRoute } from 'vue-router';
 export default defineComponent({
   setup () {
     const route = useRoute();
+    onBeforeMount(() => {
+      if (route.path.split('/')[1] === 'admin') {
+        state.getBreadcrumb();
+      }
+    });
     const state = reactive({
       breadcrumbs: [] as Array<any>,
       getBreadcrumb: () => {
