@@ -26,6 +26,7 @@ const pestManagement = () => import('@/views/admin/disease/pest/pestManagement/i
 // 4 园林花卉
 // gardens/plantsManagement 植物管理
 const plantsManagement = () => import('@/views/admin/gardens/plants/plantsManagement/index.vue');
+const plantsManagementAddUpdate = () => import('@/views/admin/gardens/plants/plantsManagement/components/add-update.vue');
 // gardens/familyManagement 科属管理
 const familyManagement = () => import('@/views/admin/gardens/plants/familyManagement/index.vue');
 
@@ -85,6 +86,14 @@ const routes: Array<RouteRecordRaw> = [
           path: '/admin/gardens/plantsManagement'
         },
         {
+          name: '园林花卉/植物管理/新增',
+          path: '/admin/gardens/plantsManagement/add'
+        },
+        {
+          name: '园林花卉/植物管理/编辑',
+          path: '/admin/gardens/plantsManagement/update'
+        },
+        {
           name: '园林花卉/科属管理',
           path: '/admin/gardens/familyManagement'
         },
@@ -127,98 +136,72 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'new/newManagement',
         name: 'newManagement',
-        component: newManagement,
-        meta: {
-          title: '新闻管理'
-        }
+        component: newManagement
       },
       {
         path: 'disease/diseaseManagement',
         name: 'diseaseManagement',
-        component: diseaseManagement,
-        meta: {
-          title: '植物病害管理'
-        }
+        component: diseaseManagement
       },
       {
         path: 'disease/pestManagement',
         name: 'pestManagement',
-        component: pestManagement,
-        meta: {
-          title: '植物虫害管理'
-        }
+        component: pestManagement
       },
       {
         path: 'gardens/plantsManagement',
         name: 'plantsManagement',
-        component: plantsManagement,
-        meta: {
-          title: '植物管理'
-        }
+        component: plantsManagement
+      },
+      {
+        path: 'gardens/plantsManagement/add',
+        name: 'plantsManagementAdd',
+        component: plantsManagementAddUpdate
+      },
+      {
+        path: 'gardens/plantsManagement/update',
+        name: 'plantsManagementUpdate',
+        component: plantsManagementAddUpdate
       },
       {
         path: 'gardens/familyManagement',
         name: 'familyManagement',
-        component: familyManagement,
-        meta: {
-          title: '科属管理'
-        }
+        component: familyManagement
       },
       {
         path: 'gardens/videoManagement',
         name: 'videoManagement',
-        component: videoManagement,
-        meta: {
-          title: '盆景养护视频'
-        }
+        component: videoManagement
       },
       {
         path: 'recognition/diseaseImageManagement',
         name: 'diseaseImageManagement',
-        component: diseaseImageManagement,
-        meta: {
-          title: '病害图像数据集管理'
-        }
+        component: diseaseImageManagement
       },
       {
         path: 'recognition/pestImageManagement',
         name: 'pestImageManagement',
-        component: pestImageManagement,
-        meta: {
-          title: '虫害图像数据集管理'
-        }
+        component: pestImageManagement
       },
       {
         path: 'recognition/plantsImageManagement',
         name: 'plantsImageManagement',
-        component: plantsImageManagement,
-        meta: {
-          title: '植物图像数据集管理'
-        }
+        component: plantsImageManagement
       },
       {
         path: 'recognition/imagesTaggingManagement',
         name: 'imagesTaggingManagement',
-        component: imagesTaggingManagement,
-        meta: {
-          title: '图片标注管理'
-        }
+        component: imagesTaggingManagement
       },
       {
         path: 'recognition/trainingModelManagement',
         name: 'trainingModelManagement',
-        component: trainingModelManagement,
-        meta: {
-          title: '训练模型管理'
-        }
+        component: trainingModelManagement
       },
       {
         path: 'recognition/trainingParamManagement',
         name: 'trainingParamManagement',
-        component: trainingParamManagement,
-        meta: {
-          title: '训练参数配置'
-        }
+        component: trainingParamManagement
       }
     ]
   }
