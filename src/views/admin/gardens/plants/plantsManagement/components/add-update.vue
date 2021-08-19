@@ -8,211 +8,225 @@
     label-width="140px"
     v-show="status === 'incomplete'"
   >
-    <el-form-item label="ID：" prop="id">
-      <el-input
-        class="input-common"
-        v-model="form.id"
-        placeholder="自动生成"
-        :disabled="true"
-      />
-    </el-form-item>
-    <el-form-item label="植物名称：" prop="name">
-      <el-input
-        class="input-common"
-        v-model="form.name"
-        placeholder="请输入植物名称"
-      />
-    </el-form-item>
-    <el-form-item label="植物学名：" prop="scientificName">
-      <el-input
-        class="input-common"
-        v-model="form.scientificName"
-        placeholder="请输入植物学名"
-      />
-    </el-form-item>
-    <el-form-item label="植物别名：" prop="nickname">
-      <el-input
-        class="input-common"
-        v-model="form.nickname"
-        placeholder="请输入植物别名"
-      />
-    </el-form-item>
-    <el-form-item label="植物科类：" prop="family">
-      <el-select
-        class="select-common"
-        v-model="form.family"
-        placeholder="请选择"
-      >
-        <el-option
-          v-for="item in familyOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="植物属类：" prop="genus">
-      <el-select
-        class="select-common"
-        v-model="form.genus"
-        placeholder="请选择"
-      >
-        <el-option
-          v-for="item in genusOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </el-form-item>
+    <el-card class="base-card">
+      <template #header>
+        <span>
+          基础信息
+        </span>
+      </template>
+      <el-form-item label="ID：" prop="id">
+        <el-input
+          class="input-common"
+          v-model="form.id"
+          placeholder="自动生成"
+          :disabled="true"
+        />
+      </el-form-item>
+      <el-form-item label="植物名称：" prop="name">
+        <el-input
+          class="input-common"
+          v-model="form.name"
+          placeholder="请输入植物名称"
+        />
+      </el-form-item>
+      <el-form-item label="植物学名：" prop="scientificName">
+        <el-input
+          class="input-common"
+          v-model="form.scientificName"
+          placeholder="请输入植物学名"
+        />
+      </el-form-item>
+      <el-form-item label="植物别名：" prop="nickname">
+        <el-input
+          class="input-common"
+          v-model="form.nickname"
+          placeholder="请输入植物别名"
+        />
+      </el-form-item>
+      <el-form-item label="植物科类：" prop="family">
+        <el-select
+          class="select-common"
+          v-model="form.family"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in familyOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="植物属类：" prop="genus">
+        <el-select
+          class="select-common"
+          v-model="form.genus"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in genusOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+    </el-card>
+    <el-card class="detail-card">
+      <template #header>
+        <span>
+          详细信息
+        </span>
+      </template>
     <!-- 园林植物分类 -->
-    <el-form-item label="植物功能性状：" prop="function">
-      <el-select
-        class="select-common"
-        v-model="functionSelected"
-        multiple
-        placeholder="请选择"
-        @change="functionChange"
-      >
-        <el-option
-          v-for="item in functionOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="植物观赏特性：" prop="enjoy">
-      <el-select
-        class="select-common"
-        v-model="enjoySelected"
-        multiple
-        placeholder="请选择"
-        @change="enjoyChange"
-      >
-        <el-option
-          v-for="item in enjoyOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="园林植物分类：" prop="garden">
-      <el-select
-        class="select-common"
-        v-model="gardenSelected"
-        multiple
-        placeholder="请选择"
-        @change="gardenChange"
-      >
-        <el-option
-          v-for="item in gardenOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="木本植物性状：" prop="woody">
-      <el-select
-        class="select-common"
-        v-model="woodySelected"
-        multiple
-        placeholder="请选择"
-        @change="woodyChange"
-      >
-        <el-option
-          v-for="item in woodyOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="草本植物性状：" prop="herbaceous">
-      <el-select
-        class="select-common"
-        v-model="herbaceousSelected"
-        multiple
-        placeholder="请选择"
-        @change="herbaceousChange"
-      >
-        <el-option
-          v-for="item in herbaceousOptions"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <!--  -->
-    <el-form-item label="外貌形态：" prop="appearance">
-      <el-input
-        type="textarea"
-        :autosize="{ minRows: 2 }"
-        class="input-common"
-        v-model="form.appearance"
-        placeholder="请输入外貌形态"
-      />
-    </el-form-item>
-    <el-form-item label="植物习性：" prop="behaviour">
-      <el-input
-        type="textarea"
-        :autosize="{ minRows: 2 }"
-        class="input-common"
-        v-model="form.behaviour"
-        placeholder="请输入植物习性"
-      />
-    </el-form-item>
-    <el-form-item label="植物用途：" prop="usages">
-      <el-input
-        type="textarea"
-        :autosize="{ minRows: 2 }"
-        class="input-common"
-        v-model="form.usages"
-        placeholder="请输入植物用途"
-      />
-    </el-form-item>
-    <el-form-item label="地域分布：" prop="regions">
-      <el-input
-        type="textarea"
-        :autosize="{ minRows: 2 }"
-        class="input-common"
-        v-model="form.regions"
-        placeholder="请输入地域分布"
-      />
-    </el-form-item>
-    <el-form-item label="繁殖方式：" prop="reproduceMethod">
-      <el-input
-        type="textarea"
-        :autosize="{ minRows: 2 }"
-        class="input-common"
-        v-model="form.reproduceMethod"
-        placeholder="请输入繁殖方式"
-      />
-    </el-form-item>
-    <el-form-item label="栽培方式：" prop="cultureMethod">
-      <el-input
-        type="textarea"
-        :autosize="{ minRows: 2 }"
-        class="input-common"
-        v-model="form.cultureMethod"
-        placeholder="请输入栽培方式"
-      />
-    </el-form-item>
-    <el-form-item>
-      <el-button :loading="isLoading" @click="back">
-        返回
-      </el-button>
-      <el-button
-        type="primary"
-        :loading="isLoading"
-        @click="submit"
-      >
-        提交
-      </el-button>
-    </el-form-item>
+      <el-form-item label="植物功能性状：" prop="function">
+        <el-select
+          class="select-common"
+          v-model="functionSelect"
+          multiple
+          placeholder="请选择"
+          @change="functionChange"
+        >
+          <el-option
+            v-for="item in functionOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="植物观赏特性：" prop="enjoy">
+        <el-select
+          class="select-common"
+          v-model="enjoySelect"
+          multiple
+          placeholder="请选择"
+          @change="enjoyChange"
+        >
+          <el-option
+            v-for="item in enjoyOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="园林植物分类：" prop="garden">
+        <el-select
+          class="select-common"
+          v-model="gardenSelect"
+          multiple
+          placeholder="请选择"
+          @change="gardenChange"
+        >
+          <el-option
+            v-for="item in gardenOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="木本植物性状：" prop="woody">
+        <el-select
+          class="select-common"
+          v-model="woodySelect"
+          multiple
+          placeholder="请选择"
+          @change="woodyChange"
+        >
+          <el-option
+            v-for="item in woodyOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="草本植物性状：" prop="herbaceous">
+        <el-select
+          class="select-common"
+          v-model="herbaceousSelect"
+          multiple
+          placeholder="请选择"
+          @change="herbaceousChange"
+        >
+          <el-option
+            v-for="item in herbaceousOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <!--  -->
+      <el-form-item label="外貌形态：" prop="appearance">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2 }"
+          class="input-common"
+          v-model="form.appearance"
+          placeholder="请输入外貌形态"
+        />
+      </el-form-item>
+      <el-form-item label="植物习性：" prop="behaviour">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2 }"
+          class="input-common"
+          v-model="form.behaviour"
+          placeholder="请输入植物习性"
+        />
+      </el-form-item>
+      <el-form-item label="植物用途：" prop="usages">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2 }"
+          class="input-common"
+          v-model="form.usages"
+          placeholder="请输入植物用途"
+        />
+      </el-form-item>
+      <el-form-item label="地域分布：" prop="regions">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2 }"
+          class="input-common"
+          v-model="form.regions"
+          placeholder="请输入地域分布"
+        />
+      </el-form-item>
+      <el-form-item label="繁殖方式：" prop="reproduceMethod">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2 }"
+          class="input-common"
+          v-model="form.reproduceMethod"
+          placeholder="请输入繁殖方式"
+        />
+      </el-form-item>
+      <el-form-item label="栽培方式：" prop="cultureMethod">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2 }"
+          class="input-common"
+          v-model="form.cultureMethod"
+          placeholder="请输入栽培方式"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-button :loading="isLoading" @click="back">
+          返回
+        </el-button>
+        <el-button
+          type="primary"
+          :loading="isLoading"
+          @click="submit"
+        >
+          提交
+        </el-button>
+      </el-form-item>
+    </el-card>
   </el-form>
   <el-result
     icon="success"
@@ -313,11 +327,11 @@ export default defineComponent({
           trigger: ['blur', 'change']
         }]
       },
-      functionSelected: [] as Array<any>,
-      enjoySelected: [] as Array<any>,
-      gardenSelected: [] as Array<any>,
-      woodySelected: [] as Array<any>,
-      herbaceousSelected: [] as Array<any>
+      functionSelect: [] as Array<any>,
+      enjoySelect: [] as Array<any>,
+      gardenSelect: [] as Array<any>,
+      woodySelect: [] as Array<any>,
+      herbaceousSelect: [] as Array<any>
     });
     // 界面类型：add 新增，update 更新
     const type = ref('');
@@ -334,11 +348,11 @@ export default defineComponent({
         if (router.currentRoute.value.params.id !== undefined) {
           const { ...tempParams } = router.currentRoute.value.params;
           state.form = tempParams;
-          state.functionSelected = state.form.plantsClassify?.function === undefined ? [] : state.form.plantsClassify.function.split(',');
-          state.enjoySelected = state.form.plantsClassify?.enjoy === undefined ? [] : state.form.plantsClassify.enjoy.split(',');
-          state.gardenSelected = state.form.plantsClassify?.garden === undefined ? [] : state.form.plantsClassify.garden.split(',');
-          state.woodySelected = state.form.plantsClassify?.woody === undefined ? [] : state.form.plantsClassify.woody.split(',');
-          state.herbaceousSelected = state.form.plantsClassify?.herbaceous === undefined ? [] : state.form.plantsClassify.herbaceous.split(',');
+          state.functionSelect = state.form.plantsClassify?.function === undefined ? [] : state.form.plantsClassify.function.split(',');
+          state.enjoySelect = state.form.plantsClassify?.enjoy === undefined ? [] : state.form.plantsClassify.enjoy.split(',');
+          state.gardenSelect = state.form.plantsClassify?.garden === undefined ? [] : state.form.plantsClassify.garden.split(',');
+          state.woodySelect = state.form.plantsClassify?.woody === undefined ? [] : state.form.plantsClassify.woody.split(',');
+          state.herbaceousSelect = state.form.plantsClassify?.herbaceous === undefined ? [] : state.form.plantsClassify.herbaceous.split(',');
         } else {
           // 非法访问更新界面
           illegalVisit();
@@ -570,27 +584,27 @@ export default defineComponent({
     };
     const functionChange = () => {
       if (state.form.plantsClassify) {
-        state.form.plantsClassify.function = state.functionSelected.join(',');
+        state.form.plantsClassify.function = state.functionSelect.join(',');
       }
     };
     const enjoyChange = () => {
       if (state.form.plantsClassify) {
-        state.form.plantsClassify.function = state.enjoySelected.join(',');
+        state.form.plantsClassify.function = state.enjoySelect.join(',');
       }
     };
     const gardenChange = () => {
       if (state.form.plantsClassify) {
-        state.form.plantsClassify.garden = state.gardenSelected.join(',');
+        state.form.plantsClassify.garden = state.gardenSelect.join(',');
       }
     };
     const woodyChange = () => {
       if (state.form.plantsClassify) {
-        state.form.plantsClassify.woody = state.woodySelected.join(',');
+        state.form.plantsClassify.woody = state.woodySelect.join(',');
       }
     };
     const herbaceousChange = () => {
       if (state.form.plantsClassify) {
-        state.form.plantsClassify.herbaceous = state.herbaceousSelected.join(',');
+        state.form.plantsClassify.herbaceous = state.herbaceousSelect.join(',');
       }
     };
     return {
@@ -626,6 +640,16 @@ export default defineComponent({
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+  .base-card {
+    width: 800px;
+    margin: 0px auto 25px;
+  }
+
+  .detail-card {
+    width: 800px;
+    margin: 0 auto;
+  }
 }
 .input-common {
   width: 30vw;

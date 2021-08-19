@@ -22,6 +22,7 @@ const diseaseManagement = () => import('@/views/admin/disease/disease/diseaseMan
 const diseaseManagementAddUpdate = () => import('@/views/admin/disease/disease/diseaseManagement/components/add-update.vue');
 // disease/pestManagement 植物虫害管理
 const pestManagement = () => import('@/views/admin/disease/pest/pestManagement/index.vue');
+const pestManagementAddUpdate = () => import('@/views/admin/disease/pest/pestManagement/components/add-update.vue');
 
 // 4 园林花卉
 // gardens/plantsManagement 植物管理
@@ -32,6 +33,7 @@ const familyManagement = () => import('@/views/admin/gardens/plants/familyManage
 
 // gardens/videoManagement 盆景养护视频
 const videoManagement = () => import('@/views/admin/gardens/gardens/videoManagement/index.vue');
+const videoManagementAddUpdate = () => import('@/views/admin/gardens/gardens/videoManagement/components/add-update.vue');
 
 // 5 AI 智能识别
 // recognition/diseaseImageManagement 病害图像数据集管理
@@ -88,6 +90,14 @@ const routes: Array<RouteRecordRaw> = [
         {
           name: '病虫害数据库/植物虫害管理',
           path: '/admin/disease/pestManagement'
+        },
+        {
+          name: '病虫害数据库/植物虫害管理/新增',
+          path: '/admin/disease/pestManagement/add'
+        },
+        {
+          name: '病虫害数据库/植物虫害管理/编辑',
+          path: '/admin/disease/pestManagement/update'
         },
         {
           name: '园林花卉/植物管理',
@@ -167,6 +177,16 @@ const routes: Array<RouteRecordRaw> = [
         component: pestManagement
       },
       {
+        path: 'disease/pestManagement/add',
+        name: 'pestManagementAdd',
+        component: pestManagementAddUpdate
+      },
+      {
+        path: 'disease/pestManagement/update',
+        name: 'pestManagementUpdate',
+        component: pestManagementAddUpdate
+      },
+      {
         path: 'gardens/plantsManagement',
         name: 'plantsManagement',
         component: plantsManagement
@@ -190,6 +210,16 @@ const routes: Array<RouteRecordRaw> = [
         path: 'gardens/videoManagement',
         name: 'videoManagement',
         component: videoManagement
+      },
+      {
+        path: 'gardens/videoManagement/add',
+        name: 'videoManagementAdd',
+        component: videoManagementAddUpdate
+      },
+      {
+        path: 'gardens/videoManagement/update',
+        name: 'videoManagementUpdate',
+        component: videoManagementAddUpdate
       },
       {
         path: 'recognition/diseaseImageManagement',

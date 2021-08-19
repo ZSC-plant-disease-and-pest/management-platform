@@ -22,17 +22,17 @@
           :disabled="true"
         />
       </el-form-item>
-      <el-form-item label="病害名称：" prop="name">
+      <el-form-item label="虫害名称：" prop="name">
         <el-input
           class="input-common"
           v-model="form.name"
-          placeholder="请输入病害名称"
+          placeholder="请输入虫害名称"
         />
       </el-form-item>
       <el-form-item label="危害部位：" prop="damagedParts">
         <el-select
           class="select-common"
-          v-model="damagedPartsSelect"
+          v-model="damagedPartsSelected"
           multiple
           placeholder="请选择"
           @change="damagedPartsChange"
@@ -93,6 +93,15 @@
           class="input-common"
           v-model="form.overview"
           placeholder="请输入虫害概述"
+        />
+      </el-form-item>
+      <el-form-item label="形态特征：" prop="appearance">
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2 }"
+          class="input-common"
+          v-model="form.appearance"
+          placeholder="请输入形态特征"
         />
       </el-form-item>
       <el-form-item label="发病规律：" prop="regularity">
@@ -156,7 +165,7 @@ import {
   onBeforeMount,
   defineComponent
 } from 'vue';
-import { diseaseHttp, diseaseParams } from '@/api/disease';
+import { pestHttp, pestParams } from '@/api/pest';
 import { useRouter } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
 
@@ -175,22 +184,23 @@ export default defineComponent({
         id: undefined,
         name: undefined,
         overview: undefined,
+        appearance: undefined,
         damagedParts: undefined,
         description: undefined,
         regularity: undefined,
         seasons: undefined,
         regions: undefined,
         suggestion: undefined
-      } as diseaseParams,
+      } as pestParams,
       formRef: ref(),
       rules: {
         name: [
-          { required: true, message: '请输入病害名称', trigger: ['blur', 'change'] }
+          { required: true, message: '请输入虫害名称', trigger: ['blur', 'change'] }
         ],
         damagedParts: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
-            if (state.damagedPartsSelect.length === 0) {
+            if (state.damagedPartsSelected.length === 0) {
               callback(new Error('请选择危害部位'));
             } else {
               callback();
@@ -218,6 +228,9 @@ export default defineComponent({
         overview: [
           { required: true, message: '请输入虫害概述', trigger: ['blur', 'change'] }
         ],
+        appearance: [
+          { required: true, message: '请输入形态特征', trigger: ['blur', 'change'] }
+        ],
         regularity: [
           { required: true, message: '请输入发病规律', trigger: ['blur', 'change'] }
         ],
@@ -226,7 +239,7 @@ export default defineComponent({
         ]
       },
       descriptionSelect: [] as Array<any>,
-      damagedPartsSelect: [] as Array<any>
+      damagedPartsSelected: [] as Array<any>
     });
     // 界面类型：add 新增，update 更新
     const type = ref('');
@@ -243,7 +256,7 @@ export default defineComponent({
         if (router.currentRoute.value.params.id !== undefined) {
           const { ...tempParams } = router.currentRoute.value.params;
           state.form = tempParams;
-          state.damagedPartsSelect = state.form.damagedParts === undefined ? [] : state.form.damagedParts.split(',');
+          state.damagedPartsSelected = state.form.damagedParts === undefined ? [] : state.form.damagedParts.split(',');
           state.descriptionSelect = state.form.description === undefined ? [] : state.form.description.split(',');
         } else {
           // 非法访问更新界面
@@ -297,6 +310,10 @@ export default defineComponent({
       {
         value: 'malformation',
         label: '畸形'
+      },
+      {
+        value: 'eating',
+        label: '被害虫食用'
       }
     ]);
     // 提交表单
@@ -307,7 +324,7 @@ export default defineComponent({
         if (valid) {
           isLoading.value = true;
           if (type.value === 'add') {
-            diseaseHttp.createDisease(state.form)
+            pestHttp.createPest(state.form)
               .then((response: any) => {
                 console.log(response);
                 // 成功后进入成功界面
@@ -317,7 +334,7 @@ export default defineComponent({
                 isLoading.value = false;
               });
           } else if (type.value === 'update') {
-            diseaseHttp.updateDisease(state.form)
+            pestHttp.updatePest(state.form)
               .then((response: any) => {
                 console.log(response);
                 status.value = 'complete';
@@ -333,8 +350,8 @@ export default defineComponent({
     const back = () => {
       console.log('back');
       router.push({
-        path: '/admin/disease/diseaseManagement',
-        name: 'diseaseManagement',
+        path: '/admin/disease/pestManagement',
+        name: 'pestManagement',
         params: {
           type: 'refresh'
         }
@@ -348,10 +365,10 @@ export default defineComponent({
       // 返回到新增界面
       status.value = 'incomplete';
       state.descriptionSelect = [];
-      state.damagedPartsSelect = [];
+      state.damagedPartsSelected = [];
     };
     const damagedPartsChange = () => {
-      state.form.damagedParts = state.damagedPartsSelect.join(',');
+      state.form.damagedParts = state.damagedPartsSelected.join(',');
     };
     const descriptionChange = () => {
       state.form.description = state.descriptionSelect.join(',');

@@ -56,7 +56,7 @@ export default defineComponent({
     // 是否加载
     const loading = ref(false);
     // 表格信息的总数
-    const total = ref(null);
+    const total = ref(0);
     // 表格的页数
     const page = ref(1);
     // 表格每页的信息大小
