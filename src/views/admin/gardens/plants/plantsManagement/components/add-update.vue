@@ -14,63 +14,184 @@
           基础信息
         </span>
       </template>
-      <el-form-item label="ID：" prop="id">
-        <el-input
-          class="input-common"
-          v-model="form.id"
-          placeholder="自动生成"
-          :disabled="true"
-        />
-      </el-form-item>
-      <el-form-item label="植物名称：" prop="name">
-        <el-input
-          class="input-common"
-          v-model="form.name"
-          placeholder="请输入植物名称"
-        />
-      </el-form-item>
-      <el-form-item label="植物学名：" prop="scientificName">
-        <el-input
-          class="input-common"
-          v-model="form.scientificName"
-          placeholder="请输入植物学名"
-        />
-      </el-form-item>
-      <el-form-item label="植物别名：" prop="nickname">
-        <el-input
-          class="input-common"
-          v-model="form.nickname"
-          placeholder="请输入植物别名"
-        />
-      </el-form-item>
-      <el-form-item label="植物科类：" prop="family">
-        <el-select
-          class="select-common"
-          v-model="form.family"
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="item in familyOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="植物属类：" prop="genus">
-        <el-select
-          class="select-common"
-          v-model="form.genus"
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="item in genusOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="ID：" prop="id">
+            <el-input
+              class="input-common"
+              v-model="form.id"
+              placeholder="自动生成"
+              :disabled="true"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="植物名称：" prop="name">
+            <el-input
+              class="input-common"
+              v-model="form.name"
+              placeholder="请输入植物名称"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="植物学名：" prop="scientificName">
+            <el-input
+              class="input-common"
+              v-model="form.scientificName"
+              placeholder="请输入植物学名"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="植物别名：" prop="nickname">
+            <el-input
+              class="input-common"
+              v-model="form.nickname"
+              placeholder="请输入植物别名"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="植物科类：" prop="family">
+            <el-select
+              class="select-common"
+              v-model="form.family"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in familyOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="植物属类：" prop="genus">
+            <el-select
+              class="select-common"
+              v-model="form.genus"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in genusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-card>
+    <el-card class="base-card">
+      <template #header>
+        <span>
+          园林植物分类信息
+        </span>
+      </template>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="植物功能性状：" prop="function">
+            <el-select
+              class="select-common"
+              v-model="functionSelect"
+              multiple
+              placeholder="请选择"
+              @change="functionChange"
+            >
+              <el-option
+                v-for="item in functionOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="植物观赏特性：" prop="enjoy">
+            <el-select
+              class="select-common"
+              v-model="enjoySelect"
+              multiple
+              placeholder="请选择"
+              @change="enjoyChange"
+            >
+              <el-option
+                v-for="item in enjoyOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="园林植物分类：" prop="garden">
+            <el-select
+              class="select-common"
+              v-model="gardenSelect"
+              multiple
+              placeholder="请选择"
+              @change="gardenChange"
+            >
+              <el-option
+                v-for="item in gardenOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="木本植物性状：" prop="woody">
+            <el-select
+              class="select-common"
+              v-model="woodySelect"
+              multiple
+              placeholder="请选择"
+              @change="woodyChange"
+            >
+              <el-option
+                v-for="item in woodyOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="草本植物性状：" prop="herbaceous">
+            <el-select
+              class="select-common"
+              v-model="herbaceousSelect"
+              multiple
+              placeholder="请选择"
+              @change="herbaceousChange"
+            >
+              <el-option
+                v-for="item in herbaceousOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-card>
     <el-card class="detail-card">
       <template #header>
@@ -78,154 +199,107 @@
           详细信息
         </span>
       </template>
-    <!-- 园林植物分类 -->
-      <el-form-item label="植物功能性状：" prop="function">
-        <el-select
-          class="select-common"
-          v-model="functionSelect"
-          multiple
-          placeholder="请选择"
-          @change="functionChange"
-        >
-          <el-option
-            v-for="item in functionOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="植物观赏特性：" prop="enjoy">
-        <el-select
-          class="select-common"
-          v-model="enjoySelect"
-          multiple
-          placeholder="请选择"
-          @change="enjoyChange"
-        >
-          <el-option
-            v-for="item in enjoyOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="园林植物分类：" prop="garden">
-        <el-select
-          class="select-common"
-          v-model="gardenSelect"
-          multiple
-          placeholder="请选择"
-          @change="gardenChange"
-        >
-          <el-option
-            v-for="item in gardenOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="木本植物性状：" prop="woody">
-        <el-select
-          class="select-common"
-          v-model="woodySelect"
-          multiple
-          placeholder="请选择"
-          @change="woodyChange"
-        >
-          <el-option
-            v-for="item in woodyOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="草本植物性状：" prop="herbaceous">
-        <el-select
-          class="select-common"
-          v-model="herbaceousSelect"
-          multiple
-          placeholder="请选择"
-          @change="herbaceousChange"
-        >
-          <el-option
-            v-for="item in herbaceousOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <!--  -->
-      <el-form-item label="外貌形态：" prop="appearance">
-        <el-input
-          type="textarea"
-          :autosize="{ minRows: 2 }"
-          class="input-common"
-          v-model="form.appearance"
-          placeholder="请输入外貌形态"
-        />
-      </el-form-item>
-      <el-form-item label="植物习性：" prop="behaviour">
-        <el-input
-          type="textarea"
-          :autosize="{ minRows: 2 }"
-          class="input-common"
-          v-model="form.behaviour"
-          placeholder="请输入植物习性"
-        />
-      </el-form-item>
-      <el-form-item label="植物用途：" prop="usages">
-        <el-input
-          type="textarea"
-          :autosize="{ minRows: 2 }"
-          class="input-common"
-          v-model="form.usages"
-          placeholder="请输入植物用途"
-        />
-      </el-form-item>
-      <el-form-item label="地域分布：" prop="regions">
-        <el-input
-          type="textarea"
-          :autosize="{ minRows: 2 }"
-          class="input-common"
-          v-model="form.regions"
-          placeholder="请输入地域分布"
-        />
-      </el-form-item>
-      <el-form-item label="繁殖方式：" prop="reproduceMethod">
-        <el-input
-          type="textarea"
-          :autosize="{ minRows: 2 }"
-          class="input-common"
-          v-model="form.reproduceMethod"
-          placeholder="请输入繁殖方式"
-        />
-      </el-form-item>
-      <el-form-item label="栽培方式：" prop="cultureMethod">
-        <el-input
-          type="textarea"
-          :autosize="{ minRows: 2 }"
-          class="input-common"
-          v-model="form.cultureMethod"
-          placeholder="请输入栽培方式"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button :loading="isLoading" @click="back">
-          返回
-        </el-button>
-        <el-button
-          type="primary"
-          :loading="isLoading"
-          @click="submit"
-        >
-          提交
-        </el-button>
-      </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="外貌形态：" prop="appearance">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 2 }"
+              class="input-common"
+              v-model="form.appearance"
+              placeholder="请输入外貌形态"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="植物习性：" prop="behaviour">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 2 }"
+              class="input-common"
+              v-model="form.behaviour"
+              placeholder="请输入植物习性"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="植物用途：" prop="usages">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 2 }"
+              class="input-common"
+              v-model="form.usages"
+              placeholder="请输入植物用途"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="地域分布：" prop="regions">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 2 }"
+              class="input-common"
+              v-model="form.regions"
+              placeholder="请输入地域分布"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="繁殖方式：" prop="reproduceMethod">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 2 }"
+              class="input-common"
+              v-model="form.reproduceMethod"
+              placeholder="请输入繁殖方式"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="栽培方式：" prop="cultureMethod">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 2 }"
+              class="input-common"
+              v-model="form.cultureMethod"
+              placeholder="请输入栽培方式"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="植物图集：" prop="file">
+            <el-upload
+              class="upload-common"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :show-file-list="false"
+            >
+              <i class="el-icon-plus upload-icon"></i>
+            </el-upload>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item>
+            <el-button :loading="isLoading" @click="back">
+              返回
+            </el-button>
+            <el-button
+              type="primary"
+              :loading="isLoading"
+              @click="submit"
+            >
+              提交
+            </el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-card>
   </el-form>
   <el-result
@@ -642,12 +716,12 @@ export default defineComponent({
   flex-direction: column;
 
   .base-card {
-    width: 800px;
+    width: 100%;
     margin: 0px auto 25px;
   }
 
   .detail-card {
-    width: 800px;
+    width: 100%;
     margin: 0 auto;
   }
 }
@@ -656,5 +730,22 @@ export default defineComponent({
 }
 .select-common {
   width: 30vw;
+}
+.upload-common {
+  width: 150px;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  .upload-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+  }
 }
 </style>
