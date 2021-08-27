@@ -1,24 +1,14 @@
 <template>
   <el-form
     ref="formRef"
+    class="form-common"
     size="small"
     :rules="rules"
     :model="form"
     label-width="140px"
     v-show="status === 'incomplete'"
-    style="
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    "
   >
-    <el-card
-      style="
-        width: 650px;
-        margin: 0px auto 25px;
-      "
-    >
+    <el-card class="base-card">
       <template #header>
         <span>
           基础信息
@@ -28,34 +18,16 @@
         <el-input
           v-model="form.name"
           placeholder="请输入虫害类别名称"
-          style="width: 30vw;"
+          class="input-common"
         />
       </el-form-item>
       <el-form-item label="图片文件上传：" prop="file">
         <el-upload
           action="https://jsonplaceholder.typicode.com/posts/"
           :show-file-list="false"
-          style="
-            width: 178px;
-            border: 1px dashed #d9d9d9;
-            border-radius: 6px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-          "
+          class="upload-common"
         >
-          <i
-            class="el-icon-plus"
-            style="
-              font-size: 28px;
-              color: #8c939d;
-              width: 178px;
-              height: 178px;
-              line-height: 178px;
-              text-align: center;
-            "
-          >
-          </i>
+          <i class="el-icon-plus upload-icon"></i>
         </el-upload>
       </el-form-item>
       <el-form-item label="导入压缩文件：">
@@ -232,4 +204,36 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.form-common {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .base-card {
+    width: 100%;
+    margin: 0px auto 25px;
+  }
+}
+.input-common {
+  width: 35%;
+}
+.upload-common {
+  width: 150px;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  .upload-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+  }
+}
+</style>
