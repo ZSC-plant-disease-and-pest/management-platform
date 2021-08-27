@@ -14,68 +14,101 @@
           基础信息
         </span>
       </template>
-      <el-form-item label="ID：" prop="id">
-        <el-input
-          class="input-common"
-          v-model="form.id"
-          placeholder="自动生成"
-          :disabled="true"
-        />
-      </el-form-item>
-      <el-form-item label="视频名称：" prop="name">
-        <el-input
-          class="input-common"
-          v-model="form.name"
-          placeholder="请输入视频名称"
-        />
-      </el-form-item>
-      <el-form-item label="视频类型：" prop="type">
-        <el-select
-          class="select-common"
-          v-model="form.type"
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="item in typeOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="植物名称：" prop="plantName">
-        <el-select
-          class="select-common"
-          v-model="form.plantName"
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="item in plantNameOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="标签：" prop="tag">
-        <el-input
-          class="input-common"
-          v-model="form.tag"
-          placeholder="请输入标签"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button :loading="isLoading" @click="back">
-          返回
-        </el-button>
-        <el-button
-          type="primary"
-          :loading="isLoading"
-          @click="submit"
-        >
-          提交
-        </el-button>
-      </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="ID：" prop="id">
+            <el-input
+              class="input-common"
+              v-model="form.id"
+              placeholder="自动生成"
+              :disabled="true"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="视频名称：" prop="name">
+            <el-input
+              class="input-common"
+              v-model="form.name"
+              placeholder="请输入视频名称"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="视频类型：" prop="type">
+            <el-select
+              class="select-common"
+              v-model="form.type"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in typeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="植物名称：" prop="plantName">
+            <el-select
+              class="select-common"
+              v-model="form.plantName"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="item in plantNameOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="标签：" prop="tag">
+            <el-input
+              class="input-common"
+              v-model="form.tag"
+              placeholder="请输入标签"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="上传视频：" prop="file">
+            <el-upload
+              class="upload-common"
+              action="https://jsonplaceholder.typicode.com/posts/"
+              :show-file-list="false"
+            >
+              <i class="el-icon-plus upload-icon"></i>
+            </el-upload>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item>
+            <el-button :loading="isLoading" @click="back">
+              返回
+            </el-button>
+            <el-button
+              type="primary"
+              :loading="isLoading"
+              @click="submit"
+            >
+              提交
+            </el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-card>
   </el-form>
   <el-result
@@ -291,7 +324,7 @@ export default defineComponent({
   flex-direction: column;
 
   .base-card {
-    width: 800px;
+    width: 100%;
     margin: 0px auto 25px;
   }
 }
@@ -300,5 +333,22 @@ export default defineComponent({
 }
 .select-common {
   width: 30vw;
+}
+.upload-common {
+  width: 150px;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  .upload-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+  }
 }
 </style>
