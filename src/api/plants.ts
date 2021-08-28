@@ -8,6 +8,9 @@ export interface plantsParams extends searchByInfo {
   // 植物名称
   name?: string
 
+  // 名字拼音
+  pinyin?: string
+
   // 学名
   scientificName?: string
 
@@ -61,7 +64,7 @@ export class plantsHttp {
   // 创建植物信息
   static createPlants (params: plantsParams) {
     return http({
-      url: '/api/plants/create',
+      url: '/api/plantsInfo/create',
       method: 'post',
       data: params
     });
@@ -70,7 +73,7 @@ export class plantsHttp {
   // 删除植物信息
   static deletePlants (ids: string) {
     return http({
-      url: `/api/plants/delete/${ids}`,
+      url: `/api/plantsInfo/delete/${ids}`,
       method: 'delete'
     });
   }
@@ -78,7 +81,7 @@ export class plantsHttp {
   // 查询全部植物信息
   static searchPlants (params: (plantsParams | null)) {
     return http({
-      url: '/api/plants/search',
+      url: '/api/plantsInfo/search',
       method: 'get',
       params
     });
@@ -87,7 +90,7 @@ export class plantsHttp {
   // 通过 Id 查询植物信息
   static searchPlantsById (id: number) {
     return http({
-      url: `/api/plants/search/${id}`,
+      url: `/api/plantsInfo/search/${id}`,
       method: 'get'
     });
   }
@@ -96,7 +99,7 @@ export class plantsHttp {
   static updatePlants (params: plantsParams) {
     const { id } = params;
     return http({
-      url: `/api/plants/update/${id}`,
+      url: `/api/plantsInfo/update/${id}`,
       method: 'put',
       data: params
     });

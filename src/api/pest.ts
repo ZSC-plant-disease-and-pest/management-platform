@@ -5,17 +5,20 @@ export interface pestParams extends searchByInfo {
   // id
   id?: number
 
-  // 虫害名称
+  // 病害名称
   name?: string
 
-  // 概述
-  overview?: string
+  // 概述,变色、坏死、腐烂、萎蔫、畸形五大类型
+  overview?: Array<string>
+
+  // 危害部位
+  damagedParts?: Array<string>
+
+  // 影响植物
+  affectedPlants?: string
 
   // 形态特征
   appearance?: string
-
-  // 危害部位
-  damagedParts?: string
 
   // 危害表现
   description?: string
@@ -37,7 +40,7 @@ export class pestHttp {
   // 创建虫害
   static createPest (params: pestParams) {
     return http({
-      url: '/api/pest/create',
+      url: '/api/pestInfo/create',
       method: 'post',
       data: params
     });
@@ -46,7 +49,7 @@ export class pestHttp {
   // 删除虫害
   static deletePest (ids: number) {
     return http({
-      url: `/api/pest/delete/${ids}`,
+      url: `/api/pestInfo/delete/${ids}`,
       method: 'delete'
     });
   }
@@ -54,7 +57,7 @@ export class pestHttp {
   // 查询全部虫害
   static searchPest (params: (pestParams | null)) {
     return http({
-      url: '/api/pest/search',
+      url: '/api/pestInfo/search',
       method: 'get',
       params
     });
@@ -63,16 +66,16 @@ export class pestHttp {
   // 通过 ID 查询虫害
   static searchPestById (id: number) {
     return http({
-      url: `/api/pest/search/${id}`,
+      url: `/api/pestInfo/search/${id}`,
       method: 'get'
     });
   }
 
-  // 修改虫害 (允许修改:)
+  // 修改虫害
   static updatePest (params: pestParams) {
     const { id } = params;
     return http({
-      url: `/api/pest/update/${id}`,
+      url: `/api/pestInfo/update/${id}`,
       method: 'put',
       data: params
     });
