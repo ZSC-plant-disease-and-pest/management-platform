@@ -114,7 +114,7 @@ export default defineComponent({
         asideList = [
           {
             name: 'disease',
-            icon: 'el-icon-watermelon',
+            icon: 'el-icon-apple',
             label: '病害数据库',
             list: [
               {
@@ -125,7 +125,7 @@ export default defineComponent({
           },
           {
             name: 'pest',
-            icon: 'el-icon-watermelon',
+            icon: 'el-icon-soccer',
             label: '虫害数据库',
             list: [
               {

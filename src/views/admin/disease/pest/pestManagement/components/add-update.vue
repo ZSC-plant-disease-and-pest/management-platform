@@ -37,36 +37,34 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="危害部位：" prop="damagedParts">
+          <el-form-item label="危害概述：" prop="overview">
             <el-select
               class="select-common"
-              v-model="damagedPartsSelected"
+              v-model="form.overview"
               multiple
               placeholder="请选择"
-              @change="damagedPartsChange"
             >
               <el-option
-                v-for="item in damagedPartsOptions"
+                v-for="item in overviewOptions"
                 :key="item.value"
-                :label="item.label"
+                :label="item.value"
                 :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="危害表现：" prop="description">
+          <el-form-item label="危害部位：" prop="damagedParts">
             <el-select
               class="select-common"
-              v-model="descriptionSelect"
+              v-model="form.damagedParts"
               multiple
               placeholder="请选择"
-              @change="descriptionChange"
             >
               <el-option
-                v-for="item in descriptionOptions"
+                v-for="item in damagedPartsOptions"
                 :key="item.value"
-                :label="item.label"
+                :label="item.value"
                 :value="item.value">
               </el-option>
             </el-select>
@@ -81,80 +79,57 @@
         </span>
       </template>
       <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="发病季节：" prop="seasons">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 2 }"
-              class="input-common"
-              v-model="form.seasons"
-              placeholder="请输入发病季节"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="分布地域：" prop="regions">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 2 }"
-              class="input-common"
-              v-model="form.regions"
-              placeholder="请输入分布地域"
-            />
+        <el-col :span="24">
+          <el-form-item label="影响植物：" prop="affectedPlants">
+            <v-md-editor v-model="form.affectedPlants" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="虫害概述：" prop="overview">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 2 }"
-              class="input-common"
-              v-model="form.overview"
-              placeholder="请输入虫害概述"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
+        <el-col :span="24">
           <el-form-item label="形态特征：" prop="appearance">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 2 }"
-              class="input-common"
-              v-model="form.appearance"
-              placeholder="请输入形态特征"
-            />
+            <v-md-editor v-model="form.appearance" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="12">
+        <el-col :span="24">
+          <el-form-item label="危害表现：" prop="description">
+            <v-md-editor v-model="form.description" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="24">
           <el-form-item label="发病规律：" prop="regularity">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 2 }"
-              class="input-common"
-              v-model="form.regularity"
-              placeholder="请输入发病规律"
-            />
+            <v-md-editor v-model="form.regularity" />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="24">
+          <el-form-item label="发病季节：" prop="seasons">
+            <v-md-editor v-model="form.seasons" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="24">
+          <el-form-item label="分布地域：" prop="regions">
+            <v-md-editor v-model="form.regions" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="24">
           <el-form-item label="治理建议：" prop="suggestion">
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 2 }"
-              class="input-common"
-              v-model="form.suggestion"
-              placeholder="请输入治理建议"
-            />
+            <v-md-editor v-model="form.suggestion" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="虫害图集：" prop="file">
+          <el-form-item label="病害图集：" prop="file">
             <el-upload
               class="upload-common"
               action="https://jsonplaceholder.typicode.com/posts/"
@@ -213,26 +188,25 @@ import {
   defineComponent
 } from 'vue';
 import { pestHttp, pestParams } from '@/api/pest';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
 
 export default defineComponent({
   name: 'add-update',
   setup () {
-    // 获取路由
+    const route = useRoute();
     const router = useRouter();
-    // 渲染前
     onBeforeMount(() => {
       getParams();
     });
-    // 表单内容
     const state = reactive({
       form: {
         id: undefined,
         name: undefined,
         overview: undefined,
-        appearance: undefined,
         damagedParts: undefined,
+        affectedPlants: undefined,
+        appearance: undefined,
         description: undefined,
         regularity: undefined,
         seasons: undefined,
@@ -247,147 +221,104 @@ export default defineComponent({
         damagedParts: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
-            if (state.damagedPartsSelected.length === 0) {
+            if (state.form.damagedParts?.length === 0) {
               callback(new Error('请选择危害部位'));
             } else {
               callback();
             }
           },
-          trigger: ['blur', 'change']
+          trigger: ['blur']
         }],
-        description: [{
+        overview: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
-            if (state.descriptionSelect.length === 0) {
-              callback(new Error('请选择危害表现'));
+            if (state.form.overview?.length === 0) {
+              callback(new Error('请选择危害概述'));
             } else {
               callback();
             }
           },
-          trigger: ['blur', 'change']
-        }],
-        seasons: [
-          { required: true, message: '请输入发病季节', trigger: ['blur', 'change'] }
-        ],
-        regions: [
-          { required: true, message: '请输入分布地域', trigger: ['blur', 'change'] }
-        ],
-        overview: [
-          { required: true, message: '请输入虫害概述', trigger: ['blur', 'change'] }
-        ],
-        appearance: [
-          { required: true, message: '请输入形态特征', trigger: ['blur', 'change'] }
-        ],
-        regularity: [
-          { required: true, message: '请输入发病规律', trigger: ['blur', 'change'] }
-        ],
-        suggestion: [
-          { required: true, message: '请输入治理建议', trigger: ['blur', 'change'] }
-        ]
+          trigger: ['blur']
+        }]
       },
-      descriptionSelect: [] as Array<any>,
-      damagedPartsSelected: [] as Array<any>
+      // 界面类型：add 新增，update 更新
+      type: '',
+      // 是否加载中
+      isLoading: false,
+      // 表单状态：complete 完成，incomplete 未完成
+      status: 'incomplete'
     });
-    // 界面类型：add 新增，update 更新
-    const type = ref('');
-    // 加载中
-    const isLoading = ref(false);
-    // 表单状态：complete 完成，incomplete 未完成
-    const status = ref('incomplete');
     // 提取路由中的 params
     const getParams = () => {
-      // 强转类型
-      type.value = router.currentRoute.value.meta.type as string;
-      if (type.value === 'update') {
+      if (route.path.split('/').slice(-1)[0] === 'update') {
         // 若 params 有 id，则是合法访问
         if (router.currentRoute.value.params.id !== undefined) {
-          const { ...tempParams } = router.currentRoute.value.params;
+          const { ...tempParams } = route.params;
           state.form = tempParams;
-          state.damagedPartsSelected = state.form.damagedParts === undefined ? [] : state.form.damagedParts.split(',');
-          state.descriptionSelect = state.form.description === undefined ? [] : state.form.description.split(',');
+          // console.log(tempParams);
         } else {
           // 非法访问更新界面
           illegalVisit();
-          // 设置全局路由守卫，当 meta.type = 'update' 时
-          // 判断 route.params.id 是否存在，不存在则返回上个界面并弹出警告提示
-          // 返回上一页
           router.go(-1);
         }
       }
     };
     const damagedPartsOptions: Array<any> = reactive([
       {
-        value: 'root',
-        label: '根'
+        value: '根'
       },
       {
-        value: 'stem',
-        label: '茎'
+        value: '茎'
       },
       {
-        value: 'leaf',
-        label: '叶'
+        value: '叶'
       },
       {
-        value: 'flower',
-        label: '花'
+        value: '花'
       },
       {
-        value: 'fruit',
-        label: '果实'
+        value: '果实'
       }
     ]);
-    const descriptionOptions: Array<any> = reactive([
+    const overviewOptions: Array<any> = reactive([
       {
-        value: 'corruption',
-        label: '腐败'
+        value: '腐败'
       },
       {
-        value: 'discoloration',
-        label: '变色'
+        value: '变色'
       },
       {
-        value: 'necrosis',
-        label: '坏死'
+        value: '坏死'
       },
       {
-        value: 'wilt',
-        label: '萎蔫'
+        value: '萎蔫'
       },
       {
-        value: 'malformation',
-        label: '畸形'
-      },
-      {
-        value: 'eating',
-        label: '被害虫食用'
+        value: '畸形'
       }
     ]);
     // 提交表单
     const submit = () => {
-      console.log('submit');
       // 表单验证
       state.formRef.validate().then((valid: boolean) => {
         if (valid) {
-          isLoading.value = true;
-          if (type.value === 'add') {
+          state.isLoading = true;
+          if (route.path.split('/').slice(-1)[0] === 'add') {
             pestHttp.createPest(state.form)
-              .then((response: any) => {
-                console.log(response);
+              .then(() => {
                 // 成功后进入成功界面
-                status.value = 'complete';
+                state.status = 'complete';
               })
               .finally(() => {
-                isLoading.value = false;
+                state.isLoading = false;
               });
-          } else if (type.value === 'update') {
+          } else if (route.path.split('/').slice(-1)[0] === 'update') {
             pestHttp.updatePest(state.form)
-              .then((response: any) => {
-                console.log(response);
-                status.value = 'complete';
+              .then(() => {
+                state.status = 'complete';
               })
               .finally(() => {
-                isLoading.value = false;
+                state.isLoading = false;
               });
           }
         }
@@ -395,7 +326,6 @@ export default defineComponent({
     };
     // 返回上一个界面
     const back = () => {
-      console.log('back');
       router.push({
         path: '/admin/disease/pestManagement',
         name: 'pestManagement',
@@ -406,33 +336,19 @@ export default defineComponent({
     };
     // 继续新增
     const keep = () => {
-      console.log('keep');
       // 重置表单
       state.formRef.resetFields();
       // 返回到新增界面
-      status.value = 'incomplete';
-      state.descriptionSelect = [];
-      state.damagedPartsSelected = [];
-    };
-    const damagedPartsChange = () => {
-      state.form.damagedParts = state.damagedPartsSelected.join(',');
-    };
-    const descriptionChange = () => {
-      state.form.description = state.descriptionSelect.join(',');
+      state.status = 'incomplete';
     };
     return {
       // 解构后创建对象的响应式数据
       ...toRefs(state),
-      type,
-      isLoading,
-      status,
       submit,
       back,
       keep,
       damagedPartsOptions,
-      descriptionOptions,
-      damagedPartsChange,
-      descriptionChange
+      overviewOptions
     };
   }
 });
@@ -456,10 +372,10 @@ export default defineComponent({
   }
 }
 .input-common {
-  width: 30vw;
+  width: 90%;
 }
 .select-common {
-  width: 30vw;
+  width: 90%;
 }
 .upload-common {
   width: 150px;
