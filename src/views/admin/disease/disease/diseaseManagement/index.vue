@@ -55,6 +55,7 @@ export default defineComponent({
         getDisease();
       }
     });
+
     // 方便内部数据响应式的改变
     const state = reactive({
       // 表格数据
@@ -99,6 +100,7 @@ export default defineComponent({
         value: ''
       }
     ]);
+
     // 请求参数
     const diseaseParams = reactive({
       page: 0,

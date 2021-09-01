@@ -55,6 +55,7 @@ export default defineComponent({
         getPest();
       }
     });
+
     // 方便内部数据响应式的改变
     const state = reactive({
       // 表格数据
@@ -104,6 +105,7 @@ export default defineComponent({
       page: 0,
       size: 10
     } as pestParams);
+
     // 请求虫害
     const getPest = () => {
       state.isLoading = true;

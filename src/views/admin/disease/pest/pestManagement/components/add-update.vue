@@ -78,56 +78,56 @@
           详细信息
         </span>
       </template>
-      <el-row :gutter="20">
+      <el-row :gutter="0">
         <el-col :span="24">
           <el-form-item label="影响植物：" prop="affectedPlants">
             <v-md-editor v-model="form.affectedPlants" />
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="0">
         <el-col :span="24">
           <el-form-item label="形态特征：" prop="appearance">
             <v-md-editor v-model="form.appearance" />
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="0">
         <el-col :span="24">
           <el-form-item label="危害表现：" prop="description">
             <v-md-editor v-model="form.description" />
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="0">
         <el-col :span="24">
           <el-form-item label="发病规律：" prop="regularity">
             <v-md-editor v-model="form.regularity" />
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="0">
         <el-col :span="24">
           <el-form-item label="发病季节：" prop="seasons">
             <v-md-editor v-model="form.seasons" />
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="0">
         <el-col :span="24">
           <el-form-item label="分布地域：" prop="regions">
             <v-md-editor v-model="form.regions" />
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="0">
         <el-col :span="24">
           <el-form-item label="治理建议：" prop="suggestion">
             <v-md-editor v-model="form.suggestion" />
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="0">
         <el-col :span="12">
           <el-form-item label="病害图集：" prop="file">
             <el-upload
@@ -140,7 +140,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20">
+      <el-row :gutter="0">
         <el-col :span="12">
           <el-form-item>
             <el-button :loading="isLoading" @click="back">
@@ -199,6 +199,7 @@ export default defineComponent({
     onBeforeMount(() => {
       getParams();
     });
+
     const state = reactive({
       form: {
         id: undefined,
@@ -248,21 +249,6 @@ export default defineComponent({
       // 表单状态：complete 完成，incomplete 未完成
       status: 'incomplete'
     });
-    // 提取路由中的 params
-    const getParams = () => {
-      if (route.path.split('/').slice(-1)[0] === 'update') {
-        // 若 params 有 id，则是合法访问
-        if (router.currentRoute.value.params.id !== undefined) {
-          const { ...tempParams } = route.params;
-          state.form = tempParams;
-          // console.log(tempParams);
-        } else {
-          // 非法访问更新界面
-          illegalVisit();
-          router.go(-1);
-        }
-      }
-    };
     const damagedPartsOptions: Array<any> = reactive([
       {
         value: '根'
@@ -297,6 +283,25 @@ export default defineComponent({
         value: '畸形'
       }
     ]);
+
+    // 提取路由中的 params
+    const getParams = () => {
+      if (route.path.split('/').slice(-1)[0] === 'update') {
+        // 若 params 有 id，则是合法访问
+        if (route.params.id !== undefined) {
+          state.type = 'update';
+          const { ...tempParams } = route.params;
+          state.form = tempParams;
+          // console.log(tempParams);
+        } else {
+          // 非法访问更新界面
+          illegalVisit();
+          router.go(-1);
+        }
+      } else {
+        state.type = 'add';
+      }
+    };
     // 提交表单
     const submit = () => {
       // 表单验证
