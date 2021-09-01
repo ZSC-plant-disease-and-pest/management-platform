@@ -8,9 +8,6 @@ export interface plantsParams extends searchByInfo {
   // 植物名称
   name?: string
 
-  // 名字拼音
-  pinyin?: string
-
   // 学名
   scientificName?: string
 
