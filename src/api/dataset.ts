@@ -49,8 +49,6 @@ export class datasetHttp {
     });
   }
 
-
-
   // 创建虫害数据集
   static createPestDataset (params: datasetParams) {
     return http({
@@ -78,12 +76,10 @@ export class datasetHttp {
     });
   }
 
-
-
   // 创建植物数据集
   static createPlantsDataset (params: datasetParams) {
     return http({
-      url: '/api/PlantsDs/create',
+      url: '/api/plantsDs/create',
       method: 'post',
       data: params
     });
@@ -92,7 +88,7 @@ export class datasetHttp {
   // 查询植物数据集
   static searchPlantsDataset (params: (datasetParams | null)) {
     return http({
-      url: '/api/PlantsDs/search',
+      url: '/api/plantsDs/search',
       method: 'get',
       params
     });
@@ -101,7 +97,7 @@ export class datasetHttp {
   // 修改植物数据集
   static updatePlantsDataset (params: datasetParams) {
     return http({
-      url: '/api/PlantsDs/update',
+      url: '/api/plantsDs/update',
       method: 'put',
       data: params
     });
