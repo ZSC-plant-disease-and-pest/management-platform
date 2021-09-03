@@ -8,53 +8,100 @@ export interface datasetParams extends searchByInfo {
   // 数据集名称
   name?: string
 
-  // 标签集 Id
-  labelCollection?: number
+  // 修改数据集名称的新名称
+  newName?: string
 
-  // 路径
+  // 数据集类型。病/虫/植，0病害，1虫害，2植物
+  type?: number
+
+  // 图片数量
+  pictureAccount?: number
+
+  // 保存路径
   path?: string
 }
 
 export class datasetHttp {
-  // 创建数据集
-  static createDataset (params: datasetParams) {
+  // 创建病害数据集
+  static createDiseaseDataset (params: datasetParams) {
     return http({
-      url: '/api/dataset/create',
+      url: '/api/diseaseDs/create',
       method: 'post',
       data: params
     });
   }
 
-  // 删除数据集
-  static deleteDataset (ids: string) {
+  // 查询病害数据集
+  static searchDiseaseDataset (params: (datasetParams | null)) {
     return http({
-      url: `/api/dataset/delete/${ids}`,
-      method: 'delete'
-    });
-  }
-
-  // 查询全部数据集
-  static searchDataset (params: (datasetParams | null)) {
-    return http({
-      url: '/api/dataset/search',
+      url: '/api/diseaseDs/search',
       method: 'get',
       params
     });
   }
 
-  // 通过 ID 查询数据集
-  static searchDatasetById (id: number) {
+  // 修改病害数据集
+  static updateDiseaseDataset (params: datasetParams) {
     return http({
-      url: `/api/dataset/search/${id}`,
-      method: 'get'
+      url: '/api/diseaseDs/update',
+      method: 'put',
+      data: params
     });
   }
 
-  // 修改数据集 (允许修改:名称, 标签集 id)
-  static updateDataset (params: datasetParams) {
-    const { id } = params;
+
+
+  // 创建虫害数据集
+  static createPestDataset (params: datasetParams) {
     return http({
-      url: `/api/dataset/update/${id}`,
+      url: '/api/pestDs/create',
+      method: 'post',
+      data: params
+    });
+  }
+
+  // 查询虫害数据集
+  static searchPestDataset (params: (datasetParams | null)) {
+    return http({
+      url: '/api/pestDs/search',
+      method: 'get',
+      params
+    });
+  }
+
+  // 修改虫害数据集
+  static updatePestDataset (params: datasetParams) {
+    return http({
+      url: '/api/pestDs/update',
+      method: 'put',
+      data: params
+    });
+  }
+
+
+
+  // 创建植物数据集
+  static createPlantsDataset (params: datasetParams) {
+    return http({
+      url: '/api/PlantsDs/create',
+      method: 'post',
+      data: params
+    });
+  }
+
+  // 查询植物数据集
+  static searchPlantsDataset (params: (datasetParams | null)) {
+    return http({
+      url: '/api/PlantsDs/search',
+      method: 'get',
+      params
+    });
+  }
+
+  // 修改植物数据集
+  static updatePlantsDataset (params: datasetParams) {
+    return http({
+      url: '/api/PlantsDs/update',
       method: 'put',
       data: params
     });
