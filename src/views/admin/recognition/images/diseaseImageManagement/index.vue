@@ -44,7 +44,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
-      createDiseaseDataset();
+      searchDiseaseDataset();
     });
     // 发生更新时
     onUpdated(() => {
@@ -52,7 +52,7 @@ export default defineComponent({
       if (route.params.type === 'refresh') {
         // 是的话则重新请求数据
         route.params.type = '';
-        createDiseaseDataset();
+        searchDiseaseDataset();
       }
     });
 
@@ -82,11 +82,6 @@ export default defineComponent({
         width: 'auto'
       },
       {
-        prop: 'type',
-        label: '数据集类型',
-        width: 'auto'
-      },
-      {
         prop: 'pictureAccount',
         label: '图片数量',
         width: 'auto'
@@ -112,9 +107,9 @@ export default defineComponent({
       size: 10
     } as datasetParams);
     // 请求病害数据集
-    const createDiseaseDataset = () => {
+    const searchDiseaseDataset = () => {
       state.isLoading = true;
-      datasetHttp.createDiseaseDataset(datasetParams)
+      datasetHttp.searchDiseaseDataset(datasetParams)
         .then((response: any) => {
           state.total = response.totalElements;
           state.size = response.size;
@@ -135,7 +130,7 @@ export default defineComponent({
       } else {
         datasetParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
       }
-      createDiseaseDataset();
+      searchDiseaseDataset();
     };
     // 新增
     const add = () => {
@@ -153,7 +148,7 @@ export default defineComponent({
         // datasetHttp.deleteDisease(selectedIds.join(','))
         //   .then(() => {
         //     ElMessage.success('删除成功');
-        //     createDiseaseDataset();
+        //     searchDiseaseDataset();
         //   })
         //   .finally(() => {
         //     isLoading.value = false;
@@ -179,7 +174,7 @@ export default defineComponent({
           datasetParams.name = data[index].value === '' ? undefined : data[index].value;
         }
       }
-      createDiseaseDataset();
+      searchDiseaseDataset();
     };
     // 重置搜索框
     const reset = () => {
@@ -187,7 +182,7 @@ export default defineComponent({
         searchList[index].value = '';
         datasetParams.name = undefined;
       }
-      createDiseaseDataset();
+      searchDiseaseDataset();
     };
     // 表格每页信息大小改变
     const handleSizeChange = (newSize: any) => {
@@ -195,13 +190,13 @@ export default defineComponent({
       datasetParams.page = 0;
       state.size = newSize;
       state.page = 1;
-      createDiseaseDataset();
+      searchDiseaseDataset();
     };
     // 表格页数改变
     const handleCurrentChange = (newPage: any) => {
       datasetParams.page = newPage;
       state.page = newPage + 1;
-      createDiseaseDataset();
+      searchDiseaseDataset();
     };
     // 导出
     return {
