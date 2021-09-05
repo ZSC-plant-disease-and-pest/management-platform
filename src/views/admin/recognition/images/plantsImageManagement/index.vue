@@ -136,7 +136,7 @@ export default defineComponent({
     const add = () => {
       router.push({
         path: router.currentRoute.value.path + '/add',
-        name: 'diseaseImageManagementAdd'
+        name: 'plantsImageManagementAdd'
       });
     };
     // 删除
@@ -159,7 +159,7 @@ export default defineComponent({
     const edit = (data: any) => {
       router.push({
         path: router.currentRoute.value.path + '/update',
-        name: 'diseaseImageManagementUpdate',
+        name: 'plantsImageManagementUpdate',
         params: data
       });
     };

@@ -19,6 +19,12 @@ export interface datasetParams extends searchByInfo {
 
   // 保存路径
   path?: string
+
+  // 植物数据集：科类
+  family?: string
+
+  // 植物数据集：属类
+  genus?: string
 }
 
 export class datasetHttp {
