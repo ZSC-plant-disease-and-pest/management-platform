@@ -8,9 +8,6 @@ export interface familyParams extends searchByInfo {
   // 属类名称
   name?: string
 
-  // 名字拼音
-  pinyin?: string
-
   // 所属科类
   family?: string
 
