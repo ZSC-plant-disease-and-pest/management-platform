@@ -42,7 +42,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row :gutter="20" v-if="type === 'add'">
+      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="植物科类：" prop="family">
             <el-select
