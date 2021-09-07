@@ -1,7 +1,7 @@
 import http from '@/utils/http';
 import { searchByInfo } from './baseInterface';
 
-export interface familyParams extends searchByInfo {
+export interface genusParams extends searchByInfo {
   // id
   id?: number
 
@@ -24,9 +24,9 @@ export interface familyParams extends searchByInfo {
   plants?: string
 }
 
-export class familyHttp {
+export class genusHttp {
   // 创建属类
-  static createFamily (params: familyParams) {
+  static createGenus (params: genusParams) {
     return http({
       url: '/api/genusInfo/create',
       method: 'post',
@@ -35,7 +35,7 @@ export class familyHttp {
   }
 
   // 删除属类
-  static deleteFamily (ids: number) {
+  static deleteGenus (ids: number) {
     return http({
       url: `/api/genusInfo/delete/${ids}`,
       method: 'delete'
@@ -43,7 +43,7 @@ export class familyHttp {
   }
 
   // 查询全部属类
-  static searchFamily (params: (familyParams | null)) {
+  static searchGenus (params: (genusParams | null)) {
     return http({
       url: '/api/genusInfo/search',
       method: 'get',
@@ -52,7 +52,7 @@ export class familyHttp {
   }
 
   // 通过 ID 查询属类
-  static searchFamilyById (id: number) {
+  static searchGenusById (id: number) {
     return http({
       url: `/api/genusInfo/search/${id}`,
       method: 'get'
@@ -60,7 +60,7 @@ export class familyHttp {
   }
 
   // 修改属类
-  static updateFamily (params: familyParams) {
+  static updateGenus (params: genusParams) {
     const { id } = params;
     return http({
       url: `/api/genusInfo/update/${id}`,
