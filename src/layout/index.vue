@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header style="padding: 0px">
+    <el-header style="padding: 0px; minWidth: 915px">
       <LayoutHeadedr @menuSelect="menuSelect" />
     </el-header>
     <el-container style="height: calc(100vh - 60px)">

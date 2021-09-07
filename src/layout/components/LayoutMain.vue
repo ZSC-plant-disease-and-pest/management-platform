@@ -45,6 +45,7 @@ export default defineComponent({
 }
 .main {
   padding: 15px;
+  min-width: 1158px;
   background-color: #fff;
   width: calc(100% - 30px);
 }

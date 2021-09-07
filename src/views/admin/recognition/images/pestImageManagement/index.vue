@@ -1,5 +1,9 @@
 <template>
-  <Search :searchList="searchList" @search="search" @reset="reset" />
+  <Search
+    :searchList="searchList"
+    @search="search"
+    @reset="reset"
+  />
   <Table
     :tableData="tableData"
     :tableColumn="tableColumn"
