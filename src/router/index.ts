@@ -30,6 +30,8 @@ const plantsManagement = () => import('@/views/admin/gardens/plants/plantsManage
 const plantsManagementAddUpdate = () => import('@/views/admin/gardens/plants/plantsManagement/components/add-update.vue');
 // gardens/familyManagement 科属管理
 const familyManagement = () => import('@/views/admin/gardens/plants/familyManagement/index.vue');
+const familyManagementFamilyAddUpdate = () => import('@/views/admin/gardens/plants/familyManagement/components/family/add-update.vue');
+const familyManagementGenusAddUpdate = () => import('@/views/admin/gardens/plants/familyManagement/components/genus/add-update.vue');
 
 // gardens/videoManagement 盆景养护视频
 const videoManagement = () => import('@/views/admin/gardens/gardens/videoManagement/index.vue');
@@ -117,6 +119,22 @@ const routes: Array<RouteRecordRaw> = [
         {
           name: '园林花卉/科属管理',
           path: '/admin/gardens/familyManagement'
+        },
+        {
+          name: '园林花卉/科属管理/科类新增',
+          path: '/admin/gardens/familyManagement/family/add'
+        },
+        {
+          name: '园林花卉/科属管理/科类编辑',
+          path: '/admin/gardens/familyManagement/family/update'
+        },
+        {
+          name: '园林花卉/科属管理/属类新增',
+          path: '/admin/gardens/familyManagement/genus/add'
+        },
+        {
+          name: '园林花卉/科属管理/属类编辑',
+          path: '/admin/gardens/familyManagement/genus/update'
         },
         {
           name: '园林花卉/盆景养护视频',
@@ -232,6 +250,26 @@ const routes: Array<RouteRecordRaw> = [
         path: 'gardens/familyManagement',
         name: 'familyManagement',
         component: familyManagement
+      },
+      {
+        path: 'gardens/familyManagement/family/add',
+        name: 'familyManagementFamilyAdd',
+        component: familyManagementFamilyAddUpdate
+      },
+      {
+        path: 'gardens/familyManagement/family/update',
+        name: 'familyManagementFamilyUpdate',
+        component: familyManagementFamilyAddUpdate
+      },
+      {
+        path: 'gardens/familyManagement/genus/add',
+        name: 'familyManagementGenusAdd',
+        component: familyManagementGenusAddUpdate
+      },
+      {
+        path: 'gardens/familyManagement/genus/update',
+        name: 'familyManagementGenusUpdate',
+        component: familyManagementGenusAddUpdate
       },
       {
         path: 'gardens/videoManagement',
