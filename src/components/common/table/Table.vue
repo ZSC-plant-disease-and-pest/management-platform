@@ -21,11 +21,11 @@
   </el-button>
   <el-table
     :data="tableData"
+    :row-style="tableRowStyle"
     v-loading="loading"
     @sort-change="sortChange"
     @selection-change="selectChange"
     @select-all="selectAll"
-    stripe
     border
     style="width: 100%; margin-top: 15px"
   >
@@ -89,6 +89,11 @@ export default defineComponent({
     loading: {
       type: Boolean,
       default: false
+    },
+    // 被选中行的 id
+    rowId: {
+      type: Number,
+      default: undefined
     }
   },
   emits: ['check', 'edit', 'remove', 'add', 'sortChange', 'selectId'],
@@ -132,6 +137,14 @@ export default defineComponent({
         selectedIds.push(selection[index].id);
       }
     };
+    // 被选中行的样式
+    const tableRowStyle = (data: any) => {
+      if (data.row.id === props.rowId) {
+        return 'background-color: #fafafa';
+      } else {
+        return '';
+      }
+    };
     return {
       add,
       remove,
@@ -139,7 +152,8 @@ export default defineComponent({
       check,
       sortChange,
       selectChange,
-      selectAll
+      selectAll,
+      tableRowStyle
     };
   }
 });
