@@ -12,18 +12,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  ref,
-  toRefs,
-  computed,
-  watch,
-  getCurrentInstance,
-  reactive,
-  unref,
-  toRaw
-} from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
