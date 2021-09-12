@@ -31,8 +31,8 @@ export class newsHttp {
   // 上传新闻图片
   static uploadNewsImage (params: newsParams, body: any) {
     const fileImg = new FormData();
+    fileImg.append('editormd-image-file', body);
     const { imgName } = params;
-    fileImg.append('file', body);
     return http({
       url: `/api/news/file/${imgName}`,
       method: 'post',
