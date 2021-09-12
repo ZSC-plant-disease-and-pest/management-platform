@@ -15,6 +15,7 @@ const home = () => import('@/views/admin/home/index.vue');
 // 2 新闻公告
 // new/newManagement 新闻管理
 const newManagement = () => import('@/views/admin/new/new/newManagement/index.vue');
+const newManagementAddUpdate = () => import('@/views/admin/new/new/newManagement/components/add-update.vue');
 
 // 3 病虫害数据库
 // disease/diseaseManagement 植物病害管理
@@ -79,6 +80,14 @@ const routes: Array<RouteRecordRaw> = [
         {
           name: '新闻公告/新闻管理',
           path: '/admin/new/newManagement'
+        },
+        {
+          name: '新闻公告/新闻管理/新增',
+          path: '/admin/new/newManagement/add'
+        },
+        {
+          name: '新闻公告/新闻管理/编辑',
+          path: '/admin/new/newManagement/update'
         },
         {
           name: '病虫害数据库/植物病害管理',
@@ -200,6 +209,16 @@ const routes: Array<RouteRecordRaw> = [
         path: 'new/newManagement',
         name: 'newManagement',
         component: newManagement
+      },
+      {
+        path: 'new/newManagement/add',
+        name: 'newManagementAdd',
+        component: newManagementAddUpdate
+      },
+      {
+        path: 'new/newManagement/update',
+        name: 'newManagementUpdate',
+        component: newManagementAddUpdate
       },
       {
         path: 'disease/diseaseManagement',
