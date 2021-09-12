@@ -38,7 +38,7 @@
       <el-row :gutter="0">
         <el-col :span="12">
           <el-form-item label="所属科类：" prop="family">
-            <PagingSelect
+            <FamilyPagingSelect
               class="select-common"
               ref="pagingSelectRef"
               :defaultValue="form.family"
@@ -126,11 +126,11 @@ import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { genusHttp, genusParams } from '@/api/genus';
 import { useRouter, useRoute } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
-import PagingSelect from './PagingSelect.vue';
+import FamilyPagingSelect from '@/components/pages/family/FamilyPagingSelect.vue';
 
 export default defineComponent({
   name: 'add-update',
-  components: { PagingSelect },
+  components: { FamilyPagingSelect },
   setup () {
     const route = useRoute();
     const router = useRouter();

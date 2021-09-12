@@ -58,34 +58,21 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="植物科类：" prop="family">
-            <el-select
+            <FamilyPagingSelect
               class="select-common"
-              v-model="form.family"
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in familyOptions"
-                :key="item.value"
-                :label="item.value"
-                :value="item.value">
-              </el-option>
-            </el-select>
+              :defaultValue="form.family"
+              @selectChange="familyChange"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="植物属类：" prop="genus">
-            <el-select
+            <GenusPagingSelect
               class="select-common"
-              v-model="form.genus"
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in genusOptions"
-                :key="item.value"
-                :label="item.value"
-                :value="item.value">
-              </el-option>
-            </el-select>
+              :defaultValue="form.genus"
+              :family="form.family"
+              @selectChange="genusChange"
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -293,9 +280,12 @@ import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { plantsHttp, plantsParams } from '@/api/plants';
 import { useRoute, useRouter } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
+import FamilyPagingSelect from '@/components/pages/family/FamilyPagingSelect.vue';
+import GenusPagingSelect from '@/components/pages/genus/GenusPagingSelect.vue';
 
 export default defineComponent({
   name: 'add-update',
+  components: { FamilyPagingSelect, GenusPagingSelect },
   setup () {
     const route = useRoute();
     const router = useRouter();
@@ -307,16 +297,16 @@ export default defineComponent({
       form: {
         id: undefined,
         name: undefined,
-        scientificName: undefined,
-        nickname: undefined,
+        scientificName: '',
+        nickname: '',
         family: undefined,
         genus: undefined,
         plantsClassify: {
-          function: undefined,
-          enjoy: undefined,
-          garden: undefined,
-          woody: undefined,
-          herbaceous: undefined
+          function: '',
+          enjoy: '',
+          garden: '',
+          woody: '',
+          herbaceous: ''
         },
         appearance: '',
         behaviour: '',
@@ -329,12 +319,6 @@ export default defineComponent({
       rules: {
         name: [
           { required: true, message: '请输入植物名称', trigger: ['blur', 'change'] }
-        ],
-        scientificName: [
-          { required: true, message: '请输入植物学名', trigger: ['blur', 'change'] }
-        ],
-        nickname: [
-          { required: true, message: '请输入植物别名', trigger: ['blur', 'change'] }
         ],
         family: [{
           required: true,
@@ -365,23 +349,6 @@ export default defineComponent({
       // 表单状态：complete 完成，incomplete 未完成
       status: 'incomplete'
     });
-    const familyOptions: Array<any> = reactive([
-      {
-        value: '槭树科'
-      },
-      {
-        value: '猕猴桃科'
-      },
-      {
-        value: '五福花科'
-      },
-      {
-        value: '龙舌兰科'
-      },
-      {
-        value: '番杏科'
-      }
-    ]);
     const genusOptions: Array<any> = reactive([
       {
         value: '半柱花属'
@@ -555,19 +522,27 @@ export default defineComponent({
       state.form.plantsClassify = {};
       state.status = 'incomplete';
     };
+    const familyChange = (params: any) => {
+      state.form.family = params;
+    };
+    const genusChange = (params: any) => {
+      console.log(params);
+      state.form.genus = params;
+    };
 
     return {
       ...toRefs(state),
       submit,
       back,
       keep,
-      familyOptions,
       genusOptions,
       functionOptions,
       enjoyOptions,
       gardenOptions,
       woodyOptions,
-      herbaceousOptions
+      herbaceousOptions,
+      familyChange,
+      genusChange
     };
   }
 });
