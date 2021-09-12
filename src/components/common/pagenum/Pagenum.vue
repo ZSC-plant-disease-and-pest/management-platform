@@ -5,8 +5,9 @@
     :current-page="currentPage"
     :page-sizes="pageSizes"
     :page-size="pageSize"
-    layout="total, sizes, prev, pager, next, jumper"
+    :layout="layout"
     :total="total"
+    :small="small"
     style="margin-top: 12px"
   >
   </el-pagination>
@@ -34,6 +35,14 @@ export default defineComponent({
       default: () => {
         return [10, 20, 50, 100];
       }
+    },
+    layout: {
+      type: String,
+      default: 'total, sizes, prev, pager, next, jumper'
+    },
+    small: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['handleSizeChange', 'handleCurrentChange'],

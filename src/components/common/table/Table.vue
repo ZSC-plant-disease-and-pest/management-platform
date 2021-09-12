@@ -17,7 +17,30 @@
     style="height: 40px; position: relative; float: right;"
     @click="add"
   >
-    添加
+    <span v-if="tableType === 'model'"> 添加模型 </span>
+    <span v-else> 添加 </span>
+  </el-button>
+  <el-button
+    type="primary"
+    size="medium"
+    icon="el-icon-refresh"
+    class="button"
+    style="height: 40px; position: relative; float: right;"
+    @click="deploy"
+    v-if="tableType === 'model'"
+  >
+    一键部署模型
+  </el-button>
+  <el-button
+    type="warning"
+    size="medium"
+    icon="el-icon-open"
+    class="button"
+    style="height: 40px; position: relative; float: right;"
+    @click="train"
+    v-if="tableType === 'model'"
+  >
+    开始训练
   </el-button>
   <el-table
     :data="tableData"
@@ -71,6 +94,11 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
+    tableType: {
+      type: String,
+      // 表格类型，默认普通表格
+      default: 'common'
+    },
     // 表格内容
     tableData: {
       type: Object,
@@ -96,7 +124,15 @@ export default defineComponent({
       default: undefined
     }
   },
-  emits: ['check', 'edit', 'remove', 'add', 'sortChange', 'selectId'],
+  emits: [
+    'add',
+    'remove',
+    'edit',
+    'check',
+    'train',
+    'deploy',
+    'sortChange'
+  ],
   setup (props, { emit }) {
     // 新增
     const add = () => {
@@ -113,6 +149,14 @@ export default defineComponent({
     // 查看
     const check = (row: any) => {
       emit('check', row);
+    };
+    // 模型管理：一键训练
+    const train = (row: any) => {
+      emit('train', row);
+    };
+    // 模型管理：一键部署模型
+    const deploy = (row: any) => {
+      emit('deploy', row);
     };
     // 改变排序
     const sortChange = (params: any) => {
@@ -150,6 +194,8 @@ export default defineComponent({
       remove,
       edit,
       check,
+      train,
+      deploy,
       sortChange,
       selectChange,
       selectAll,
