@@ -24,13 +24,7 @@
 </template>
 
 <script lang="ts">
-import {
-  toRefs,
-  reactive,
-  onUpdated,
-  onBeforeMount,
-  defineComponent
-} from 'vue';
+import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
 import { plantsHttp, plantsParams } from '@/api/plants';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
@@ -50,7 +44,6 @@ export default defineComponent({
     onBeforeMount(() => {
       getPlants();
     });
-    // 发生更新时
     onUpdated(() => {
       // 判断是否从添加界面返回
       if (route.params.type === 'refresh') {
@@ -60,20 +53,13 @@ export default defineComponent({
       }
     });
 
-    // 方便内部数据响应式的改变
     const state = reactive({
-      // 表格数据
       tableData: [] as Array<any>,
-      // 是否加载中
       isLoading: false,
-      // 表格信息的总数
       total: 0,
-      // 表格的页数
       page: 1,
-      // 表格每页的信息大小
       size: 10
     });
-    // 表头信息
     const tableColumn = reactive([
       {
         prop: 'id',
@@ -106,7 +92,6 @@ export default defineComponent({
         width: 'auto'
       }
     ]);
-    // 搜索框信息
     const searchList = reactive([
       {
         name: 'name',
@@ -114,13 +99,11 @@ export default defineComponent({
         value: ''
       }
     ]);
-    // 请求参数
+
     const plantsParams = reactive({
       page: 0,
       size: 10
     } as plantsParams);
-
-    // 请求数据集
     const getPlants = () => {
       state.isLoading = true;
       plantsHttp.searchPlants(plantsParams)
@@ -138,7 +121,6 @@ export default defineComponent({
           state.isLoading = false;
         });
     };
-    // 排序
     const sortChange = (params: any) => {
       if (params.prop === null) {
         plantsParams.sort = '';
@@ -147,15 +129,12 @@ export default defineComponent({
       }
       getPlants();
     };
-    // 新增
-    const add = (data: any) => {
-      console.log(data);
+    const add = () => {
       router.push({
-        path: router.currentRoute.value.path + '/add',
-        name: 'plantsManagementAdd'
+        path: route.path + '/add',
+        name: route.name as string + 'Add'
       });
     };
-    // 删除
     const remove = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
@@ -171,20 +150,18 @@ export default defineComponent({
           });
       }
     };
-    // 编辑
     const edit = (data: any) => {
+      // 利用 JSON 来传输对象内的对象
       data.plantsClassify = JSON.stringify(data.plantsClassify);
       router.push({
-        path: router.currentRoute.value.path + '/update',
-        name: 'plantsManagementUpdate',
+        path: route.path + '/update',
+        name: route.name as string + 'Update',
         params: data
       });
     };
-    // 查看
     const check = (data: any) => {
       console.log(data);
     };
-    // 搜索
     const search = (data: any) => {
       for (const index in data) {
         if (data[index].name === 'name') {
@@ -193,7 +170,6 @@ export default defineComponent({
       }
       getPlants();
     };
-    // 重置搜索框
     const reset = () => {
       for (const index in searchList) {
         searchList[index].value = '';
@@ -201,7 +177,6 @@ export default defineComponent({
       }
       getPlants();
     };
-    // 表格每页信息大小改变
     const handleSizeChange = (newSize: any) => {
       plantsParams.size = newSize;
       plantsParams.page = 0;
@@ -209,13 +184,12 @@ export default defineComponent({
       state.page = 1;
       getPlants();
     };
-    // 表格页数改变
     const handleCurrentChange = (newPage: any) => {
       plantsParams.page = newPage;
       state.page = newPage + 1;
       getPlants();
     };
-    // 导出
+
     return {
       ...toRefs(state),
       tableColumn,

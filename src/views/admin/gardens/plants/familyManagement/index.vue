@@ -69,14 +69,7 @@
 </template>
 
 <script lang="ts">
-import {
-  toRefs,
-  reactive,
-  onUpdated,
-  onBeforeMount,
-  defineComponent,
-  computed
-} from 'vue';
+import { computed, defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
 import { familyHttp, familyParams } from '@/api/family';
 import { genusHttp, genusParams } from '@/api/genus';
 import { useRoute, useRouter } from 'vue-router';
@@ -232,14 +225,14 @@ export default defineComponent({
     };
     const familyAdd = () => {
       router.push({
-        path: router.currentRoute.value.path + '/family/add',
-        name: 'familyManagementFamilyAdd'
+        path: route.path + '/family/add',
+        name: route.name as string + 'FamilyAdd'
       });
     };
     const genusAdd = () => {
       router.push({
-        path: router.currentRoute.value.path + '/genus/add',
-        name: 'familyManagementGenusAdd'
+        path: route.path + '/genus/add',
+        name: route.name as string + 'GenusAdd'
       });
     };
     const familyRemove = (selectedIds: any) => {
@@ -275,15 +268,15 @@ export default defineComponent({
     };
     const familyEdit = (data: any) => {
       router.push({
-        path: router.currentRoute.value.path + '/family/update',
-        name: 'familyManagementFamilyUpdate',
+        path: route.path + '/family/update',
+        name: route.name as string + 'FamilyUpdate',
         params: data
       });
     };
     const genusEdit = (data: any) => {
       router.push({
-        path: router.currentRoute.value.path + '/genus/update',
-        name: 'familyManagementGenusUpdate',
+        path: route.path + '/genus/update',
+        name: route.name as string + 'GenusUpdate',
         params: data
       });
     };
