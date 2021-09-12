@@ -122,13 +122,7 @@
 
 <script lang="ts">
 
-import {
-  ref,
-  toRefs,
-  reactive,
-  onBeforeMount,
-  defineComponent
-} from 'vue';
+import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { genusHttp, genusParams } from '@/api/genus';
 import { useRouter, useRoute } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
@@ -238,6 +232,7 @@ export default defineComponent({
       state.pagingSelectRef.reset();
       state.status = 'incomplete';
     };
+
     return {
       ...toRefs(state),
       familyChange,
@@ -250,43 +245,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.form-common {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  .base-card {
-    width: 100%;
-    margin: 0px auto 25px;
-  }
-
-  .detail-card {
-    width: 100%;
-    margin: 0 auto;
-  }
-}
-.input-common {
-  width: 90%;
-}
 .select-common {
-  width: 88%;
-}
-.upload-common {
-  width: 150px;
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-
-  .upload-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 150px;
-    height: 150px;
-    line-height: 150px;
-    text-align: center;
-  }
+  width: 98.3%;
 }
 </style>

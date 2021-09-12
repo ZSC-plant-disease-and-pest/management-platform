@@ -79,6 +79,7 @@ export default defineComponent({
     const reset = () => {
       state.defaultValue = '';
     };
+
     return {
       ...toRefs(state),
       handleCurrentChange,

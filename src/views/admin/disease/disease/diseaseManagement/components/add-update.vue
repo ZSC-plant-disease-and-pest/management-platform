@@ -180,13 +180,7 @@
 
 <script lang="ts">
 
-import {
-  ref,
-  toRefs,
-  reactive,
-  onBeforeMount,
-  defineComponent
-} from 'vue';
+import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { diseaseHttp, diseaseParams } from '@/api/disease';
 import { useRouter, useRoute } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
@@ -302,16 +296,13 @@ export default defineComponent({
         state.type = 'add';
       }
     };
-    // 提交表单
     const submit = () => {
-      // 表单验证
       state.formRef.validate().then((valid: boolean) => {
         if (valid) {
           state.isLoading = true;
           if (route.path.split('/').slice(-1)[0] === 'add') {
             diseaseHttp.createDisease(state.form)
               .then(() => {
-                // 成功后进入成功界面
                 state.status = 'complete';
               })
               .finally(() => {
@@ -329,7 +320,6 @@ export default defineComponent({
         }
       });
     };
-    // 返回上一个界面
     const back = () => {
       router.push({
         path: '/admin/disease/diseaseManagement',
@@ -339,15 +329,12 @@ export default defineComponent({
         }
       });
     };
-    // 继续新增
     const keep = () => {
-      // 重置表单
       state.formRef.resetFields();
-      // 返回到新增界面
       state.status = 'incomplete';
     };
+
     return {
-      // 解构后创建对象的响应式数据
       ...toRefs(state),
       submit,
       back,
@@ -359,44 +346,4 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-.form-common {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  .base-card {
-    width: 100%;
-    margin: 0px auto 25px;
-  }
-
-  .detail-card {
-    width: 100%;
-    margin: 0 auto;
-  }
-}
-.input-common {
-  width: 90%;
-}
-.select-common {
-  width: 90%;
-}
-.upload-common {
-  width: 150px;
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-
-  .upload-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 150px;
-    height: 150px;
-    line-height: 150px;
-    text-align: center;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

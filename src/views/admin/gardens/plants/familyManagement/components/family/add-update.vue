@@ -110,13 +110,7 @@
 
 <script lang="ts">
 
-import {
-  ref,
-  toRefs,
-  reactive,
-  onBeforeMount,
-  defineComponent
-} from 'vue';
+import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { familyHttp, familyParams } from '@/api/family';
 import { useRouter, useRoute } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
@@ -206,6 +200,7 @@ export default defineComponent({
       state.formRef.resetFields();
       state.status = 'incomplete';
     };
+
     return {
       ...toRefs(state),
       submit,
@@ -216,44 +211,4 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-.form-common {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  .base-card {
-    width: 100%;
-    margin: 0px auto 25px;
-  }
-
-  .detail-card {
-    width: 100%;
-    margin: 0 auto;
-  }
-}
-.input-common {
-  width: 90%;
-}
-.select-common {
-  width: 90%;
-}
-.upload-common {
-  width: 150px;
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-
-  .upload-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 150px;
-    height: 150px;
-    line-height: 150px;
-    text-align: center;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

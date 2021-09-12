@@ -316,39 +316,4 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-.form-common {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  .base-card {
-    width: 100%;
-    margin: 0px auto 25px;
-  }
-}
-.input-common {
-  width: 30vw;
-}
-.select-common {
-  width: 30vw;
-}
-.upload-common {
-  width: 150px;
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-
-  .upload-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 150px;
-    height: 150px;
-    line-height: 150px;
-    text-align: center;
-  }
-}
-</style>
+<style lang="scss" scoped></style>
