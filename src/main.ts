@@ -3,6 +3,8 @@ import App from './App.vue';
 import axios from 'axios';
 import store from './store';
 import router from './router';
+// 导入全局 css 文件
+import '@/assets/css/global.scss';
 // 引入 element-plus
 import element from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
