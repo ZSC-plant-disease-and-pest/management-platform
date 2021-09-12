@@ -158,6 +158,7 @@ export default defineComponent({
         name: route.name as string + 'Update',
         params: data
       });
+      console.log(data);
     };
     const check = (data: any) => {
       console.log(data);
