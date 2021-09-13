@@ -144,12 +144,12 @@ export default defineComponent({
             label: '植物数据集',
             list: [
               {
-                name: 'plantsManagement',
-                label: '植物管理'
-              },
-              {
                 name: 'familyManagement',
                 label: '科属管理'
+              },
+              {
+                name: 'plantsManagement',
+                label: '植物管理'
               }
             ]
           },
@@ -165,7 +165,7 @@ export default defineComponent({
             ]
           }
         ];
-        path = '/admin/gardens/plantsManagement';
+        path = '/admin/gardens/familyManagement';
       } else if (params === 'recognition') {
         asideList = [
           {

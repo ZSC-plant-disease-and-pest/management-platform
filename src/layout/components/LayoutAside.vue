@@ -53,7 +53,7 @@ export default defineComponent({
         case 'disease':
           return 'diseaseManagement';
         case 'gardens':
-          return 'plantsManagement';
+          return 'familyManagement';
         case 'recognition':
           return 'diseaseImageManagement';
         // case 'system':
