@@ -15,7 +15,7 @@
       <el-menu-item index="home">
         首页
       </el-menu-item>
-      <el-menu-item index="new">
+      <el-menu-item index="news">
         新闻公告
       </el-menu-item>
       <el-menu-item index="disease">
@@ -93,23 +93,23 @@ export default defineComponent({
       if (params === 'home') {
         // 跳转到首页，隐藏 aside
         path = '/admin/home';
-      } else if (params === 'new') {
+      } else if (params === 'news') {
         // 侧边导航栏列表
         asideList = [
           {
-            name: 'new',
+            name: 'news',
             icon: 'el-icon-watermelon',
             label: '新闻公告',
             list: [
               {
-                name: 'newManagement',
+                name: 'newsManagement',
                 label: '新闻管理'
               }
             ]
           }
         ];
         // 根据头部菜单路径(param = 'new'),跳转到他的第一个子页面
-        path = '/admin/new/newManagement';
+        path = '/admin/news/newsManagement';
       } else if (params === 'disease') {
         asideList = [
           {

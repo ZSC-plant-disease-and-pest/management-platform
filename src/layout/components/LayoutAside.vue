@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -48,8 +48,8 @@ export default defineComponent({
     const router = useRouter();
     const defaultActive = computed(() => {
       switch (props.path) {
-        case 'new':
-          return 'newManagement';
+        case 'news':
+          return 'newsManagement';
         case 'disease':
           return 'diseaseManagement';
         case 'gardens':

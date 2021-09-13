@@ -13,9 +13,9 @@ const layout = () => import('@/layout/index.vue');
 const home = () => import('@/views/admin/home/index.vue');
 
 // 2 新闻公告
-// new/newManagement 新闻管理
-const newManagement = () => import('@/views/admin/new/new/newManagement/index.vue');
-const newManagementAddUpdate = () => import('@/views/admin/new/new/newManagement/components/add-update.vue');
+// news/newsManagement 新闻管理
+const newsManagement = () => import('@/views/admin/news/news/newsManagement/index.vue');
+const newsManagementAddUpdate = () => import('@/views/admin/news/news/newsManagement/components/add-update.vue');
 
 // 3 病虫害数据库
 // disease/diseaseManagement 植物病害管理
@@ -79,15 +79,15 @@ const routes: Array<RouteRecordRaw> = [
       breadcrumb: [
         {
           name: '新闻公告/新闻管理',
-          path: '/admin/new/newManagement'
+          path: '/admin/news/newsManagement'
         },
         {
           name: '新闻公告/新闻管理/新增',
-          path: '/admin/new/newManagement/add'
+          path: '/admin/news/newsManagement/add'
         },
         {
           name: '新闻公告/新闻管理/编辑',
-          path: '/admin/new/newManagement/update'
+          path: '/admin/news/newsManagement/update'
         },
         {
           name: '病虫害数据库/植物病害管理',
@@ -206,19 +206,19 @@ const routes: Array<RouteRecordRaw> = [
         component: home
       },
       {
-        path: 'new/newManagement',
-        name: 'newManagement',
-        component: newManagement
+        path: 'news/newsManagement',
+        name: 'newsManagement',
+        component: newsManagement
       },
       {
-        path: 'new/newManagement/add',
-        name: 'newManagementAdd',
-        component: newManagementAddUpdate
+        path: 'news/newsManagement/add',
+        name: 'newsManagementAdd',
+        component: newsManagementAddUpdate
       },
       {
-        path: 'new/newManagement/update',
-        name: 'newManagementUpdate',
-        component: newManagementAddUpdate
+        path: 'news/newsManagement/update',
+        name: 'newsManagementUpdate',
+        component: newsManagementAddUpdate
       },
       {
         path: 'disease/diseaseManagement',
