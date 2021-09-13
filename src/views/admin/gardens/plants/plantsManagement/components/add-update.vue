@@ -349,23 +349,6 @@ export default defineComponent({
       // 表单状态：complete 完成，incomplete 未完成
       status: 'incomplete'
     });
-    const genusOptions: Array<any> = reactive([
-      {
-        value: '半柱花属'
-      },
-      {
-        value: '水蓑衣属'
-      },
-      {
-        value: '枪刀药属'
-      },
-      {
-        value: '银脉爵床属'
-      },
-      {
-        value: '鳞花草属'
-      }
-    ]);
     const functionOptions: Array<any> = reactive([
       {
         value: '耐阴树种'
@@ -526,7 +509,6 @@ export default defineComponent({
       state.form.family = params;
     };
     const genusChange = (params: any) => {
-      console.log(params);
       state.form.genus = params;
     };
 
@@ -535,7 +517,6 @@ export default defineComponent({
       submit,
       back,
       keep,
-      genusOptions,
       functionOptions,
       enjoyOptions,
       gardenOptions,

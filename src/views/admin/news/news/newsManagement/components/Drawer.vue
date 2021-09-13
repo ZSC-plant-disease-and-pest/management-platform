@@ -214,13 +214,12 @@ export default defineComponent({
       state.tableLoading = true;
       newsHttp.searchImage(state.searchForm)
         .then((response: any) => {
-          console.log(response);
-          // state.total = response.totalElements;
-          // state.size = response.size;
-          // state.tableData = [];
-          // for (let i = 0; i < response.content.length; i++) {
-          //   state.tableData.push(response.content[i]);
-          // }
+          state.total = response.totalElements;
+          state.size = response.size;
+          state.tableData = [];
+          for (let i = 0; i < response.content.length; i++) {
+            state.tableData.push(response.content[i]);
+          }
         })
         .finally(() => {
           state.tableLoading = false;
