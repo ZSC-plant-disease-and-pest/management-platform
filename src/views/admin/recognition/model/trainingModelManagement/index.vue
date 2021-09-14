@@ -43,12 +43,12 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
-      getDisease();
+      getModel();
     });
     onUpdated(() => {
       if (route.params.type === 'refresh') {
         route.params.type = '';
-        getDisease();
+        getModel();
       }
     });
 
@@ -67,24 +67,24 @@ export default defineComponent({
       },
       {
         prop: 'name',
-        label: '病害名称',
+        label: '模型名称',
         width: 'auto'
       },
       {
-        prop: 'overview',
-        label: '植物表现',
+        prop: 'dataSetType',
+        label: '数据集类型',
         width: 'auto'
       },
       {
-        prop: 'damagedParts',
-        label: '危害部位',
+        prop: 'status',
+        label: '状态',
         width: 'auto'
       }
     ]);
     const searchList = reactive([
       {
         name: 'name',
-        placeholder: '病害名称',
+        placeholder: '模型名称',
         value: ''
       }
     ]);
@@ -93,7 +93,7 @@ export default defineComponent({
       page: 0,
       size: 10
     } as modelParams);
-    const getDisease = () => {
+    const getModel = () => {
       state.isLoading = true;
       modelHttp.searchModel(modelParams)
         .then((response: any) => {
@@ -115,7 +115,7 @@ export default defineComponent({
       } else {
         modelParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
       }
-      getDisease();
+      getModel();
     };
     const add = () => {
       router.push({
@@ -131,7 +131,7 @@ export default defineComponent({
         modelHttp.deleteModel(selectedIds.join(','))
           .then(() => {
             ElMessage.success('删除成功');
-            getDisease();
+            getModel();
           })
           .finally(() => {
             state.isLoading = false;
@@ -154,26 +154,26 @@ export default defineComponent({
           modelParams.name = data[index].value === '' ? undefined : data[index].value;
         }
       }
-      getDisease();
+      getModel();
     };
     const reset = () => {
       for (const index in searchList) {
         searchList[index].value = '';
         modelParams.name = undefined;
       }
-      getDisease();
+      getModel();
     };
     const handleSizeChange = (newSize: any) => {
       modelParams.size = newSize;
       modelParams.page = 0;
       state.size = newSize;
       state.page = 1;
-      getDisease();
+      getModel();
     };
     const handleCurrentChange = (newPage: any) => {
       modelParams.page = newPage;
       state.page = newPage + 1;
-      getDisease();
+      getModel();
     };
 
     return {
