@@ -129,19 +129,6 @@
       </el-row>
       <el-row :gutter="0">
         <el-col :span="12">
-          <el-form-item label="病害图集：" prop="file">
-            <el-upload
-              class="upload-common"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-            >
-              <i class="el-icon-plus upload-icon"></i>
-            </el-upload>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="0">
-        <el-col :span="12">
           <el-form-item>
             <el-button :loading="isLoading" @click="back">
               返回
