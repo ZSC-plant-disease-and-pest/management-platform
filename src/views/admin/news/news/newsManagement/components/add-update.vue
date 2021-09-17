@@ -6,31 +6,10 @@
     size="small"
     :rules="rules"
     :model="form"
-    label-width="140px"
+    label-width="100px"
     v-show="status === 'incomplete'"
   >
-    <el-card class="base-card">
-      <template #header>
-        <div class="card-title">
-          <span>
-            基础信息
-          </span>
-          <el-button type="primary" @click="openDrawer">
-            管理新闻图片
-          </el-button>
-        </div>
-      </template>
       <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="ID：" prop="id">
-            <el-input
-              class="input-common"
-              v-model="form.id"
-              placeholder="自动生成"
-              :disabled="true"
-            />
-          </el-form-item>
-        </el-col>
         <el-col :span="12">
           <el-form-item label="新闻作者：" prop="author">
             <el-input
@@ -40,8 +19,6 @@
             />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="新闻标题：" prop="title">
             <el-input
@@ -51,6 +28,8 @@
             />
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="新闻标签：" prop="newsTag">
             <el-select
@@ -68,17 +47,14 @@
           </el-form-item>
         </el-col>
       </el-row>
-    </el-card>
-    <el-card class="detail-card">
-      <template #header>
-        <span>
-          详细信息
-        </span>
-      </template>
       <el-row :gutter="0">
         <el-col :span="24">
           <el-form-item label="新闻内容：" prop="content">
-            <v-md-editor v-model="form.content" />
+            <v-md-editor
+              mode="edit"
+              height="200px"
+              v-model="form.content"
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -98,7 +74,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-    </el-card>
   </el-form>
   <el-result
     icon="success"

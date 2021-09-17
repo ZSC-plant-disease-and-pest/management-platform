@@ -1,24 +1,29 @@
 .form-common {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  .base-card {
-    width: 100%;
-    margin: 0px auto 25px;
-  }
-
-  .detail-card {
-    width: 100%;
-    margin: 0 auto;
-  }
+  margin-top: 15px;
+  width: 100%;
 }
 .input-common {
-  width: 90%;
+  width: 100%;
 }
 .select-common {
   width: 100%;
+}
+.pagingSelect-common {
+  width: 100.1%;
+}
+.textarea-row {
+  margin-bottom: 13px;
+}
+.textarea-row-space {
+  margin-bottom: 38px;
+}
+.textarea-common {
+  width: 99.2%;
+  height: 80px;
+}
+.textarea-one {
+  width: 99.6%;
+  height: 80px;
 }
 .upload-common {
   width: 150px;

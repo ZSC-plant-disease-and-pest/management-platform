@@ -5,100 +5,106 @@
     size="small"
     :rules="rules"
     :model="form"
-    label-width="140px"
+    label-width="100px"
     v-show="status === 'incomplete'"
   >
-    <el-card class="base-card">
-      <template #header>
-        <span>
-          基础信息
-        </span>
-      </template>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="ID：" prop="id">
-            <el-input
-              class="input-common"
-              v-model="form.id"
-              placeholder="自动生成"
-              :disabled="true"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="属类名称：" prop="name">
-            <el-input
-              class="input-common"
-              v-model="form.name"
-              placeholder="请输入属类名称"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="0">
-        <el-col :span="12">
-          <el-form-item label="所属科类：" prop="family">
-            <FamilyPagingSelect
-              class="select-common"
-              ref="pagingSelectRef"
-              :defaultValue="form.family"
-              @selectChange="familyChange"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
-    <el-card class="detail-card">
-      <template #header>
-        <span>
-          详细信息
-        </span>
-      </template>
-      <el-row :gutter="0">
-        <el-col :span="24">
-          <el-form-item label="简介：" prop="introduction">
-            <v-md-editor v-model="form.introduction" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="0">
-        <el-col :span="24">
-          <el-form-item label="形态特征：" prop="appearance">
-            <v-md-editor v-model="form.appearance" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="0">
-        <el-col :span="24">
-          <el-form-item label="分布地域：" prop="regions">
-            <v-md-editor v-model="form.regions" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="0">
-        <el-col :span="24">
-          <el-form-item label="常见植物：" prop="plants">
-            <v-md-editor v-model="form.plants" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="0">
-        <el-col :span="12">
-          <el-form-item>
-            <el-button :loading="isLoading" @click="back">
-              返回
-            </el-button>
-            <el-button
-              type="primary"
-              :loading="isLoading"
-              @click="submit"
-            >
-              提交
-            </el-button>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-card>
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <el-form-item label="属类名称：" prop="name">
+          <el-input
+            class="input-common"
+            v-model="form.name"
+            placeholder="请输入属类名称"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="所属科类：" prop="family">
+          <FamilyPagingSelect
+            class="pagingSelect-common"
+            ref="pagingSelectRef"
+            :defaultValue="form.family"
+            @selectChange="familyChange"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row :gutter="0" class="textarea-row">
+      <el-col :span="24">
+        <el-form-item label="简介：" prop="introduction">
+          <el-input
+            class="textarea-common"
+            type="textarea"
+            resize="none"
+            :autosize="{ minRows: 4, maxRows: 4}"
+            placeholder="请输入简介"
+            clearable
+            v-model="form.introduction"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row :gutter="0" class="textarea-row">
+      <el-col :span="24">
+        <el-form-item label="形态特征：" prop="appearance">
+          <el-input
+            class="textarea-common"
+            type="textarea"
+            resize="none"
+            :autosize="{ minRows: 4, maxRows: 4}"
+            placeholder="请输入形态特征"
+            clearable
+            v-model="form.appearance"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row :gutter="0" class="textarea-row">
+      <el-col :span="24">
+        <el-form-item label="分布地域：" prop="regions">
+          <el-input
+            class="textarea-common"
+            type="textarea"
+            resize="none"
+            :autosize="{ minRows: 4, maxRows: 4}"
+            placeholder="请输入分布地域"
+            clearable
+            v-model="form.regions"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row :gutter="0" class="textarea-row">
+      <el-col :span="24">
+        <el-form-item label="常见植物：" prop="plants">
+          <el-input
+            class="textarea-common"
+            type="textarea"
+            resize="none"
+            :autosize="{ minRows: 4, maxRows: 4}"
+            placeholder="请输入常见植物"
+            clearable
+            v-model="form.plants"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row :gutter="0">
+      <el-col :span="12">
+        <el-form-item>
+          <el-button :loading="isLoading" @click="back">
+            返回
+          </el-button>
+          <el-button
+            type="primary"
+            :loading="isLoading"
+            @click="submit"
+          >
+            提交
+          </el-button>
+        </el-form-item>
+      </el-col>
+    </el-row>
   </el-form>
   <el-result
     icon="success"
