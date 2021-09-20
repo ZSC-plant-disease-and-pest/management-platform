@@ -66,7 +66,23 @@ export class diseaseHttp {
   // 通过 ID 查询病害
   static searchDiseaseById (id: number) {
     return http({
-      url: `/api/diseaseInfo/search/${id}`,
+      url: `/api/diseaseInfo/searchId/${id}`,
+      method: 'get'
+    });
+  }
+
+  // 病害信息图片展示
+  static searchDiseaseImg (name: string) {
+    return http({
+      url: `/api/diseaseInfo/searchImg/${name}`,
+      method: 'get'
+    });
+  }
+
+  // 通过名称查看病害详情
+  static searchDiseaseByName (name: string) {
+    return http({
+      url: `/api/diseaseInfo/searchName/${name}`,
       method: 'get'
     });
   }
@@ -78,6 +94,27 @@ export class diseaseHttp {
       url: `/api/diseaseInfo/update/${id}`,
       method: 'put',
       data: params
+    });
+  }
+
+  // 上传病害图集
+  static uploadImg (params: diseaseParams, body: Array<any>) {
+    const fileImg = new FormData();
+    const { name } = params;
+    for (const item in body) {
+      if (body[item].raw) {
+        fileImg.append('img', body[item].raw);
+      }
+    }
+    // fileImg.append('img', body[0].raw);
+    return http({
+      url: '/api/diseaseInfo/uploadImg',
+      method: 'post',
+      params: { name },
+      data: fileImg,
+      headers: {
+        'Content-type': 'multipart/form-data'
+      }
     });
   }
 }

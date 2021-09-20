@@ -54,7 +54,7 @@ export class pestHttp {
     });
   }
 
-  // 查询全部虫害
+  // 查询虫害
   static searchPest (params: (pestParams | null)) {
     return http({
       url: '/api/pestInfo/search',
@@ -71,6 +71,22 @@ export class pestHttp {
     });
   }
 
+  // 虫害信息图片展示
+  static searchPestImg (name: string) {
+    return http({
+      url: `/api/pestInfo/searchImg/${name}`,
+      method: 'get'
+    });
+  }
+
+  // 通过名称查看虫害详情
+  static searchPestByName (name: string) {
+    return http({
+      url: `/api/pestInfo/search/${name}`,
+      method: 'get'
+    });
+  }
+
   // 修改虫害
   static updatePest (params: pestParams) {
     const { id } = params;
@@ -78,6 +94,27 @@ export class pestHttp {
       url: `/api/pestInfo/update/${id}`,
       method: 'put',
       data: params
+    });
+  }
+
+  // 上传虫害图集
+  static uploadImg (params: pestParams, body: Array<any>) {
+    const fileImg = new FormData();
+    const { name } = params;
+    for (const item in body) {
+      if (body[item].raw) {
+        fileImg.append('img', body[item].raw);
+      }
+    }
+    // fileImg.append('img', body[0].raw);
+    return http({
+      url: '/api/pestInfo/uploadImg',
+      method: 'post',
+      params: { name },
+      data: fileImg,
+      headers: {
+        'Content-type': 'multipart/form-data'
+      }
     });
   }
 }
