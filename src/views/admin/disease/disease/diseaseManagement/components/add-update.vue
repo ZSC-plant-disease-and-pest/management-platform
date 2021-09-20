@@ -5,7 +5,7 @@
     size="small"
     :rules="rules"
     :model="form"
-    label-width="100px"
+    label-width="130px"
     v-show="status === 'incomplete'"
   >
     <el-row :gutter="20">
@@ -156,6 +156,30 @@
     </el-row>
     <el-row :gutter="0">
       <el-col :span="12">
+        <el-form-item label="上传病害图集：">
+          <el-upload
+            ref="uploadRef"
+            action=""
+            :auto-upload="false"
+            list-type="picture"
+            :limit="10"
+            :on-change="onChange"
+            :before-remove="beforeRemove"
+          >
+            <el-button size="small" type="primary">
+              点击上传
+            </el-button>
+            <template #tip>
+              <div>
+                最多上传十张图片
+              </div>
+            </template>
+          </el-upload>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row :gutter="0">
+      <el-col :span="12">
         <el-form-item>
           <el-button :loading="isLoading" @click="back">
             返回
@@ -251,10 +275,10 @@ export default defineComponent({
       },
       // 界面类型：add 新增，update 更新
       type: '',
-      // 是否加载中
       isLoading: false,
       // 表单状态：complete 完成，incomplete 未完成
-      status: 'incomplete'
+      status: 'incomplete',
+      fileImg: [] as Array<any>
     });
     const damagedPartsOptions: Array<any> = reactive([
       {
@@ -316,7 +340,14 @@ export default defineComponent({
           if (route.path.split('/').slice(-1)[0] === 'add') {
             diseaseHttp.createDisease(state.form)
               .then(() => {
-                state.status = 'complete';
+                if (state.fileImg.length === 0) {
+                  state.status = 'complete';
+                } else {
+                  diseaseHttp.uploadImg(state.form, state.fileImg)
+                    .then(() => {
+                      state.status = 'complete';
+                    });
+                }
               })
               .finally(() => {
                 state.isLoading = false;
@@ -324,7 +355,14 @@ export default defineComponent({
           } else if (route.path.split('/').slice(-1)[0] === 'update') {
             diseaseHttp.updateDisease(state.form)
               .then(() => {
-                state.status = 'complete';
+                if (state.fileImg.length === 0) {
+                  state.status = 'complete';
+                } else {
+                  diseaseHttp.uploadImg(state.form, state.fileImg)
+                    .then(() => {
+                      state.status = 'complete';
+                    });
+                }
               })
               .finally(() => {
                 state.isLoading = false;
@@ -346,6 +384,12 @@ export default defineComponent({
       state.formRef.resetFields();
       state.status = 'incomplete';
     };
+    const onChange = (file: any, fileList: any) => {
+      state.fileImg = fileList;
+    };
+    const beforeRemove = () => {
+      state.fileImg = [];
+    };
 
     return {
       ...toRefs(state),
@@ -353,7 +397,9 @@ export default defineComponent({
       back,
       keep,
       damagedPartsOptions,
-      overviewOptions
+      overviewOptions,
+      onChange,
+      beforeRemove
     };
   }
 });
