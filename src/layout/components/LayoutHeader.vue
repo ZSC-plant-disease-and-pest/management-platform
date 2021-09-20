@@ -13,21 +13,27 @@
       @select="menuSelect"
     >
       <el-menu-item index="home">
+        <i class="el-icon-s-home"></i>
         首页
       </el-menu-item>
       <el-menu-item index="news">
+        <i class="el-icon-news"></i>
         新闻公告
       </el-menu-item>
       <el-menu-item index="disease">
+        <i class="el-icon-s-data"></i>
         病虫害数据库
       </el-menu-item>
       <el-menu-item index="gardens">
+        <i class="el-icon-sunny"></i>
         园林花卉
       </el-menu-item>
       <el-menu-item index="recognition">
+        <i class="el-icon-search"></i>
         AI 智能识别
       </el-menu-item>
       <el-menu-item index="system">
+        <i class="el-icon-set-up"></i>
         系统管理
       </el-menu-item>
     </el-menu>
