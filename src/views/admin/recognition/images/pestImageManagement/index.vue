@@ -5,13 +5,13 @@
     @reset="reset"
   />
   <Table
+  :tableType="'images'"
     :tableData="tableData"
     :tableColumn="tableColumn"
     :loading="isLoading"
     @check="check"
     @edit="edit"
     @remove="remove"
-    @add="add"
     @sortChange="sortChange"
   />
   <Pagenum
@@ -21,6 +21,7 @@
     @handleSizeChange="handleSizeChange"
     @handleCurrentChange="handleCurrentChange"
   />
+  <Dialog ref="dialogRef" />
 </template>
 
 <script lang="ts">
@@ -29,28 +30,29 @@ import {
   reactive,
   onUpdated,
   onBeforeMount,
-  defineComponent
+  defineComponent,
+  ref
 } from 'vue';
 import { datasetHttp, datasetParams } from '@/api/dataset';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
+import Dialog from '@/components/pages/recognition/images/Dialog.vue';
 
 export default defineComponent({
   components: {
     Table,
     Search,
-    Pagenum
+    Pagenum,
+    Dialog
   },
   setup () {
     const route = useRoute();
-    const router = useRouter();
     onBeforeMount(() => {
       searchPestDataset();
     });
-    // 发生更新时
     onUpdated(() => {
       // 判断是否从添加界面返回
       if (route.params.type === 'refresh') {
@@ -60,20 +62,14 @@ export default defineComponent({
       }
     });
 
-    // 方便内部数据响应式的改变
     const state = reactive({
-      // 表格数据
       tableData: [] as Array<any>,
-      // 是否加载中
       isLoading: false,
-      // 表格信息的总数
       total: 0,
-      // 表格的页数
       page: 1,
-      // 表格每页的信息大小
-      size: 10
+      size: 10,
+      dialogRef: ref()
     });
-    // 表头信息
     const tableColumn = reactive([
       {
         prop: 'id',
@@ -96,7 +92,6 @@ export default defineComponent({
         width: 'auto'
       }
     ]);
-    // 搜索框信息
     const searchList = reactive([
       {
         name: 'name',
@@ -105,12 +100,10 @@ export default defineComponent({
       }
     ]);
 
-    // 请求参数
     const datasetParams = reactive({
       page: 0,
       size: 10
     } as datasetParams);
-    // 请求虫害数据集
     const searchPestDataset = () => {
       state.isLoading = true;
       datasetHttp.searchPestDataset(datasetParams)
@@ -127,7 +120,6 @@ export default defineComponent({
           state.isLoading = false;
         });
     };
-    // 排序
     const sortChange = (params: any) => {
       if (params.prop === null) {
         datasetParams.sort = '';
@@ -136,14 +128,6 @@ export default defineComponent({
       }
       searchPestDataset();
     };
-    // 新增
-    const add = () => {
-      router.push({
-        path: router.currentRoute.value.path + '/add',
-        name: 'pestImageManagementAdd'
-      });
-    };
-    // 删除
     const remove = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
@@ -159,19 +143,12 @@ export default defineComponent({
         //   });
       }
     };
-    // 编辑
     const edit = (data: any) => {
-      router.push({
-        path: router.currentRoute.value.path + '/update',
-        name: 'pestImageManagementUpdate',
-        params: data
-      });
+      state.dialogRef.openDialog('pest', data);
     };
-    // 查看
     const check = (data: any) => {
       console.log(data);
     };
-    // 搜索
     const search = (data: any) => {
       for (const index in data) {
         if (data[index].name === 'name') {
@@ -180,7 +157,6 @@ export default defineComponent({
       }
       searchPestDataset();
     };
-    // 重置搜索框
     const reset = () => {
       for (const index in searchList) {
         searchList[index].value = '';
@@ -188,7 +164,6 @@ export default defineComponent({
       }
       searchPestDataset();
     };
-    // 表格每页信息大小改变
     const handleSizeChange = (newSize: any) => {
       datasetParams.size = newSize;
       datasetParams.page = 0;
@@ -196,18 +171,16 @@ export default defineComponent({
       state.page = 1;
       searchPestDataset();
     };
-    // 表格页数改变
     const handleCurrentChange = (newPage: any) => {
       datasetParams.page = newPage;
       state.page = newPage + 1;
       searchPestDataset();
     };
-    // 导出
+
     return {
       ...toRefs(state),
       tableColumn,
       sortChange,
-      add,
       remove,
       edit,
       check,

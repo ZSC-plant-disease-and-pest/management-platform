@@ -41,13 +41,10 @@ const videoManagementAddUpdate = () => import('@/views/admin/gardens/gardens/vid
 // 5 AI 智能识别
 // recognition/diseaseImageManagement 病害图像数据集管理
 const diseaseImageManagement = () => import('@/views/admin/recognition/images/diseaseImageManagement/index.vue');
-const diseaseImageManagementAddUpdate = () => import('@/views/admin/recognition/images/diseaseImageManagement/components/add-update.vue');
 // recognition/pestImageManagement 病害图像数据集管理
 const pestImageManagement = () => import('@/views/admin/recognition/images/pestImageManagement/index.vue');
-const pestImageManagementAddUpdate = () => import('@/views/admin/recognition/images/pestImageManagement/components/add-update.vue');
 // recognition/plantsImageManagement 病害图像数据集管理
 const plantsImageManagement = () => import('@/views/admin/recognition/images/plantsImageManagement/index.vue');
-const plantsImageManagementAddUpdate = () => import('@/views/admin/recognition/images/plantsImageManagement/components/add-update.vue');
 
 // recognition/imagesTaggingManagement 病害图像数据集管理
 const imagesTaggingManagement = () => import('@/views/admin/recognition/dataset/imagesTaggingManagement/index.vue');
@@ -154,36 +151,12 @@ const routes: Array<RouteRecordRaw> = [
           path: '/admin/recognition/diseaseImageManagement'
         },
         {
-          name: 'AI 智能识别/病害图像数据集管理/新增',
-          path: '/admin/recognition/diseaseImageManagement/add'
-        },
-        {
-          name: 'AI 智能识别/病害图像数据集管理/编辑',
-          path: '/admin/recognition/diseaseImageManagement/update'
-        },
-        {
           name: 'AI 智能识别/虫害图像数据集管理',
           path: '/admin/recognition/pestImageManagement'
         },
         {
-          name: 'AI 智能识别/虫害图像数据集管理/新增',
-          path: '/admin/recognition/pestImageManagement/add'
-        },
-        {
-          name: 'AI 智能识别/虫害图像数据集管理/编辑',
-          path: '/admin/recognition/pestImageManagement/update'
-        },
-        {
           name: 'AI 智能识别/植物图像数据集管理',
           path: '/admin/recognition/plantsImageManagement'
-        },
-        {
-          name: 'AI 智能识别/植物图像数据集管理/新增',
-          path: '/admin/recognition/plantsImageManagement/add'
-        },
-        {
-          name: 'AI 智能识别/植物图像数据集管理/编辑',
-          path: '/admin/recognition/plantsImageManagement/update'
         },
         {
           name: 'AI 智能识别/图片标注管理',
@@ -311,44 +284,14 @@ const routes: Array<RouteRecordRaw> = [
         component: diseaseImageManagement
       },
       {
-        path: 'recognition/diseaseImageManagement/add',
-        name: 'diseaseImageManagementAdd',
-        component: diseaseImageManagementAddUpdate
-      },
-      {
-        path: 'recognition/diseaseImageManagement/update',
-        name: 'diseaseImageManagementUpdate',
-        component: diseaseImageManagementAddUpdate
-      },
-      {
         path: 'recognition/pestImageManagement',
         name: 'pestImageManagement',
         component: pestImageManagement
       },
       {
-        path: 'recognition/pestImageManagement/add',
-        name: 'pestImageManagementAdd',
-        component: pestImageManagementAddUpdate
-      },
-      {
-        path: 'recognition/pestImageManagement/update',
-        name: 'pestImageManagementUpdate',
-        component: pestImageManagementAddUpdate
-      },
-      {
         path: 'recognition/plantsImageManagement',
         name: 'plantsImageManagement',
         component: plantsImageManagement
-      },
-      {
-        path: 'recognition/plantsImageManagement/add',
-        name: 'plantsImageManagementAdd',
-        component: plantsImageManagementAddUpdate
-      },
-      {
-        path: 'recognition/plantsImageManagement/update',
-        name: 'plantsImageManagementUpdate',
-        component: plantsImageManagementAddUpdate
       },
       {
         path: 'recognition/imagesTaggingManagement',

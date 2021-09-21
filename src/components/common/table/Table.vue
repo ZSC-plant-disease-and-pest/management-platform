@@ -16,6 +16,7 @@
     class="button"
     style="height: 40px; position: relative; float: right;"
     @click="add"
+    v-if="tableType !== 'images'"
   >
     <span v-if="tableType === 'model'"> 添加模型 </span>
     <span v-else> 添加 </span>
