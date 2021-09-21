@@ -8,24 +8,18 @@ export interface genusParams extends searchByInfo {
   // 属类名称
   name?: string
 
+  // 拉丁学名
+  scientificName?: string
+
   // 所属科类
   family?: string
 
   // 简介
   introduction?: string
-
-  // 形态特征
-  appearance?: string
-
-  // 分布地域
-  regions?: string
-
-  // 常见植物
-  plants?: string
 }
 
 export class genusHttp {
-  // 创建属类
+  // 新增属类
   static createGenus (params: genusParams) {
     return http({
       url: '/api/genusInfo/create',
@@ -37,12 +31,12 @@ export class genusHttp {
   // 删除属类
   static deleteGenus (ids: number) {
     return http({
-      url: `/api/genusInfo/delete/${ids}`,
+      url: `/api/genusInfo/deleteByIds/${ids}`,
       method: 'delete'
     });
   }
 
-  // 查询全部属类
+  // 分页查询属类信息
   static searchGenus (params: (genusParams | null)) {
     return http({
       url: '/api/genusInfo/search',
@@ -51,19 +45,19 @@ export class genusHttp {
     });
   }
 
-  // 通过 ID 查询属类
+  // 通过 ID 查看属类详情
   static searchGenusById (id: number) {
     return http({
-      url: `/api/genusInfo/search/${id}`,
+      url: `/api/genusInfo/searchById/${id}`,
       method: 'get'
     });
   }
 
-  // 修改属类
+  // 修改属类信息
   static updateGenus (params: genusParams) {
     const { id } = params;
     return http({
-      url: `/api/genusInfo/update/${id}`,
+      url: `/api/genusInfo/updateById/${id}`,
       method: 'put',
       data: params
     });

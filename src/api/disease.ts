@@ -37,7 +37,7 @@ export interface diseaseParams extends searchByInfo {
 }
 
 export class diseaseHttp {
-  // 创建病害
+  // 新增病害信息与对应数据集
   static createDisease (params: diseaseParams) {
     return http({
       url: '/api/diseaseInfo/create',
@@ -46,15 +46,15 @@ export class diseaseHttp {
     });
   }
 
-  // 删除病害
+  // 删除病害信息
   static deleteDisease (ids: number) {
     return http({
-      url: `/api/diseaseInfo/delete/${ids}`,
+      url: `/api/diseaseInfo/deleteByIds/${ids}`,
       method: 'delete'
     });
   }
 
-  // 查询病害
+  // 分页查询病害信息
   static searchDisease (params: (diseaseParams | null)) {
     return http({
       url: '/api/diseaseInfo/search',
@@ -63,18 +63,10 @@ export class diseaseHttp {
     });
   }
 
-  // 通过 ID 查询病害
+  // 通过 ID 查看病害详情
   static searchDiseaseById (id: number) {
     return http({
-      url: `/api/diseaseInfo/searchId/${id}`,
-      method: 'get'
-    });
-  }
-
-  // 病害信息图片展示
-  static searchDiseaseImg (name: string) {
-    return http({
-      url: `/api/diseaseInfo/searchImg/${name}`,
+      url: `/api/diseaseInfo/searchById/${id}`,
       method: 'get'
     });
   }
@@ -82,22 +74,32 @@ export class diseaseHttp {
   // 通过名称查看病害详情
   static searchDiseaseByName (name: string) {
     return http({
-      url: `/api/diseaseInfo/searchName/${name}`,
+      url: `/api/diseaseInfo/searchByName/${name}`,
       method: 'get'
     });
   }
 
-  // 修改病害
+  // 病害信息图片展示
+  static searchDiseaseImgByName (params: diseaseParams) {
+    const { name } = params;
+    return http({
+      url: `/api/diseaseInfo/searchImgByName/${name}`,
+      method: 'get',
+      params
+    });
+  }
+
+  // 修改病害与对应数据集信息
   static updateDisease (params: diseaseParams) {
     const { id } = params;
     return http({
-      url: `/api/diseaseInfo/update/${id}`,
+      url: `/api/diseaseInfo/updateById/${id}`,
       method: 'put',
       data: params
     });
   }
 
-  // 上传病害图集
+  // 上传病害信息图片
   static uploadImg (params: diseaseParams, body: Array<any>) {
     const fileImg = new FormData();
     const { name } = params;

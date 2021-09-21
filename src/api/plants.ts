@@ -58,7 +58,7 @@ export interface plantsParams extends searchByInfo {
 }
 
 export class plantsHttp {
-  // 创建植物信息
+  // 新增植物信息与对应数据集
   static createPlants (params: plantsParams) {
     return http({
       url: '/api/plantsInfo/create',
@@ -70,12 +70,12 @@ export class plantsHttp {
   // 删除植物信息
   static deletePlants (ids: string) {
     return http({
-      url: `/api/plantsInfo/delete/${ids}`,
+      url: `/api/plantsInfo/deleteByIds/${ids}`,
       method: 'delete'
     });
   }
 
-  // 查询植物
+  // 分页查询植物信息
   static searchPlants (params: (plantsParams | null)) {
     return http({
       url: '/api/plantsInfo/search',
@@ -84,18 +84,10 @@ export class plantsHttp {
     });
   }
 
-  // 通过 Id 查询植物
+  // 通过 ID 查看植物详情
   static searchPlantsById (id: number) {
     return http({
-      url: `/api/plantsInfo/search/${id}`,
-      method: 'get'
-    });
-  }
-
-  // 植物信息图片展示
-  static searchPlantsImg (name: string) {
-    return http({
-      url: `/api/plantsInfo/searchImg/${name}`,
+      url: `/api/plantsInfo/searchById/${id}`,
       method: 'get'
     });
   }
@@ -103,22 +95,32 @@ export class plantsHttp {
   // 通过名称查看植物详情
   static searchDiseaseByName (name: string) {
     return http({
-      url: `/api/plantsInfo/search/${name}`,
+      url: `/api/plantsInfo/searchByName/${name}`,
       method: 'get'
     });
   }
 
-  // 修改植物
+  // 植物信息图片展示
+  static searchPlantsImgByName (params: plantsParams) {
+    const { name } = params;
+    return http({
+      url: `/api/plantsInfo/searchImgByName/${name}`,
+      method: 'get',
+      params
+    });
+  }
+
+  // 修改植物与对应数据集信息
   static updatePlants (params: plantsParams) {
     const { id } = params;
     return http({
-      url: `/api/plantsInfo/update/${id}`,
+      url: `/api/plantsInfo/updateById/${id}`,
       method: 'put',
       data: params
     });
   }
 
-  // 上传植物图集
+  // 上传植物信息图片
   static uploadImg (params: plantsParams, body: Array<any>) {
     const fileImg = new FormData();
     const { name } = params;

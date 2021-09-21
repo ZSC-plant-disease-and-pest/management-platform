@@ -8,21 +8,15 @@ export interface familyParams extends searchByInfo {
   // 科类名称
   name?: string
 
+  // 拉丁学名
+  scientificName?: string
+
   // 简介
   introduction?: string
-
-  // 形态特征
-  appearance?: string
-
-  // 分布地域
-  regions?: string
-
-  // 生长环境
-  environment?: string
 }
 
 export class familyHttp {
-  // 创建科类
+  // 新增科类
   static createFamily (params: familyParams) {
     return http({
       url: '/api/familyInfo/create',
@@ -34,12 +28,12 @@ export class familyHttp {
   // 删除科类
   static deleteFamily (ids: number) {
     return http({
-      url: `/api/familyInfo/delete/${ids}`,
+      url: `/api/familyInfo/deleteByIds/${ids}`,
       method: 'delete'
     });
   }
 
-  // 查询全部科类
+  // 分页查询科类信息
   static searchFamily (params: (familyParams | null)) {
     return http({
       url: '/api/familyInfo/search',
@@ -48,19 +42,19 @@ export class familyHttp {
     });
   }
 
-  // 通过 ID 查询科类
+  // 通过 ID 查看科类详情
   static searchFamilyById (id: number) {
     return http({
-      url: `/api/familyInfo/search/${id}`,
+      url: `/api/familyInfo/searchById/${id}`,
       method: 'get'
     });
   }
 
-  // 修改科类
+  // 修改科类信息
   static updateFamily (params: familyParams) {
     const { id } = params;
     return http({
-      url: `/api/familyInfo/update/${id}`,
+      url: `/api/familyInfo/updateById/${id}`,
       method: 'put',
       data: params
     });

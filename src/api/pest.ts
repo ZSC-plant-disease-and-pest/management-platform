@@ -5,7 +5,7 @@ export interface pestParams extends searchByInfo {
   // id
   id?: number
 
-  // 病害名称
+  // 虫害名称
   name?: string
 
   // 概述,变色、坏死、腐烂、萎蔫、畸形五大类型
@@ -37,7 +37,7 @@ export interface pestParams extends searchByInfo {
 }
 
 export class pestHttp {
-  // 创建虫害
+  // 新增虫害信息与对应数据集
   static createPest (params: pestParams) {
     return http({
       url: '/api/pestInfo/create',
@@ -46,15 +46,15 @@ export class pestHttp {
     });
   }
 
-  // 删除虫害
+  // 删除虫害信息
   static deletePest (ids: number) {
     return http({
-      url: `/api/pestInfo/delete/${ids}`,
+      url: `/api/pestInfo/deleteByIds/${ids}`,
       method: 'delete'
     });
   }
 
-  // 查询虫害
+  // 分页查询虫害信息
   static searchPest (params: (pestParams | null)) {
     return http({
       url: '/api/pestInfo/search',
@@ -63,18 +63,10 @@ export class pestHttp {
     });
   }
 
-  // 通过 ID 查询虫害
+  // 通过 ID 查看虫害详情
   static searchPestById (id: number) {
     return http({
-      url: `/api/pestInfo/search/${id}`,
-      method: 'get'
-    });
-  }
-
-  // 虫害信息图片展示
-  static searchPestImg (name: string) {
-    return http({
-      url: `/api/pestInfo/searchImg/${name}`,
+      url: `/api/pestInfo/searchById/${id}`,
       method: 'get'
     });
   }
@@ -82,22 +74,32 @@ export class pestHttp {
   // 通过名称查看虫害详情
   static searchPestByName (name: string) {
     return http({
-      url: `/api/pestInfo/search/${name}`,
+      url: `/api/pestInfo/searchByName/${name}`,
       method: 'get'
     });
   }
 
-  // 修改虫害
+  // 虫害信息图片展示
+  static searchPestImgByName (params: pestParams) {
+    const { name } = params;
+    return http({
+      url: `/api/pestInfo/searchImgByName/${name}`,
+      method: 'get',
+      params
+    });
+  }
+
+  // 修改虫害与对应数据集信息
   static updatePest (params: pestParams) {
     const { id } = params;
     return http({
-      url: `/api/pestInfo/update/${id}`,
+      url: `/api/pestInfo/updateById/${id}`,
       method: 'put',
       data: params
     });
   }
 
-  // 上传虫害图集
+  // 上传虫害信息图片
   static uploadImg (params: pestParams, body: Array<any>) {
     const fileImg = new FormData();
     const { name } = params;
