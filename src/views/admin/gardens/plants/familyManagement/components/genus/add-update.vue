@@ -19,6 +19,17 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
+        <el-form-item label="拉丁学名：">
+          <el-input
+            class="input-common"
+            v-model="form.scientificName"
+            placeholder="请输入拉丁学名"
+          />
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="12">
         <el-form-item label="所属科类：" prop="family">
           <FamilyPagingSelect
             class="pagingSelect-common"
@@ -31,7 +42,7 @@
     </el-row>
     <el-row :gutter="0" class="textarea-row">
       <el-col :span="24">
-        <el-form-item label="简介：" prop="introduction">
+        <el-form-item label="简介：">
           <el-input
             class="textarea-common"
             type="textarea"
@@ -40,51 +51,6 @@
             placeholder="请输入简介"
             clearable
             v-model="form.introduction"
-          />
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row :gutter="0" class="textarea-row">
-      <el-col :span="24">
-        <el-form-item label="形态特征：" prop="appearance">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入形态特征"
-            clearable
-            v-model="form.appearance"
-          />
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row :gutter="0" class="textarea-row">
-      <el-col :span="24">
-        <el-form-item label="分布地域：" prop="regions">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入分布地域"
-            clearable
-            v-model="form.regions"
-          />
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row :gutter="0" class="textarea-row">
-      <el-col :span="24">
-        <el-form-item label="常见植物：" prop="plants">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入常见植物"
-            clearable
-            v-model="form.plants"
           />
         </el-form-item>
       </el-col>
@@ -147,12 +113,10 @@ export default defineComponent({
     const state = reactive({
       form: {
         id: undefined,
-        name: undefined,
-        family: undefined,
-        introduction: '',
-        appearance: '',
-        regions: '',
-        plants: ''
+        name: '',
+        scientificName: '',
+        family: '',
+        introduction: ''
       } as genusParams,
       formRef: ref(),
       pagingSelectRef: ref(),

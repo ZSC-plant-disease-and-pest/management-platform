@@ -66,27 +66,32 @@
       </el-card>
     </el-col>
   </el-row>
+  <FamilyDialog ref="familyDialogRef" />
+  <GenusDialog ref="genusDialogRef" />
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
+import { computed, defineComponent, onBeforeMount, onUpdated, reactive, ref, toRefs } from 'vue';
 import { familyHttp, familyParams } from '@/api/family';
 import { genusHttp, genusParams } from '@/api/genus';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
+import FamilyDialog from '@/components/pages/family/Dialog.vue';
+import GenusDialog from '@/components/pages/genus/Dialog.vue';
 
 export default defineComponent({
   components: {
     Table,
     Search,
-    Pagenum
+    Pagenum,
+    FamilyDialog,
+    GenusDialog
   },
   setup () {
     const route = useRoute();
-    const router = useRouter();
     onBeforeMount(() => {
       getFamily();
       getGenus();
@@ -107,14 +112,16 @@ export default defineComponent({
       familyTotal: 0,
       familyPage: 1,
       familySize: 9,
-      familyRowId: undefined
+      familyRowId: undefined,
+      familyDialogRef: ref()
     });
     const genusState = reactive({
       genusTableData: [] as Array<any>,
       genusIsLoading: false,
       genusTotal: 0,
       genusPage: 1,
-      genusSize: 9
+      genusSize: 9,
+      genusDialogRef: ref()
     });
     const familyTableColumn = reactive([
       {
@@ -125,6 +132,11 @@ export default defineComponent({
       {
         prop: 'name',
         label: '科类名称',
+        width: 'auto'
+      },
+      {
+        prop: 'scientificName',
+        label: '拉丁学名',
         width: 'auto'
       }
     ]);
@@ -142,6 +154,11 @@ export default defineComponent({
       {
         prop: 'family',
         label: '所属科类',
+        width: 'auto'
+      },
+      {
+        prop: 'scientificName',
+        label: '拉丁学名',
         width: 'auto'
       }
     ]);
@@ -224,16 +241,18 @@ export default defineComponent({
       getGenus();
     };
     const familyAdd = () => {
-      router.push({
-        path: route.path + '/family/add',
-        name: route.name as string + 'FamilyAdd'
-      });
+      // router.push({
+      //   path: route.path + '/family/add',
+      //   name: route.name as string + 'FamilyAdd'
+      // });
+      familyState.familyDialogRef.openDialog('add');
     };
     const genusAdd = () => {
-      router.push({
-        path: route.path + '/genus/add',
-        name: route.name as string + 'GenusAdd'
-      });
+      // router.push({
+      //   path: route.path + '/genus/add',
+      //   name: route.name as string + 'GenusAdd'
+      // });
+      genusState.genusDialogRef.openDialog('add');
     };
     const familyRemove = (selectedIds: any) => {
       if (selectedIds.length === 0) {
@@ -267,18 +286,20 @@ export default defineComponent({
       }
     };
     const familyEdit = (data: any) => {
-      router.push({
-        path: route.path + '/family/update',
-        name: route.name as string + 'FamilyUpdate',
-        params: data
-      });
+      // router.push({
+      //   path: route.path + '/family/update',
+      //   name: route.name as string + 'FamilyUpdate',
+      //   params: data
+      // });
+      familyState.familyDialogRef.openDialog('edit', data);
     };
     const genusEdit = (data: any) => {
-      router.push({
-        path: route.path + '/genus/update',
-        name: route.name as string + 'GenusUpdate',
-        params: data
-      });
+      // router.push({
+      //   path: route.path + '/genus/update',
+      //   name: route.name as string + 'GenusUpdate',
+      //   params: data
+      // });
+      genusState.genusDialogRef.openDialog('edit', data);
     };
     const familyCheck = (data: any) => {
       genusParams.family = data.name;

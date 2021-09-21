@@ -18,10 +18,19 @@
           />
         </el-form-item>
       </el-col>
+      <el-col :span="12">
+        <el-form-item label="拉丁学名：">
+          <el-input
+            class="input-common"
+            v-model="form.scientificName"
+            placeholder="请输入拉丁学名"
+          />
+        </el-form-item>
+      </el-col>
     </el-row>
     <el-row :gutter="0" class="textarea-row">
       <el-col :span="24">
-        <el-form-item label="简介：" prop="introduction">
+        <el-form-item label="简介：">
           <el-input
             class="textarea-common"
             type="textarea"
@@ -30,51 +39,6 @@
             placeholder="请输入简介"
             clearable
             v-model="form.introduction"
-          />
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row :gutter="0" class="textarea-row">
-      <el-col :span="24">
-        <el-form-item label="形态特征：" prop="appearance">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入形态特征"
-            clearable
-            v-model="form.appearance"
-          />
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row :gutter="0" class="textarea-row">
-      <el-col :span="24">
-        <el-form-item label="分布地域：" prop="regions">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入分布地域"
-            clearable
-            v-model="form.regions"
-          />
-        </el-form-item>
-      </el-col>
-    </el-row>
-    <el-row :gutter="0" class="textarea-row">
-      <el-col :span="24">
-        <el-form-item label="生长环境：" prop="environment">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入生长环境"
-            clearable
-            v-model="form.environment"
           />
         </el-form-item>
       </el-col>
@@ -136,10 +100,8 @@ export default defineComponent({
       form: {
         id: undefined,
         name: '',
-        introduction: '',
-        appearance: '',
-        regions: '',
-        environment: ''
+        scientificName: '',
+        introduction: ''
       } as familyParams,
       formRef: ref(),
       rules: {
