@@ -50,11 +50,7 @@
       <el-row :gutter="0">
         <el-col :span="24">
           <el-form-item label="新闻内容：" prop="content">
-            <v-md-editor
-              mode="edit"
-              height="200px"
-              v-model="form.content"
-            />
+            <WangEditor ref="wangEditorRef" @editorData="editorData" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -102,10 +98,11 @@ import { newsHttp, newsParams } from '@/api/news';
 import { useRouter, useRoute } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
 import Drawer from './Drawer.vue';
+import WangEditor from '@/components/common/wangeditor/WangEditor.vue';
 
 export default defineComponent({
   name: 'add-update',
-  components: { Drawer },
+  components: { Drawer, WangEditor },
   setup () {
     const route = useRoute();
     const router = useRouter();
@@ -123,6 +120,7 @@ export default defineComponent({
       } as newsParams,
       formRef: ref(),
       drawerRef: ref(),
+      wangEditorRef: ref(),
       rules: {
         author: [
           { required: true, message: '请输入新闻作者', trigger: ['blur', 'change'] }
@@ -132,9 +130,6 @@ export default defineComponent({
         ],
         newsTag: [
           { required: true, message: '请输入新闻标签', trigger: ['blur', 'change'] }
-        ],
-        content: [
-          { required: true, message: '请输入新闻内容', trigger: ['blur', 'change'] }
         ]
       },
       // 界面类型：add 新增，update 更新
@@ -169,6 +164,7 @@ export default defineComponent({
           state.type = 'update';
           const { ...tempParams } = route.params;
           state.form = tempParams;
+          state.wangEditorRef.edit(state.form.content);
           // console.log(tempParams);
         } else {
           // 非法访问更新界面
@@ -178,6 +174,9 @@ export default defineComponent({
       } else {
         state.type = 'add';
       }
+    };
+    const editorData = (data: any) => {
+      state.form.content = data;
     };
     const submit = () => {
       state.formRef.validate().then((valid: boolean) => {
@@ -205,8 +204,8 @@ export default defineComponent({
     };
     const back = () => {
       router.push({
-        path: '/admin/new/newManagement',
-        name: 'newManagement',
+        path: '/admin/news/newsManagement',
+        name: 'newsManagement',
         params: {
           type: 'refresh'
         }
@@ -223,6 +222,7 @@ export default defineComponent({
     return {
       ...toRefs(state),
       newsTagOptions,
+      editorData,
       submit,
       back,
       keep,
