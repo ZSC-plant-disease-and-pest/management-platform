@@ -73,12 +73,12 @@ export default defineComponent({
     const tableColumn = reactive([
       {
         prop: 'id',
-        label: 'ID',
+        label: '序号',
         width: '75px'
       },
       {
         prop: 'name',
-        label: '虫害数据集名称',
+        label: '虫害名称',
         width: 'auto'
       },
       {
@@ -95,7 +95,7 @@ export default defineComponent({
     const searchList = reactive([
       {
         name: 'name',
-        placeholder: '虫害数据集名称',
+        placeholder: '虫害名称',
         value: ''
       }
     ]);
