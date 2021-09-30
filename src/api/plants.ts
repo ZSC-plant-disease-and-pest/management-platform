@@ -59,11 +59,19 @@ export interface plantsParams extends searchByInfo {
 
 export class plantsHttp {
   // 新增植物信息与对应数据集
-  static createPlants (params: plantsParams) {
+  static createPlants (params: plantsParams, body: Array<any>) {
+    const data = new FormData();
+    for (const item in body) {
+      if (body[item].raw) {
+        data.append('img', body[item].raw);
+      }
+    }
+    const JSONParams = JSON.stringify(params);
+    data.append('plantsVO', new Blob([JSONParams], { type: 'application/json' }));
     return http({
       url: '/api/plantsInfo/create',
       method: 'post',
-      data: params
+      data
     });
   }
 
@@ -102,9 +110,9 @@ export class plantsHttp {
 
   // 植物信息图片展示
   static searchPlantsImgByName (params: plantsParams) {
-    const { name } = params;
+    const { id } = params;
     return http({
-      url: `/api/plantsInfo/searchImgByName/${name}`,
+      url: `/api/plantsInfo/searchImgByName/${id}`,
       method: 'get',
       params
     });
@@ -117,27 +125,6 @@ export class plantsHttp {
       url: `/api/plantsInfo/updateById/${id}`,
       method: 'put',
       data: params
-    });
-  }
-
-  // 上传植物信息图片
-  static uploadImg (params: plantsParams, body: Array<any>) {
-    const fileImg = new FormData();
-    const { name } = params;
-    for (const item in body) {
-      if (body[item].raw) {
-        fileImg.append('img', body[item].raw);
-      }
-    }
-    // fileImg.append('img', body[0].raw);
-    return http({
-      url: '/api/plantsInfo/uploadImg',
-      method: 'post',
-      params: { name },
-      data: fileImg,
-      headers: {
-        'Content-type': 'multipart/form-data'
-      }
     });
   }
 }

@@ -38,11 +38,19 @@ export interface diseaseParams extends searchByInfo {
 
 export class diseaseHttp {
   // 新增病害信息与对应数据集
-  static createDisease (params: diseaseParams) {
+  static createDisease (params: diseaseParams, body: Array<any>) {
+    const data = new FormData();
+    for (const item in body) {
+      if (body[item].raw) {
+        data.append('img', body[item].raw);
+      }
+    }
+    const JSONParams = JSON.stringify(params);
+    data.append('diseaseVO', new Blob([JSONParams], { type: 'application/json' }));
     return http({
       url: '/api/diseaseInfo/create',
       method: 'post',
-      data: params
+      data
     });
   }
 
@@ -80,10 +88,10 @@ export class diseaseHttp {
   }
 
   // 病害信息图片展示
-  static searchDiseaseImgByName (params: diseaseParams) {
-    const { name } = params;
+  static searchDiseaseImgById (params: diseaseParams) {
+    const { id } = params;
     return http({
-      url: `/api/diseaseInfo/searchImgByName/${name}`,
+      url: `/api/diseaseInfo/searchImgByName/${id}`,
       method: 'get',
       params
     });
@@ -96,27 +104,6 @@ export class diseaseHttp {
       url: `/api/diseaseInfo/updateById/${id}`,
       method: 'put',
       data: params
-    });
-  }
-
-  // 上传病害信息图片
-  static uploadImg (params: diseaseParams, body: Array<any>) {
-    const fileImg = new FormData();
-    const { name } = params;
-    for (const item in body) {
-      if (body[item].raw) {
-        fileImg.append('img', body[item].raw);
-      }
-    }
-    // fileImg.append('img', body[0].raw);
-    return http({
-      url: '/api/diseaseInfo/uploadImg',
-      method: 'post',
-      params: { name },
-      data: fileImg,
-      headers: {
-        'Content-type': 'multipart/form-data'
-      }
     });
   }
 }

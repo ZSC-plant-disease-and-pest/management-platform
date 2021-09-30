@@ -38,11 +38,19 @@ export interface pestParams extends searchByInfo {
 
 export class pestHttp {
   // 新增虫害信息与对应数据集
-  static createPest (params: pestParams) {
+  static createPest (params: pestParams, body: Array<any>) {
+    const data = new FormData();
+    for (const item in body) {
+      if (body[item].raw) {
+        data.append('img', body[item].raw);
+      }
+    }
+    const JSONParams = JSON.stringify(params);
+    data.append('pestVO', new Blob([JSONParams], { type: 'application/json' }));
     return http({
       url: '/api/pestInfo/create',
       method: 'post',
-      data: params
+      data
     });
   }
 
@@ -81,9 +89,9 @@ export class pestHttp {
 
   // 虫害信息图片展示
   static searchPestImgByName (params: pestParams) {
-    const { name } = params;
+    const { id } = params;
     return http({
-      url: `/api/pestInfo/searchImgByName/${name}`,
+      url: `/api/pestInfo/searchImgByName/${id}`,
       method: 'get',
       params
     });
@@ -96,27 +104,6 @@ export class pestHttp {
       url: `/api/pestInfo/updateById/${id}`,
       method: 'put',
       data: params
-    });
-  }
-
-  // 上传虫害信息图片
-  static uploadImg (params: pestParams, body: Array<any>) {
-    const fileImg = new FormData();
-    const { name } = params;
-    for (const item in body) {
-      if (body[item].raw) {
-        fileImg.append('img', body[item].raw);
-      }
-    }
-    // fileImg.append('img', body[0].raw);
-    return http({
-      url: '/api/pestInfo/uploadImg',
-      method: 'post',
-      params: { name },
-      data: fileImg,
-      headers: {
-        'Content-type': 'multipart/form-data'
-      }
     });
   }
 }

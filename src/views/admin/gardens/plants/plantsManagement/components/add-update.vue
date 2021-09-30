@@ -235,9 +235,9 @@
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row :gutter="0">
+    <el-row :gutter="0" v-if="type === 'add'">
       <el-col :span="12">
-        <el-form-item label="上传植物图集：">
+        <el-form-item label="上传植物图集：" prop="picture">
           <el-upload
             ref="uploadRef"
             action=""
@@ -363,6 +363,17 @@ export default defineComponent({
             }
           },
           trigger: ['blur', 'change']
+        }],
+        picture: [{
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            if (state.fileImg.length === 0) {
+              callback(new Error('请上传至少一张植物图片'));
+            } else {
+              callback();
+            }
+          },
+          trigger: ['blur', 'change']
         }]
       },
       // 界面类型：add 新增，update 更新
@@ -373,101 +384,43 @@ export default defineComponent({
       fileImg: [] as Array<any>
     });
     const functionOptions: Array<any> = reactive([
-      {
-        value: '耐阴树种'
-      },
-      {
-        value: '抗旱树种'
-      },
-      {
-        value: '耐水湿树种'
-      },
-      {
-        value: '耐盐碱树种'
-      },
-      {
-        value: '抗污染树种'
-      }
+      { value: '耐阴树种' },
+      { value: '抗旱树种' },
+      { value: '耐水湿树种' },
+      { value: '耐盐碱树种' },
+      { value: '抗污染树种' }
     ]);
     const enjoyOptions: Array<any> = reactive([
-      {
-        value: '观叶植物'
-      },
-      {
-        value: '观花植物'
-      },
-      {
-        value: '观果植物'
-      },
-      {
-        value: '招鸟植物'
-      },
-      {
-        value: '多肉植物'
-      },
-      {
-        value: '水培植物'
-      },
-      {
-        value: '食肉植物'
-      }
+      { value: '观叶植物' },
+      { value: '观花植物' },
+      { value: '观果植物' },
+      { value: '招鸟植物' },
+      { value: '多肉植物' },
+      { value: '水培植物' },
+      { value: '食肉植物' }
     ]);
     const gardenOptions: Array<any> = reactive([
-      {
-        value: '常绿灌木'
-      },
-      {
-        value: '落叶灌木'
-      },
-      {
-        value: '藤本植物'
-      },
-      {
-        value: '草坪及地被植物'
-      },
-      {
-        value: '竹类植物'
-      },
-      {
-        value: '常绿乔木及小乔木'
-      },
-      {
-        value: '落叶乔木及小乔木'
-      }
+      { value: '常绿灌木' },
+      { value: '落叶灌木' },
+      { value: '藤本植物' },
+      { value: '草坪及地被植物' },
+      { value: '竹类植物' },
+      { value: '常绿乔木及小乔木' },
+      { value: '落叶乔木及小乔木' }
     ]);
     const woodyOptions: Array<any> = reactive([
-      {
-        value: '常绿针叶'
-      },
-      {
-        value: '常绿阔叶'
-      },
-      {
-        value: '落叶阔叶'
-      },
-      {
-        value: '竹类'
-      },
-      {
-        value: '藤木'
-      }
+      { value: '常绿针叶' },
+      { value: '常绿阔叶' },
+      { value: '落叶阔叶' },
+      { value: '竹类' },
+      { value: '藤木' }
     ]);
     const herbaceousOptions: Array<any> = reactive([
-      {
-        value: '一二年生花卉'
-      },
-      {
-        value: '宿根花卉'
-      },
-      {
-        value: '球根花卉'
-      },
-      {
-        value: '水生花卉'
-      },
-      {
-        value: '草坪地被'
-      }
+      { value: '一二年生花卉' },
+      { value: '宿根花卉' },
+      { value: '球根花卉' },
+      { value: '水生花卉' },
+      { value: '草坪地被' }
     ]);
 
     // 提取路由中的 params
@@ -494,16 +447,9 @@ export default defineComponent({
         if (valid) {
           state.isLoading = true;
           if (route.path.split('/').slice(-1)[0] === 'add') {
-            plantsHttp.createPlants(state.form)
+            plantsHttp.createPlants(state.form, state.fileImg)
               .then(() => {
-                if (state.fileImg.length === 0) {
-                  state.status = 'complete';
-                } else {
-                  plantsHttp.uploadImg(state.form, state.fileImg)
-                    .then(() => {
-                      state.status = 'complete';
-                    });
-                }
+                state.status = 'complete';
               })
               .finally(() => {
                 state.isLoading = false;
@@ -511,14 +457,7 @@ export default defineComponent({
           } else if (route.path.split('/').slice(-1)[0] === 'update') {
             plantsHttp.updatePlants(state.form)
               .then(() => {
-                if (state.fileImg.length === 0) {
-                  state.status = 'complete';
-                } else {
-                  plantsHttp.uploadImg(state.form, state.fileImg)
-                    .then(() => {
-                      state.status = 'complete';
-                    });
-                }
+                state.status = 'complete';
               })
               .finally(() => {
                 state.isLoading = false;

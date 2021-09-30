@@ -154,9 +154,9 @@
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row :gutter="0">
+    <el-row :gutter="0" v-if="type === 'add'">
       <el-col :span="12">
-        <el-form-item label="上传病害图集：">
+        <el-form-item label="上传病害图集：" prop="picture">
           <el-upload
             ref="uploadRef"
             action=""
@@ -271,6 +271,17 @@ export default defineComponent({
             }
           },
           trigger: ['blur']
+        }],
+        picture: [{
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            if (state.fileImg.length === 0) {
+              callback(new Error('请上传至少一张病害图片'));
+            } else {
+              callback();
+            }
+          },
+          trigger: ['blur', 'change']
         }]
       },
       // 界面类型：add 新增，update 更新
@@ -281,38 +292,18 @@ export default defineComponent({
       fileImg: [] as Array<any>
     });
     const damagedPartsOptions: Array<any> = reactive([
-      {
-        value: '根'
-      },
-      {
-        value: '茎'
-      },
-      {
-        value: '叶'
-      },
-      {
-        value: '花'
-      },
-      {
-        value: '果实'
-      }
+      { value: '根' },
+      { value: '茎' },
+      { value: '叶' },
+      { value: '花' },
+      { value: '果实' }
     ]);
     const overviewOptions: Array<any> = reactive([
-      {
-        value: '腐败'
-      },
-      {
-        value: '变色'
-      },
-      {
-        value: '坏死'
-      },
-      {
-        value: '萎蔫'
-      },
-      {
-        value: '畸形'
-      }
+      { value: '腐烂' },
+      { value: '变色' },
+      { value: '坏死' },
+      { value: '萎蔫' },
+      { value: '畸形' }
     ]);
 
     // 提取路由中的 params
@@ -338,16 +329,9 @@ export default defineComponent({
         if (valid) {
           state.isLoading = true;
           if (route.path.split('/').slice(-1)[0] === 'add') {
-            diseaseHttp.createDisease(state.form)
+            diseaseHttp.createDisease(state.form, state.fileImg)
               .then(() => {
-                if (state.fileImg.length === 0) {
-                  state.status = 'complete';
-                } else {
-                  diseaseHttp.uploadImg(state.form, state.fileImg)
-                    .then(() => {
-                      state.status = 'complete';
-                    });
-                }
+                state.status = 'complete';
               })
               .finally(() => {
                 state.isLoading = false;
@@ -355,14 +339,7 @@ export default defineComponent({
           } else if (route.path.split('/').slice(-1)[0] === 'update') {
             diseaseHttp.updateDisease(state.form)
               .then(() => {
-                if (state.fileImg.length === 0) {
-                  state.status = 'complete';
-                } else {
-                  diseaseHttp.uploadImg(state.form, state.fileImg)
-                    .then(() => {
-                      state.status = 'complete';
-                    });
-                }
+                state.status = 'complete';
               })
               .finally(() => {
                 state.isLoading = false;
