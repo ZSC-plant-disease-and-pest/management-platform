@@ -91,7 +91,7 @@ export class diseaseHttp {
   static searchDiseaseImgById (params: diseaseParams) {
     const { id } = params;
     return http({
-      url: `/api/diseaseInfo/searchImgByName/${id}`,
+      url: `/api/diseaseInfo/searchImgById/${id}`,
       method: 'get',
       params
     });

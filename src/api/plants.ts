@@ -109,10 +109,10 @@ export class plantsHttp {
   }
 
   // 植物信息图片展示
-  static searchPlantsImgByName (params: plantsParams) {
+  static searchPlantsImgById (params: plantsParams) {
     const { id } = params;
     return http({
-      url: `/api/plantsInfo/searchImgByName/${id}`,
+      url: `/api/plantsInfo/searchImgById/${id}`,
       method: 'get',
       params
     });

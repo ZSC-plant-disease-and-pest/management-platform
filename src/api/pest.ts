@@ -88,10 +88,10 @@ export class pestHttp {
   }
 
   // 虫害信息图片展示
-  static searchPestImgByName (params: pestParams) {
+  static searchPestImgById (params: pestParams) {
     const { id } = params;
     return http({
-      url: `/api/pestInfo/searchImgByName/${id}`,
+      url: `/api/pestInfo/searchImgById/${id}`,
       method: 'get',
       params
     });
