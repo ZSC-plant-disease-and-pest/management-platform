@@ -32,7 +32,7 @@
         <i class="el-icon-search"></i>
         AI 智能识别
       </el-menu-item>
-      <el-menu-item index="system">
+      <el-menu-item index="systemManagement">
         <i class="el-icon-set-up"></i>
         系统管理
       </el-menu-item>
@@ -228,8 +228,21 @@ export default defineComponent({
           }
         ];
         path = '/admin/recognition/diseaseImageManagement';
-      } else if (params === 'system') {
-        // 空
+      } else if (params === 'systemManagement') {
+        asideList = [
+          {
+            name: 'systemManagement',
+            icon: 'el-icon-watermelon',
+            label: '系统管理',
+            list: [
+              {
+                name: 'authorityManagement',
+                label: '权限管理'
+              }
+            ]
+          }
+        ];
+        path = '/admin/systemManagement/authorityManagement';
       }
       // params 是头部菜单路径
       emit('menuSelect', params, asideList);
