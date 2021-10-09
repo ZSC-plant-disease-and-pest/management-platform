@@ -78,7 +78,6 @@ export default defineComponent({
         name: undefined
       } as authorityParams,
       formRef: ref(),
-      wangEditorRef: ref(),
       rules: {
         name: [
           { required: true, message: '请输入用户名', trigger: ['blur', 'change'] }
@@ -99,7 +98,6 @@ export default defineComponent({
           state.type = 'update';
           const { ...tempParams } = route.params;
           state.form = tempParams;
-          state.wangEditorRef.edit(state.form.content);
           // console.log(tempParams);
         } else {
           // 非法访问更新界面
@@ -109,9 +107,6 @@ export default defineComponent({
       } else {
         state.type = 'add';
       }
-    };
-    const editorData = (data: any) => {
-      state.form.content = data;
     };
     const submit = () => {
       state.formRef.validate().then((valid: boolean) => {
@@ -153,7 +148,6 @@ export default defineComponent({
 
     return {
       ...toRefs(state),
-      editorData,
       submit,
       back,
       keep
