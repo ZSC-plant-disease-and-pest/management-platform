@@ -58,6 +58,8 @@ const trainingModelManagement = () => import('@/views/admin/recognition/model/tr
 const trainingParamManagement = () => import('@/views/admin/recognition/config/trainingParamManagement/index.vue');
 
 // 6 系统管理
+const authorityManagement = () => import('@/views/admin/systemManagement/authorityManagement/index.vue');
+const authorityManagementAddUpdate = () => import('@/views/admin/systemManagement/authorityManagement/components/add-update.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -175,6 +177,18 @@ const routes: Array<RouteRecordRaw> = [
         {
           name: 'AI 智能识别/训练参数配置',
           path: '/admin/recognition/trainingParamManagement'
+        },
+        {
+          name: '系统管理/权限管理',
+          path: '/admin/systemManagement/authorityManagement'
+        },
+        {
+          name: '系统管理/权限管理/新增',
+          path: '/admin/systemManagement/authorityManagement/add'
+        },
+        {
+          name: '系统管理/权限管理/编辑',
+          path: '/admin/systemManagement/authorityManagement/update'
         }
       ]
     },
@@ -318,6 +332,21 @@ const routes: Array<RouteRecordRaw> = [
         path: 'recognition/trainingParamManagement',
         name: 'trainingParamManagement',
         component: trainingParamManagement
+      },
+      {
+        path: 'systemManagement/authorityManagement',
+        name: 'authorityManagement',
+        component: authorityManagement
+      },
+      {
+        path: 'systemManagement/authorityManagement/add',
+        name: 'authorityManagementAdd',
+        component: authorityManagementAddUpdate
+      },
+      {
+        path: 'systemManagement/authorityManagement/update',
+        name: 'authorityManagementUpdate',
+        component: authorityManagementAddUpdate
       }
     ]
   }
