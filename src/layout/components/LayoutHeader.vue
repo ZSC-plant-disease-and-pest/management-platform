@@ -110,6 +110,10 @@ export default defineComponent({
               {
                 name: 'newsManagement',
                 label: '新闻管理'
+              },
+              {
+                name: 'typeManagement',
+                label: '类别管理'
               }
             ]
           }
