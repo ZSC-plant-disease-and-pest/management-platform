@@ -81,7 +81,8 @@ import { familyHttp, familyParams } from '@/api/family';
 import { ElMessage } from 'element-plus';
 
 export default defineComponent({
-  setup () {
+  emits: ['refreshFamilyTable'],
+  setup (prop, { emit }) {
     const state = reactive({
       form: {
         id: undefined,
@@ -132,6 +133,7 @@ export default defineComponent({
               .then(() => {
                 ElMessage.success('添加成功');
                 state.dialogVisible = false;
+                emit('refreshFamilyTable');
               })
               .finally(() => {
                 state.isLoading = false;
@@ -141,6 +143,7 @@ export default defineComponent({
               .then(() => {
                 ElMessage.success('更新成功');
                 state.dialogVisible = false;
+                emit('refreshFamilyTable');
               })
               .finally(() => {
                 state.isLoading = false;

@@ -11,8 +11,8 @@ export interface newsParams extends searchByInfo {
   // 新闻标题
   title?: string
 
-  // 新闻标签
-  newsTag?: string
+  // 新闻类型ID
+  newTypeId?: number
 
   // 新闻内容
   content?: string

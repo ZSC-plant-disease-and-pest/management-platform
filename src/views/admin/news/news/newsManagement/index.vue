@@ -77,7 +77,7 @@ export default defineComponent({
         width: 'auto'
       },
       {
-        prop: 'newsTag',
+        prop: 'newTypeId',
         label: '新闻标签',
         width: 'auto'
       }
@@ -160,8 +160,8 @@ export default defineComponent({
           newsParams.title = data[index].value === '' ? undefined : data[index].value;
         } else if (data[index].name === 'author') {
           newsParams.author = data[index].value === '' ? undefined : data[index].value;
-        } else if (data[index].name === 'newsTag') {
-          newsParams.newsTag = data[index].value === '' ? undefined : data[index].value;
+        } else if (data[index].name === 'newTypeId') {
+          newsParams.newTypeId = data[index].value === '' ? undefined : data[index].value;
         }
       }
       searchNews();
@@ -171,7 +171,6 @@ export default defineComponent({
         searchList[index].value = '';
         newsParams.title = undefined;
         newsParams.author = undefined;
-        newsParams.newsTag = undefined;
       }
       searchNews();
     };

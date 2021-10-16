@@ -95,7 +95,8 @@ import FamilyPagingSelect from '@/components/pages/family/FamilyPagingSelect.vue
 
 export default defineComponent({
   components: { FamilyPagingSelect },
-  setup () {
+  emits: ['refreshGenusTable'],
+  setup (prop, { emit }) {
     const state = reactive({
       form: {
         id: undefined,
@@ -160,6 +161,7 @@ export default defineComponent({
               .then(() => {
                 ElMessage.success('添加成功');
                 state.dialogVisible = false;
+                emit('refreshGenusTable');
               })
               .finally(() => {
                 state.isLoading = false;
@@ -169,6 +171,7 @@ export default defineComponent({
               .then(() => {
                 ElMessage.success('更新成功');
                 state.dialogVisible = false;
+                emit('refreshGenusTable');
               })
               .finally(() => {
                 state.isLoading = false;

@@ -27,7 +27,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, onUpdated, reactive, ref, toRefs } from 'vue';
 import { newsTypeHttp, newsTypeParams } from '@/api/newsType';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
@@ -43,7 +43,6 @@ export default defineComponent({
   },
   setup () {
     const route = useRoute();
-    const router = useRouter();
     onBeforeMount(() => {
       searchNewsType();
     });
@@ -131,11 +130,7 @@ export default defineComponent({
       }
     };
     const edit = (data: any) => {
-      router.push({
-        path: route.path + '/update',
-        name: route.name as string + 'Update',
-        params: data
-      });
+      state.newsTypeDialogRef.openDialog('edit', data);
     };
     const check = (data: any) => {
       console.log(data);

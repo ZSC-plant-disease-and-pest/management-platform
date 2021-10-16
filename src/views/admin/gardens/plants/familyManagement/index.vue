@@ -66,8 +66,8 @@
       </el-card>
     </el-col>
   </el-row>
-  <FamilyDialog ref="familyDialogRef" />
-  <GenusDialog ref="genusDialogRef" />
+  <FamilyDialog ref="familyDialogRef" @refreshFamilyTable="refreshFamilyTable" />
+  <GenusDialog ref="genusDialogRef" @refreshGenusTable="refreshGenusTable" />
 </template>
 
 <script lang="ts">
@@ -241,17 +241,9 @@ export default defineComponent({
       getGenus();
     };
     const familyAdd = () => {
-      // router.push({
-      //   path: route.path + '/family/add',
-      //   name: route.name as string + 'FamilyAdd'
-      // });
       familyState.familyDialogRef.openDialog('add');
     };
     const genusAdd = () => {
-      // router.push({
-      //   path: route.path + '/genus/add',
-      //   name: route.name as string + 'GenusAdd'
-      // });
       genusState.genusDialogRef.openDialog('add');
     };
     const familyRemove = (selectedIds: any) => {
@@ -286,19 +278,9 @@ export default defineComponent({
       }
     };
     const familyEdit = (data: any) => {
-      // router.push({
-      //   path: route.path + '/family/update',
-      //   name: route.name as string + 'FamilyUpdate',
-      //   params: data
-      // });
       familyState.familyDialogRef.openDialog('edit', data);
     };
     const genusEdit = (data: any) => {
-      // router.push({
-      //   path: route.path + '/genus/update',
-      //   name: route.name as string + 'GenusUpdate',
-      //   params: data
-      // });
       genusState.genusDialogRef.openDialog('edit', data);
     };
     const familyCheck = (data: any) => {
@@ -365,6 +347,12 @@ export default defineComponent({
       genusState.genusPage = newPage + 1;
       getGenus();
     };
+    const refreshFamilyTable = () => {
+      getFamily();
+    };
+    const refreshGenusTable = () => {
+      getGenus();
+    };
 
     return {
       ...toRefs(familyState),
@@ -391,7 +379,9 @@ export default defineComponent({
       familyHandleSizeChange,
       genusHandleSizeChange,
       familyHandleCurrentChange,
-      genusHandleCurrentChange
+      genusHandleCurrentChange,
+      refreshFamilyTable,
+      refreshGenusTable
     };
   }
 });

@@ -1,5 +1,4 @@
 <template>
-  <Drawer ref="drawerRef" />
   <el-form
     ref="formRef"
     class="form-common"
@@ -31,19 +30,11 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="新闻标签：" prop="newsTag">
-            <el-select
-              class="select-common"
-              v-model="form.newsTag"
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in newsTagOptions"
-                :key="item.value"
-                :label="item.value"
-                :value="item.value"
-              />
-            </el-select>
+          <el-form-item label="新闻类型：" prop="newsType">
+            <NewsTypePagingSelect
+              ref="newsTypePagingSelectRef"
+              @selectChange="newsTypeSelect"
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -97,12 +88,11 @@ import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { newsHttp, newsParams } from '@/api/news';
 import { useRouter, useRoute } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
-import Drawer from './Drawer.vue';
 import WangEditor from '@/components/common/wangeditor/WangEditor.vue';
 
 export default defineComponent({
   name: 'add-update',
-  components: { Drawer, WangEditor },
+  components: { WangEditor },
   setup () {
     const route = useRoute();
     const router = useRouter();
@@ -115,12 +105,12 @@ export default defineComponent({
         id: undefined,
         author: undefined,
         title: undefined,
-        newsTag: undefined,
+        newTypeId: undefined,
         content: undefined
       } as newsParams,
       formRef: ref(),
-      drawerRef: ref(),
       wangEditorRef: ref(),
+      newsTypePagingSelectRef: ref(),
       rules: {
         author: [
           { required: true, message: '请输入新闻作者', trigger: ['blur', 'change'] }
@@ -128,8 +118,8 @@ export default defineComponent({
         title: [
           { required: true, message: '请输入新闻标题', trigger: ['blur', 'change'] }
         ],
-        newsTag: [
-          { required: true, message: '请输入新闻标签', trigger: ['blur', 'change'] }
+        newsType: [
+          { required: true, message: '请输入新闻类型', trigger: ['blur', 'change'] }
         ]
       },
       // 界面类型：add 新增，update 更新
@@ -138,23 +128,6 @@ export default defineComponent({
       // 表单状态：complete 完成，incomplete 未完成
       status: 'incomplete'
     });
-    const newsTagOptions: Array<any> = reactive([
-      {
-        value: '网站新闻'
-      },
-      {
-        value: '病虫害防治'
-      },
-      {
-        value: '园林植物护养'
-      },
-      {
-        value: '智慧农业'
-      },
-      {
-        value: '更新公告'
-      }
-    ]);
 
     // 提取路由中的 params
     const getParams = () => {
@@ -163,6 +136,7 @@ export default defineComponent({
         if (route.params.id !== undefined) {
           state.type = 'update';
           const { ...tempParams } = route.params;
+          setNewsType(Number(tempParams.newTypeId));
           state.form = tempParams;
           state.wangEditorRef.edit(state.form.content);
           // console.log(tempParams);
@@ -215,18 +189,21 @@ export default defineComponent({
       state.formRef.resetFields();
       state.status = 'incomplete';
     };
-    const openDrawer = () => {
-      state.drawerRef.open();
+    const newsTypeSelect = (id: number) => {
+      state.form.newTypeId = id;
+    };
+    const setNewsType = (id: number) => {
+      state.newsTypePagingSelectRef.setNewsType(id);
     };
 
     return {
       ...toRefs(state),
-      newsTagOptions,
       editorData,
       submit,
       back,
       keep,
-      openDrawer
+      newsTypeSelect,
+      setNewsType
     };
   }
 });
