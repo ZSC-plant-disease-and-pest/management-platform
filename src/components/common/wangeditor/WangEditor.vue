@@ -36,7 +36,7 @@ export default defineComponent({
 
       editor.config.uploadImgHooks = {
         before (xhr) {
-          // console.log(xhr);
+          console.log('上传图片: ', xhr);
           // 可阻止图片上传
           // return {
           //   prevent: true,
