@@ -17,6 +17,9 @@ export interface newsParams extends searchByInfo {
   // 新闻内容
   content?: string
 
+  // 新闻是否为发布状态
+  status?: boolean
+
   // 新闻图片名称
   imgName?: string
 

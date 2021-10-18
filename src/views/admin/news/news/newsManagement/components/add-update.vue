@@ -41,7 +41,7 @@
       <el-row :gutter="0">
         <el-col :span="24">
           <el-form-item label="新闻内容：" prop="content">
-            <WangEditor ref="wangEditorRef" @editorData="editorData" />
+            <WangEditor ref="wangEditorRef" @editorData="editorData" :content="form.content" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -56,7 +56,14 @@
               :loading="isLoading"
               @click="submit"
             >
-              提交
+              保存
+            </el-button>
+            <el-button
+              type="primary"
+              :loading="isLoading"
+              @click="release"
+            >
+              保存并发布
             </el-button>
           </el-form-item>
         </el-col>
@@ -84,29 +91,34 @@
 
 <script lang="ts">
 
-import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
+import { defineComponent, onBeforeMount, onMounted, reactive, ref, toRefs } from 'vue';
 import { newsHttp, newsParams } from '@/api/news';
 import { useRouter, useRoute } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
 import WangEditor from '@/components/common/wangeditor/WangEditor.vue';
+import NewsTypePagingSelect from './NewsTypePagingSelect.vue';
 
 export default defineComponent({
   name: 'add-update',
-  components: { WangEditor },
+  components: { WangEditor, NewsTypePagingSelect },
   setup () {
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
       getParams();
     });
+    onMounted(() => {
+      state.wangEditorRef.edit(state.form.content);
+    });
 
     const state = reactive({
       form: {
         id: undefined,
-        author: undefined,
-        title: undefined,
+        author: '',
+        title: '',
         newTypeId: undefined,
-        content: undefined
+        content: '',
+        status: false
       } as newsParams,
       formRef: ref(),
       wangEditorRef: ref(),
@@ -118,9 +130,17 @@ export default defineComponent({
         title: [
           { required: true, message: '请输入新闻标题', trigger: ['blur', 'change'] }
         ],
-        newsType: [
-          { required: true, message: '请输入新闻类型', trigger: ['blur', 'change'] }
-        ]
+        newsType: [{
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            if (state.form.newTypeId === undefined) {
+              callback(new Error('请选择危害部位'));
+            } else {
+              callback();
+            }
+          },
+          trigger: ['blur', 'change']
+        }]
       },
       // 界面类型：add 新增，update 更新
       type: '',
@@ -136,9 +156,7 @@ export default defineComponent({
         if (route.params.id !== undefined) {
           state.type = 'update';
           const { ...tempParams } = route.params;
-          setNewsType(Number(tempParams.newTypeId));
           state.form = tempParams;
-          state.wangEditorRef.edit(state.form.content);
           // console.log(tempParams);
         } else {
           // 非法访问更新界面
@@ -147,10 +165,12 @@ export default defineComponent({
         }
       } else {
         state.type = 'add';
+        state.form.status = false;
       }
     };
     const editorData = (data: any) => {
-      state.form.content = data;
+      state.form.content = data as string;
+      // console.log(data);
     };
     const submit = () => {
       state.formRef.validate().then((valid: boolean) => {
@@ -185,6 +205,10 @@ export default defineComponent({
         }
       });
     };
+    const release = () => {
+      state.form.status = true;
+      submit();
+    };
     const keep = () => {
       state.formRef.resetFields();
       state.status = 'incomplete';
@@ -201,6 +225,7 @@ export default defineComponent({
       editorData,
       submit,
       back,
+      release,
       keep,
       newsTypeSelect,
       setNewsType

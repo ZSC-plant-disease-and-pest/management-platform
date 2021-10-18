@@ -7,13 +7,19 @@ import { defineComponent, onMounted, reactive, toRefs } from 'vue';
 import WangEditor from 'wangeditor';
 
 export default defineComponent({
+  props: {
+    content: {
+      type: String,
+      default: ''
+    }
+  },
   emits: ['editorData'],
   setup (props, { emit }) {
     onMounted(() => {
       const editor = new WangEditor('#editor');
       editor.config.onchange = (newHtml: string) => {
-        console.log(newHtml);
         state.editorData = newHtml;
+        emit('editorData', state.editorData);
       };
       // 图片上传的地址
       editor.config.uploadImgServer = '/api/news/file/xieTest3';
@@ -30,7 +36,7 @@ export default defineComponent({
 
       editor.config.uploadImgHooks = {
         before (xhr) {
-          console.log(xhr);
+          // console.log(xhr);
           // 可阻止图片上传
           // return {
           //   prevent: true,
@@ -50,31 +56,29 @@ export default defineComponent({
           console.log('timeout');
         },
         customInsert: function (insertImgFn: any, result: any) {
-          console.log('customInsert', result.url);
+          // console.log('customInsert', result);
           // insertImgFn 可把图片插入到编辑器，传入图片 src ，执行函数即可
-          insertImgFn('http://localhost:8080' + result.url);
+          insertImgFn('http://localhost:8080' + result.data.content[0].url);
         }
       };
       editor.create();
+      editor.txt.html(props.content);
       state.editor = editor;
     });
 
     const state = reactive({
-      editor: undefined as any,
+      editor: '' as any,
       editorData: '' as string
     });
 
     const edit = (data: any) => {
       state.editorData = data;
-    };
-    const submit = () => {
-      emit('editorData', state.editorData);
+      // console.log(state.editorData);
     };
 
     return {
       ...toRefs(state),
-      edit,
-      submit
+      edit
     };
   }
 });
