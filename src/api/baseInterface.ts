@@ -7,4 +7,10 @@ export interface searchByInfo {
 
   // 排序规则
   sort?: string
+
+  // 创建时间
+  createTime?: Date
+
+  // 修改时间
+  updateTime?: Date
 }
