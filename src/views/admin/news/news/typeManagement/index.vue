@@ -22,6 +22,7 @@
     @handleCurrentChange="handleCurrentChange"
   />
   <NewsTypeDialog ref="newsTypeDialogRef" @refreshTable="refreshTable" />
+  <Detail ref="newsTypeDetailRef" />
 </template>
 
 <script lang="ts">
@@ -33,13 +34,15 @@ import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
 import NewsTypeDialog from '@/components/pages/newsType/Dialog.vue';
+import Detail from './components/detail.vue';
 
 export default defineComponent({
   components: {
     Table,
     Search,
     Pagenum,
-    NewsTypeDialog
+    NewsTypeDialog,
+    Detail
   },
   setup () {
     const route = useRoute();
@@ -61,7 +64,8 @@ export default defineComponent({
       total: 0,
       page: 1,
       size: 10,
-      newsTypeDialogRef: ref()
+      newsTypeDialogRef: ref(),
+      newsTypeDetailRef: ref()
     });
     const tableColumn = reactive([
       {
@@ -133,7 +137,7 @@ export default defineComponent({
       state.newsTypeDialogRef.openDialog('edit', data);
     };
     const check = (data: any) => {
-      console.log(data);
+      state.newsTypeDetailRef.openDialog(data);
     };
     const search = (data: any) => {
       for (const index in data) {

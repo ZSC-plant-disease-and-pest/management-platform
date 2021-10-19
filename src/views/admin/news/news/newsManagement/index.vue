@@ -205,7 +205,6 @@ export default defineComponent({
       });
     };
     const check = (data: any) => {
-      console.log(data);
       state.newsDetailRef.openDialog(data);
     };
     const search = (data: any) => {

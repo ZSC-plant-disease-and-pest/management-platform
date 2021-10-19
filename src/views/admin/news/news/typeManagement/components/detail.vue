@@ -16,26 +16,13 @@
     >
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="新闻标题：">
-            <span>{{ form.title }}</span>
+          <el-form-item label="新闻类型名称：">
+            <span>{{ form.name }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="新闻作者：">
-            <span>{{ form.author }}</span>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="新闻类型：">
-            <span>{{ form.newTypeId }}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="新闻状态：">
-            <span v-if="form.status">已发布</span>
-            <span v-else>未发布</span>
+          <el-form-item label="新闻类型数量：">
+            <span>{{ form.name }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -64,19 +51,12 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
-import { newsParams } from '@/api/news';
+import { newsTypeParams } from '@/api/newsType';
 
 export default defineComponent({
   setup () {
     const state = reactive({
-      form: {
-        id: 0,
-        author: '',
-        title: '',
-        newTypeId: 0,
-        content: '',
-        status: false
-      } as newsParams,
+      form: {} as newsTypeParams,
       formRef: ref(),
       isLoading: false,
       dialogVisible: false
