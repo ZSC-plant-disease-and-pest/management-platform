@@ -56,7 +56,7 @@ export default defineComponent({
     // 被选中行的样式
     const tableRowStyle = (data: any) => {
       if (data.row.id === state.selectedId) {
-        return 'background-color: #e0e0e0; font-weight: 700; color: black';
+        return 'background-color: #f0f0f0; font-weight: 700; color: black';
       } else {
         return '';
       }

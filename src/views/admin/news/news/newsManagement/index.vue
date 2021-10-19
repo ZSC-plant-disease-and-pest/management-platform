@@ -32,25 +32,28 @@
       />
     </div>
   </el-row>
+  <Detail ref="newsDetailRef" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
+import { defineComponent, onBeforeMount, onUpdated, reactive, ref, toRefs } from 'vue';
 import { newsHttp, newsParams } from '@/api/news';
+import { newsTypeHttp } from '@/api/newsType';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import NewsTypeTable from './components/NewsTypeTable.vue';
 import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
-import { newsTypeHttp } from '@/api/newsType';
+import Detail from './components/detail.vue';
 
 export default defineComponent({
   components: {
     NewsTypeTable,
     Table,
     Search,
-    Pagenum
+    Pagenum,
+    Detail
   },
   setup () {
     const route = useRoute();
@@ -72,6 +75,7 @@ export default defineComponent({
     const state = reactive({
       tableData: [] as Array<any>,
       newsTypeTableData: [] as Array<any>,
+      newsDetailRef: ref(),
       isLoading: false,
       newsTypeIsLoading: false,
       total: 0,
@@ -202,6 +206,7 @@ export default defineComponent({
     };
     const check = (data: any) => {
       console.log(data);
+      state.newsDetailRef.openDialog(data);
     };
     const search = (data: any) => {
       for (const index in data) {
