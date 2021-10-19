@@ -1,26 +1,37 @@
 <template>
-  <Search
-    :searchList="searchList"
-    @search="search"
-    @reset="reset"
-  />
-  <Table
-    :tableData="tableData"
-    :tableColumn="tableColumn"
-    :loading="isLoading"
-    @check="check"
-    @edit="edit"
-    @remove="remove"
-    @add="add"
-    @sortChange="sortChange"
-  />
-  <Pagenum
-    :total="total"
-    :currentPage="page"
-    :pageSize="size"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  />
+  <el-row :gutter="0">
+    <NewsTypeTable
+      :tableData="newsTypeTableData"
+      :tableColumn="newsTypeTableColumn"
+      :loading="newsTypeIsLoading"
+      @rowSelect="newsTypeSelect"
+      style="width: 180px"
+    />
+    <div style="width: calc(100% - 190px); margin-left: 10px;">
+      <Search
+        :searchList="searchList"
+        @search="search"
+        @reset="reset"
+      />
+      <Table
+        :tableData="tableData"
+        :tableColumn="tableColumn"
+        :loading="isLoading"
+        @check="check"
+        @edit="edit"
+        @remove="remove"
+        @add="add"
+        @sortChange="sortChange"
+      />
+      <Pagenum
+        :total="total"
+        :currentPage="page"
+        :pageSize="size"
+        @handleSizeChange="handleSizeChange"
+        @handleCurrentChange="handleCurrentChange"
+      />
+    </div>
+  </el-row>
 </template>
 
 <script lang="ts">
@@ -28,12 +39,15 @@ import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue
 import { newsHttp, newsParams } from '@/api/news';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import NewsTypeTable from './components/NewsTypeTable.vue';
 import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
+import { newsTypeHttp } from '@/api/newsType';
 
 export default defineComponent({
   components: {
+    NewsTypeTable,
     Table,
     Search,
     Pagenum
@@ -43,6 +57,7 @@ export default defineComponent({
     const router = useRouter();
     onBeforeMount(() => {
       searchNews();
+      searchNewsType();
     });
     onUpdated(() => {
       // 判断是否从添加界面返回
@@ -50,12 +65,15 @@ export default defineComponent({
         // 是的话则重新请求数据
         route.params.type = '';
         searchNews();
+        searchNewsType();
       }
     });
 
     const state = reactive({
       tableData: [] as Array<any>,
+      newsTypeTableData: [] as Array<any>,
       isLoading: false,
+      newsTypeIsLoading: false,
       total: 0,
       page: 1,
       size: 10
@@ -78,7 +96,7 @@ export default defineComponent({
       },
       {
         prop: 'newTypeId',
-        label: '新闻标签',
+        label: '新闻类型',
         width: 'auto'
       }
     ]);
@@ -92,6 +110,13 @@ export default defineComponent({
         name: 'author',
         placeholder: '新闻作者',
         value: ''
+      }
+    ]);
+    const newsTypeTableColumn = reactive([
+      {
+        prop: 'name',
+        label: '新闻类型',
+        width: 'auto'
       }
     ]);
 
@@ -114,6 +139,30 @@ export default defineComponent({
         .finally(() => {
           state.isLoading = false;
         });
+    };
+    const searchNewsType = () => {
+      state.newsTypeIsLoading = true;
+      newsTypeHttp.searchNewsType(null)
+        .then((response: any) => {
+          console.log(response);
+          // 响应式的添加到表格中
+          state.newsTypeTableData = [];
+          state.newsTypeTableData.push({ id: 0, name: '全部' });
+          for (let i = 0; i < response.content.length; i++) {
+            state.newsTypeTableData.push(response.content[i]);
+          }
+        })
+        .finally(() => {
+          state.newsTypeIsLoading = false;
+        });
+    };
+    const newsTypeSelect = (newsTypeId: number) => {
+      if (newsTypeId === 0) {
+        newsParams.newTypeId = undefined;
+      } else {
+        newsParams.newTypeId = newsTypeId;
+      }
+      searchNews();
     };
     const sortChange = (params: any) => {
       if (params.prop === null) {
@@ -190,6 +239,8 @@ export default defineComponent({
     return {
       ...toRefs(state),
       tableColumn,
+      newsTypeTableColumn,
+      newsTypeSelect,
       sortChange,
       add,
       remove,
