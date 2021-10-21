@@ -242,17 +242,19 @@
             ref="uploadRef"
             action=""
             :auto-upload="false"
-            list-type="picture"
-            :limit="10"
             :on-change="onChange"
-            :before-remove="beforeRemove"
+            :on-remove="onRemove"
+            multiple
+            drag
+            accept=".gif,.jpg,.jpeg,.png,.bmp,.webp"
           >
-            <el-button size="small" type="primary">
-              点击上传
-            </el-button>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将图片放在此处或单击上传
+            </div>
             <template #tip>
-              <div>
-                最多上传十张图片
+              <div class="el-upload__tip">
+                仅限常见类型图片，最大不超过5M
               </div>
             </template>
           </el-upload>
@@ -304,6 +306,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
 import FamilyPagingSelect from '@/components/pages/family/FamilyPagingSelect.vue';
 import GenusPagingSelect from '@/components/pages/genus/GenusPagingSelect.vue';
+import { ElMessage } from 'element-plus';
 
 export default defineComponent({
   name: 'add-update',
@@ -338,6 +341,7 @@ export default defineComponent({
         cultureMethod: ''
       } as plantsParams,
       formRef: ref(),
+      uploadRef: ref(),
       rules: {
         name: [
           { required: true, message: '请输入植物名称', trigger: ['blur', 'change'] }
@@ -487,11 +491,33 @@ export default defineComponent({
     const genusChange = (params: any) => {
       state.form.genus = params;
     };
-    const onChange = (file: any, fileList: any) => {
-      state.fileImg = fileList;
+    const onChange = (file: any) => {
+      const type = file.raw.type.split('/').pop();
+      if (
+        type !== 'gif' &&
+        type !== 'jpg' &&
+        type !== 'jpeg' &&
+        type !== 'png' &&
+        type !== 'bmp' &&
+        type !== 'webp') {
+        ElMessage.error(`名称为${file.raw.name}的图片格式有误 !`);
+        setImageList();
+      } else if (file.raw.size / 1024 / 1024 > 5) {
+        ElMessage.error(`名称为${file.raw.name}的图片大小不能超过 5MB !`);
+        setImageList();
+      } else {
+        state.fileImg.push(file);
+      }
     };
-    const beforeRemove = () => {
-      state.fileImg = [];
+    const onRemove = (file: any, fileList: any) => {
+      state.fileImg = fileList;
+      setImageList();
+    };
+    const setImageList = () => {
+      state.uploadRef.clearFiles();
+      for (const index in state.fileImg) {
+        state.uploadRef.uploadFiles.push(state.fileImg[index]);
+      }
     };
 
     return {
@@ -507,7 +533,7 @@ export default defineComponent({
       familyChange,
       genusChange,
       onChange,
-      beforeRemove
+      onRemove
     };
   }
 });
