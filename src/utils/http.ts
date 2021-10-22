@@ -52,8 +52,9 @@ export default function request (reqData: any): any {
         let result = '';
         if (err.message === 'Network Error') {
           result = '请求超时';
-        } else if (err && err.response.status) {
-          switch (err.response.status) {
+          console.log(err.response)
+        } else if (err && err.status) {
+          switch (err.status) {
             case 401:
               result = '登录状态失效，请重新登录';
               // removeToken();
@@ -64,7 +65,11 @@ export default function request (reqData: any): any {
               result = '找不到目标资源';
               break;
             default:
-              result = `错误状态码: ${err.response.status}`;
+              if (err.response.msg) {
+                result = `错误提示: ${err.response.msg}`;
+              } else {
+                result = `错误状态码: ${err.response.code}`;
+              }
               break;
           }
         } else {
