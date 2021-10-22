@@ -5,7 +5,7 @@
     size="small"
     :rules="rules"
     :model="form"
-    label-width="120px"
+    label-width="130px"
     v-show="status === 'incomplete'"
   >
     <el-row :gutter="20">
