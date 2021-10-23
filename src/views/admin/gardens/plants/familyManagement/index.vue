@@ -13,11 +13,14 @@
           @reset="familyReset"
         />
         <Table
+          :tableType="'family'"
           :tableData="familyTableData"
           :tableColumn="familyTableColumn"
           :loading="familyIsLoading"
           :rowId="familyRowId"
-          @check="familyCheck"
+          :buttonWidth="204"
+          @check="checkFamilyDetail"
+          @checkFamily="familyCheck"
           @edit="familyEdit"
           @remove="familyRemove"
           @add="familyAdd"
@@ -49,7 +52,7 @@
           :tableData="genusTableData"
           :tableColumn="genusTableColumn"
           :loading="genusIsLoading"
-          @check="genusCheck"
+          @check="checkGenusDetail"
           @edit="genusEdit"
           @remove="genusRemove"
           @add="genusAdd"
@@ -68,6 +71,8 @@
   </el-row>
   <FamilyDialog ref="familyDialogRef" @refreshFamilyTable="refreshFamilyTable" />
   <GenusDialog ref="genusDialogRef" @refreshGenusTable="refreshGenusTable" />
+  <FamilyDetail ref="familyDetailRef" />
+  <GenusDetail ref="genusDetailRef" />
 </template>
 
 <script lang="ts">
@@ -81,6 +86,8 @@ import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
 import FamilyDialog from '@/components/pages/family/Dialog.vue';
 import GenusDialog from '@/components/pages/genus/Dialog.vue';
+import FamilyDetail from './components/family/Detail.vue';
+import GenusDetail from './components/genus/Detail.vue';
 
 export default defineComponent({
   components: {
@@ -88,7 +95,9 @@ export default defineComponent({
     Search,
     Pagenum,
     FamilyDialog,
-    GenusDialog
+    GenusDialog,
+    FamilyDetail,
+    GenusDetail
   },
   setup () {
     const route = useRoute();
@@ -113,7 +122,8 @@ export default defineComponent({
       familyPage: 1,
       familySize: 9,
       familyRowId: undefined,
-      familyDialogRef: ref()
+      familyDialogRef: ref(),
+      familyDetailRef: ref()
     });
     const genusState = reactive({
       genusTableData: [] as Array<any>,
@@ -121,12 +131,13 @@ export default defineComponent({
       genusTotal: 0,
       genusPage: 1,
       genusSize: 9,
-      genusDialogRef: ref()
+      genusDialogRef: ref(),
+      genusDetailRef: ref()
     });
     const familyTableColumn = reactive([
       {
         prop: 'id',
-        label: 'ID',
+        label: '序号',
         width: '75px'
       },
       {
@@ -137,13 +148,13 @@ export default defineComponent({
       {
         prop: 'scientificName',
         label: '拉丁学名',
-        width: 'auto'
+        width: '200px'
       }
     ]);
     const genusTableColumn = reactive([
       {
         prop: 'id',
-        label: 'ID',
+        label: '序号',
         width: '75px'
       },
       {
@@ -159,7 +170,7 @@ export default defineComponent({
       {
         prop: 'scientificName',
         label: '拉丁学名',
-        width: 'auto'
+        width: '200px'
       }
     ]);
     const familySearchList = reactive([
@@ -288,8 +299,11 @@ export default defineComponent({
       familyState.familyRowId = data.id;
       getGenus();
     };
-    const genusCheck = (data: any) => {
-      console.log(data);
+    const checkGenusDetail = (data: any) => {
+      genusState.genusDetailRef.openDialog(data);
+    };
+    const checkFamilyDetail = (data: any) => {
+      familyState.familyDetailRef.openDialog(data);
     };
     const familySearch = (data: any) => {
       for (const index in data) {
@@ -369,7 +383,8 @@ export default defineComponent({
       familyEdit,
       genusEdit,
       familyCheck,
-      genusCheck,
+      checkGenusDetail,
+      checkFamilyDetail,
       familySearch,
       genusSearch,
       familyReset,

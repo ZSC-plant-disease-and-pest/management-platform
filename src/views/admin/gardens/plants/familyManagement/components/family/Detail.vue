@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="新闻详情"
+    :title="form.name + '详情'"
     v-model="dialogVisible"
     :show-close="false"
     :close-on-click-modal="false"
@@ -12,42 +12,24 @@
       class="form-common"
       size="small"
       :model="form"
-      label-width="140px"
+      label-width="90px"
     >
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="植物名称">
+          <el-form-item label="科类名称：">
             <span>{{ form.name }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="植物学名：">
-            <span>{{ form.author }}</span>
+          <el-form-item label="拉丁学名：">
+            <span>{{ form.scientificName }}</span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="植物别名：">
-            <span>{{ form.newTypeId }}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="新闻状态：">
-            <span v-if="form.status">已发布</span>
-            <span v-else>未发布</span>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="新闻创建时间：">
-            <span>{{ form.createTime }}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="新闻更新时间：">
-            <span>{{ form.updateTime }}</span>
+        <el-col :span="24">
+          <el-form-item label="简介：">
+            <span>{{ form.introduction }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -64,19 +46,17 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
-import { newsParams } from '@/api/news';
+import { familyParams } from '@/api/family';
 
 export default defineComponent({
   setup () {
     const state = reactive({
       form: {
         id: 0,
-        author: '',
-        title: '',
-        newTypeId: 0,
-        content: '',
-        status: false
-      } as newsParams,
+        name: '',
+        scientificName: '',
+        introduction: ''
+      } as familyParams,
       formRef: ref(),
       isLoading: false,
       dialogVisible: false

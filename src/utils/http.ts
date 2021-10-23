@@ -52,7 +52,6 @@ export default function request (reqData: any): any {
         let result = '';
         if (err.message === 'Network Error') {
           result = '请求超时';
-          console.log(err.response)
         } else if (err && err.status) {
           switch (err.status) {
             case 401:
@@ -65,10 +64,10 @@ export default function request (reqData: any): any {
               result = '找不到目标资源';
               break;
             default:
-              if (err.response.msg) {
-                result = `错误提示: ${err.response.msg}`;
+              if (err.data.msg) {
+                result = `错误提示: ${err.data.msg}`;
               } else {
-                result = `错误状态码: ${err.response.code}`;
+                result = `错误状态码: ${err.data.code}`;
               }
               break;
           }

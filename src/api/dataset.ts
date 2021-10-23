@@ -8,21 +8,48 @@ export interface datasetParams extends searchByInfo {
   // 数据集名称
   name?: string
 
-  // 数据集类型。病/虫/植，0病害，1虫害，2植物
-  type?: number
+  // 数据集对应的id
+  informationId?: number
 
   // 图片数量
-  pictureAccount?: number
+  imgAmount?: number
 
   // 保存路径
   path?: string
-
-  // 是否被假删除
-  hasDeleted?: boolean
 }
 
 export class datasetHttp {
-  // 病害数据集信息概览
+  /**
+   * 病害
+   */
+
+  // 新增病害数据集
+  static createDiseaseDateset (params: datasetParams) {
+    const { informationId } = params;
+    return http({
+      url: '/api/diseaseDs/create',
+      method: 'get',
+      params: { informationId }
+    });
+  }
+
+  // 删除病害数据集
+  static deleteDisease (ids: number) {
+    return http({
+      url: `/api/diseaseDs/deleteByIds/${ids}`,
+      method: 'delete'
+    });
+  }
+
+  // 删除病害数据集图片
+  static deleteDiseaseImageById (id: number) {
+    return http({
+      url: `/api/diseaseDs/deleteImgByIds/${id}`,
+      method: 'delete'
+    });
+  }
+
+  // 查询病害数据集
   static searchDiseaseDataset (params: (datasetParams | null)) {
     return http({
       url: '/api/diseaseDs/search',
@@ -31,18 +58,17 @@ export class datasetHttp {
     });
   }
 
-  // 根据 ID 查询病害数据集详情(多图片)
-  static searchDiseaseDatasetById (params: datasetParams) {
-    const { id } = params;
+  // 查询病害数据集所有图片
+  static searchDiseaseDatasetImage (params: datasetParams) {
     return http({
-      url: `/api/diseaseDs/searchById/${id}`,
+      url: '/api/diseaseDs/searchImgById/search',
       method: 'get',
       params
     });
   }
 
   // 上传病害数据集图片
-  static uploadDiseaseImg (datasetId: number, body: Array<any>) {
+  static uploadDiseaseImg (id: number, body: Array<any>) {
     const fileImg = new FormData();
     for (const item in body) {
       if (body[item].raw) {
@@ -51,9 +77,8 @@ export class datasetHttp {
     }
     // fileImg.append('img', body[0].raw);
     return http({
-      url: '/api/diseaseDs/uploadImg',
+      url: `/api/diseaseDs/uploadImgById/${id}`,
       method: 'post',
-      params: { datasetId },
       data: fileImg,
       headers: {
         'Content-type': 'multipart/form-data'
@@ -61,7 +86,37 @@ export class datasetHttp {
     });
   }
 
-  // 虫害数据集信息概览
+  /**
+   * 虫害
+   */
+
+  // 新增虫害数据集
+  static createPestDateset (params: datasetParams) {
+    const { informationId } = params;
+    return http({
+      url: '/api/pestDs/create',
+      method: 'get',
+      params: { informationId }
+    });
+  }
+
+  // 删除虫害数据集
+  static deletePest (ids: number) {
+    return http({
+      url: `/api/pestDs/deleteByIds/${ids}`,
+      method: 'delete'
+    });
+  }
+
+  // 删除虫害数据集图片
+  static deletePestImageById (id: number) {
+    return http({
+      url: `/api/pestDs/deleteImgByIds/${id}`,
+      method: 'delete'
+    });
+  }
+
+  // 查询虫害数据集
   static searchPestDataset (params: (datasetParams | null)) {
     return http({
       url: '/api/pestDs/search',
@@ -70,18 +125,17 @@ export class datasetHttp {
     });
   }
 
-  // 根据 ID 查询虫害数据集详情(多图片)
-  static searchPestDatasetById (params: datasetParams) {
-    const { id } = params;
+  // 查询虫害数据集所有图片
+  static searchPestDatasetImage (params: datasetParams) {
     return http({
-      url: `/api/pestDs/searchById/${id}`,
+      url: '/api/pestDs/searchImgById/search',
       method: 'get',
       params
     });
   }
 
   // 上传虫害数据集图片
-  static uploadPestImg (datasetId: number, body: Array<any>) {
+  static uploadPestImg (id: number, body: Array<any>) {
     const fileImg = new FormData();
     for (const item in body) {
       if (body[item].raw) {
@@ -90,9 +144,8 @@ export class datasetHttp {
     }
     // fileImg.append('img', body[0].raw);
     return http({
-      url: '/api/pestDs/uploadImg',
+      url: `/api/pestDs/uploadImgById/${id}`,
       method: 'post',
-      params: { datasetId },
       data: fileImg,
       headers: {
         'Content-type': 'multipart/form-data'
@@ -100,7 +153,37 @@ export class datasetHttp {
     });
   }
 
-  // 植物数据集信息概览
+  /**
+   * 植物
+   */
+
+  // 新增植物数据集
+  static createPlantsDateset (params: datasetParams) {
+    const { informationId } = params;
+    return http({
+      url: '/api/plantsDs/create',
+      method: 'get',
+      params: { informationId }
+    });
+  }
+
+  // 删除植物数据集
+  static deletePlants (ids: number) {
+    return http({
+      url: `/api/plantsDs/deleteByIds/${ids}`,
+      method: 'delete'
+    });
+  }
+
+  // 删除植物数据集图片
+  static deletePlantsImageById (id: number) {
+    return http({
+      url: `/api/plantsDs/deleteImgByIds/${id}`,
+      method: 'delete'
+    });
+  }
+
+  // 查询植物数据集
   static searchPlantsDataset (params: (datasetParams | null)) {
     return http({
       url: '/api/plantsDs/search',
@@ -109,18 +192,17 @@ export class datasetHttp {
     });
   }
 
-  // 根据 ID 查询植物数据集详情(多图片)
-  static searchPlantsDatasetById (params: datasetParams) {
-    const { id } = params;
+  // 查询植物数据集所有图片
+  static searchPlantsDatasetImage (params: datasetParams) {
     return http({
-      url: `/api/plantsDs/searchById/${id}`,
+      url: '/api/plantsDs/searchImgById/search',
       method: 'get',
       params
     });
   }
 
   // 上传植物数据集图片
-  static uploadPlantsImg (datasetId: number, body: Array<any>) {
+  static uploadPlantsImg (id: number, body: Array<any>) {
     const fileImg = new FormData();
     for (const item in body) {
       if (body[item].raw) {
@@ -129,9 +211,8 @@ export class datasetHttp {
     }
     // fileImg.append('img', body[0].raw);
     return http({
-      url: '/api/plantsDs/uploadImg',
+      url: `/api/plantsDs/uploadImgById/${id}`,
       method: 'post',
-      params: { datasetId },
       data: fileImg,
       headers: {
         'Content-type': 'multipart/form-data'

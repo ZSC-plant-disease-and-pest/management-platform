@@ -5,12 +5,13 @@
     @reset="reset"
   />
   <Table
-    :tableType="'images'"
+    :tableType="'disease'"
     :tableData="tableData"
     :tableColumn="tableColumn"
     :loading="isLoading"
+    @add="add"
     @check="check"
-    @edit="edit"
+    @checkDateset="checkDateset"
     @remove="remove"
     @sortChange="sortChange"
   />
@@ -36,10 +37,10 @@ import {
 import { datasetHttp, datasetParams } from '@/api/dataset';
 import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import Table from '@/components/common/table/Table.vue';
+import Table from '../components/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
-import Dialog from '@/components/pages/recognition/images/Dialog.vue';
+import Dialog from '@/components/pages/dataset/Dialog.vue';
 
 export default defineComponent({
   components: {
@@ -79,12 +80,12 @@ export default defineComponent({
       {
         prop: 'name',
         label: '病害名称',
-        width: 'auto'
+        width: '200px'
       },
       {
-        prop: 'pictureAccount',
+        prop: 'imgAmount',
         label: '图片数量',
-        width: 'auto'
+        width: '150px'
       },
       {
         prop: 'path',
@@ -128,25 +129,28 @@ export default defineComponent({
       }
       searchDiseaseDataset();
     };
+    const add = () => {
+      state.dialogRef.openDialog('disease');
+    };
     const remove = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
       } else {
-        // isLoading.value = true;
-        // datasetHttp.deleteDisease(selectedIds.join(','))
-        //   .then(() => {
-        //     ElMessage.success('删除成功');
-        //     searchDiseaseDataset();
-        //   })
-        //   .finally(() => {
-        //     isLoading.value = false;
-        //   });
+        state.isLoading = true;
+        datasetHttp.deleteDisease(selectedIds.join(','))
+          .then(() => {
+            ElMessage.success('删除成功');
+            searchDiseaseDataset();
+          })
+          .finally(() => {
+            state.isLoading = false;
+          });
       }
     };
-    const edit = (data: any) => {
-      state.dialogRef.openDialog('disease', data);
-    };
     const check = (data: any) => {
+      window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
+    };
+    const checkDateset = (data: any) => {
       console.log(data);
     };
     const search = (data: any) => {
@@ -181,9 +185,10 @@ export default defineComponent({
       ...toRefs(state),
       tableColumn,
       sortChange,
+      add,
       remove,
-      edit,
       check,
+      checkDateset,
       search,
       reset,
       searchList,

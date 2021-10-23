@@ -16,36 +16,11 @@
     class="button"
     style="height: 40px; position: relative; float: right;"
     @click="add"
-    v-if="tableType !== 'images'"
   >
-    <span v-if="tableType === 'model'"> 添加模型 </span>
-    <span v-else> 添加 </span>
-  </el-button>
-  <el-button
-    type="primary"
-    size="medium"
-    icon="el-icon-refresh"
-    class="button"
-    style="height: 40px; position: relative; float: right;"
-    @click="deploy"
-    v-if="tableType === 'model'"
-  >
-    一键部署模型
-  </el-button>
-  <el-button
-    type="warning"
-    size="medium"
-    icon="el-icon-open"
-    class="button"
-    style="height: 40px; position: relative; float: right;"
-    @click="train"
-    v-if="tableType === 'model'"
-  >
-    开始训练
+    添加
   </el-button>
   <el-table
     :data="tableData"
-    :row-style="tableRowStyle"
     v-loading="loading"
     @sort-change="sortChange"
     @selection-change="selectChange"
@@ -64,18 +39,17 @@
     />
     <el-table-column
       label="操作"
-      :width="buttonWidth"
+      width="190"
     >
       <template #default="scope">
         <el-button
           type="text"
           size="small"
           icon="el-icon-search"
-          style="color: rgb(63, 186, 246)"
-          @click="checkFamily(scope.row)"
-          v-if="tableType === 'family'"
+          style="color: rgb(230, 162, 60)"
+          @click="checkDateset(scope.row)"
         >
-          查看科类
+          查看数据集
         </el-button>
         <el-button
           type="text"
@@ -84,16 +58,9 @@
           style="color: rgb(63, 186, 246)"
           @click="check(scope.row)"
         >
-          详情
-        </el-button>
-        <el-button
-          type="text"
-          size="small"
-          icon="el-icon-edit"
-          style="color: rgb(65, 209, 204)"
-          @click="edit(scope.row)"
-        >
-          编辑
+          <span v-if="tableType === 'disease'">病害详情</span>
+          <span v-if="tableType === 'pest'">虫害详情</span>
+          <span v-if="tableType === 'plants'">植物详情</span>
         </el-button>
       </template>
     </el-table-column>
@@ -107,7 +74,7 @@ export default defineComponent({
   props: {
     tableType: {
       type: String,
-      // 表格类型，默认普通表格, family 科类表格
+      // 表格类型
       default: 'common'
     },
     // 表格内容
@@ -128,26 +95,13 @@ export default defineComponent({
     loading: {
       type: Boolean,
       default: false
-    },
-    // 被选中行的 id
-    rowId: {
-      type: Number,
-      default: undefined
-    },
-    // 操作按钮的宽度
-    buttonWidth: {
-      type: Number,
-      default: 126
     }
   },
   emits: [
     'add',
     'remove',
-    'edit',
     'check',
-    'checkFamily',
-    'train',
-    'deploy',
+    'checkDateset',
     'sortChange'
   ],
   setup (props, { emit }) {
@@ -159,25 +113,13 @@ export default defineComponent({
     const remove = () => {
       emit('remove', selectedIds);
     };
-    // 编辑
-    const edit = (row: any) => {
-      emit('edit', row);
-    };
-    // 查看
+    // 查看详情
     const check = (row: any) => {
       emit('check', row);
     };
-    // 查看科类信息
-    const checkFamily = (row: any) => {
-      emit('checkFamily', row);
-    };
-    // 模型管理：一键训练
-    const train = (row: any) => {
-      emit('train', row);
-    };
-    // 模型管理：一键部署模型
-    const deploy = (row: any) => {
-      emit('deploy', row);
+    // 查看数据集
+    const checkDateset = (row: any) => {
+      emit('checkDateset', row);
     };
     // 改变排序
     const sortChange = (params: any) => {
@@ -202,26 +144,14 @@ export default defineComponent({
         selectedIds.push(selection[index].id);
       }
     };
-    // 被选中行的样式
-    const tableRowStyle = (data: any) => {
-      if (data.row.id === props.rowId) {
-        return 'background-color: #fafafa';
-      } else {
-        return '';
-      }
-    };
     return {
       add,
       remove,
-      edit,
       check,
-      checkFamily,
-      train,
-      deploy,
+      checkDateset,
       sortChange,
       selectChange,
-      selectAll,
-      tableRowStyle
+      selectAll
     };
   }
 });

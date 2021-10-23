@@ -62,7 +62,7 @@ export default defineComponent({
     });
     const tableColumn = reactive([
       {
-        prop: 'id',
+        prop: '序号',
         label: 'ID',
         width: '75px'
       },
@@ -147,7 +147,7 @@ export default defineComponent({
       });
     };
     const check = (data: any) => {
-      console.log(data);
+      window.open(`http://localhost:8082/pest/detail/${data.id}`, '_blank');
     };
     const search = (data: any) => {
       for (const index in data) {
