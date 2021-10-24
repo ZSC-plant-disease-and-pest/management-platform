@@ -2,7 +2,7 @@
   <Breadcrumb class="breadcrumb" v-show="path !== 'home'" />
   <div class="main" :style="{ 'minHeight': `calc(${minHeight})` }">
     <router-view v-slot="{ Component }">
-      <keep-alive :exclude="['add-update']">
+      <keep-alive :exclude="['add-update', 'detail']">
         <component :is="Component" />
       </keep-alive>
     </router-view>

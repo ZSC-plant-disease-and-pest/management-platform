@@ -60,8 +60,9 @@ export class datasetHttp {
 
   // 查询病害数据集所有图片
   static searchDiseaseDatasetImage (params: datasetParams) {
+    const { id } = params;
     return http({
-      url: '/api/diseaseDs/searchImgById/search',
+      url: `/api/diseaseDs/searchImgById/${id}`,
       method: 'get',
       params
     });
@@ -127,8 +128,9 @@ export class datasetHttp {
 
   // 查询虫害数据集所有图片
   static searchPestDatasetImage (params: datasetParams) {
+    const { id } = params;
     return http({
-      url: '/api/pestDs/searchImgById/search',
+      url: `/api/pestDs/searchImgById/${id}`,
       method: 'get',
       params
     });
@@ -194,8 +196,9 @@ export class datasetHttp {
 
   // 查询植物数据集所有图片
   static searchPlantsDatasetImage (params: datasetParams) {
+    const { id } = params;
     return http({
-      url: '/api/plantsDs/searchImgById/search',
+      url: `/api/plantsDs/searchImgById/${id}`,
       method: 'get',
       params
     });

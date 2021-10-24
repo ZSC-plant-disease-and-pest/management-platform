@@ -48,6 +48,9 @@ const pestImageManagement = () => import('@/views/admin/recognition/images/pestI
 // recognition/plantsImageManagement 病害图像数据集管理
 const plantsImageManagement = () => import('@/views/admin/recognition/images/plantsImageManagement/index.vue');
 
+// recognition/datasetDetail 病虫害图像数据集详情
+const datasetDetail = () => import('@/views/admin/recognition/images/detail/index.vue');
+
 // recognition/imagesTaggingManagement 病害图像数据集管理
 const imagesTaggingManagement = () => import('@/views/admin/recognition/dataset/imagesTaggingManagement/index.vue');
 
@@ -317,6 +320,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'recognition/plantsImageManagement',
         name: 'plantsImageManagement',
         component: plantsImageManagement
+      },
+      {
+        path: 'recognition/datasetDetail/:type/:id',
+        name: 'datasetDetail',
+        component: datasetDetail
       },
       {
         path: 'recognition/imagesTaggingManagement',

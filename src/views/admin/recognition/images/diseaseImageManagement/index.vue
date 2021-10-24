@@ -35,7 +35,7 @@ import {
   ref
 } from 'vue';
 import { datasetHttp, datasetParams } from '@/api/dataset';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import Table from '../components/Table.vue';
 import Search from '@/components/common/search/Search.vue';
@@ -51,6 +51,7 @@ export default defineComponent({
   },
   setup () {
     const route = useRoute();
+    const router = useRouter();
     onBeforeMount(() => {
       searchDiseaseDataset();
     });
@@ -151,6 +152,7 @@ export default defineComponent({
       window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
     };
     const checkDateset = (data: any) => {
+      router.push(`/admin/recognition/datasetDetail/disease/${data.id}`);
       console.log(data);
     };
     const search = (data: any) => {
