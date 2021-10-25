@@ -13,16 +13,16 @@
             class="link"
             @click="checkDetail"
           >
-            张三李四病{{ form.name }}
+            {{ form.name }}
           </span>
         </span>
         <span style="margin-left: 15px">
-          数据集图片数量：123{{ form.imgAmount }}
+          数据集图片数量：{{ form.imgAmount }}
         </span>
       </div>
     </el-col>
   </el-row>
-  <Dialog ref="dialogRef" />
+  <Dialog ref="dialogRef" @refreshTable="refreshTable" />
 </template>
 
 <script lang="ts">
@@ -35,8 +35,7 @@ import {
 } from 'vue';
 import { datasetHttp, datasetParams } from '@/api/dataset';
 import { useRoute } from 'vue-router';
-import { ElMessage } from 'element-plus';
-import Dialog from '@/components/pages/dataset/Dialog.vue';
+import Dialog from './components/Dialog.vue';
 
 export default defineComponent({
   name: 'detail',
@@ -53,7 +52,8 @@ export default defineComponent({
     const state = reactive({
       type: '',
       form: {} as datasetParams,
-      dialogRef: ref()
+      dialogRef: ref(),
+      isLoading: false
     });
 
     const datasetParams = reactive({
@@ -61,20 +61,34 @@ export default defineComponent({
       size: 10
     } as datasetParams);
     const getDatasetImage = () => {
-      datasetHttp.searchDiseaseDataset(datasetParams);
-      datasetHttp.searchDiseaseDatasetImage(datasetParams);
+      state.isLoading = true;
+      datasetHttp.searchDiseaseDatasetImage(datasetParams)
+        .then((response: any) => {
+          console.log(response);
+        })
+        .finally(() => {
+          state.isLoading = false;
+        });
     };
     const add = () => {
-      state.dialogRef.openDialog();
+      state.dialogRef.openDialog(
+        state.type,
+        state.form.informationId,
+        state.form.name
+      );
     };
     const checkDetail = () => {
-      window.open(`http://localhost:8082/${state.type}/detail/${datasetParams.id}`, '_blank');
+      window.open(`http://localhost:8082/${state.type}/detail/${datasetParams.informationId}`, '_blank');
+    };
+    const refreshTable = () => {
+      getDatasetImage();
     };
 
     return {
       ...toRefs(state),
       add,
-      checkDetail
+      checkDetail,
+      refreshTable
     };
   }
 });

@@ -9,6 +9,7 @@
     filterable
     remote
     :remote-method="remoteMethod"
+    :disabled="SelectDisabled"
   >
     <el-option
       v-for="item in list"
@@ -37,6 +38,10 @@ import { plantsHttp } from '@/api/plants';
 
 export default defineComponent({
   props: {
+    defaultId: {
+      type: Number,
+      default: 0
+    },
     type: {
       type: String,
       default: ''
@@ -49,12 +54,13 @@ export default defineComponent({
     });
 
     const state = reactive({
-      defaultValue: undefined,
+      defaultValue: undefined as number | undefined,
       isLoading: false,
       total: 0,
       currentPage: 1,
       pageSize: 5,
-      list: [] as Array<any>
+      list: [] as Array<any>,
+      SelectDisabled: false
     });
 
     const datasetParams = reactive({
@@ -63,6 +69,11 @@ export default defineComponent({
       size: 5
     } as any);
     const getDatasetId = () => {
+      if (props.defaultId !== 0) {
+        state.SelectDisabled = true;
+        state.defaultValue = props.defaultId;
+        datasetParams.id = props.defaultId;
+      }
       state.isLoading = true;
       if (props.type === 'disease') {
         diseaseHttp.searchDisease(datasetParams)
