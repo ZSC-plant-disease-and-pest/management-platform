@@ -52,7 +52,7 @@ const plantsImageManagement = () => import('@/views/admin/recognition/images/pla
 const datasetDetail = () => import('@/views/admin/recognition/images/detail/index.vue');
 
 // recognition/imagesTaggingManagement 病害图像数据集管理
-const imagesTaggingManagement = () => import('@/views/admin/recognition/dataset/imagesTaggingManagement/index.vue');
+const imagesTaggingManagement = () => import('@/views/admin/recognition/tagging/taggingManagement/index.vue');
 
 // recognition/trainingModelManagement 病害图像数据集管理
 const trainingModelManagement = () => import('@/views/admin/recognition/model/trainingModelManagement/index.vue');

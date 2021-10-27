@@ -6,7 +6,7 @@
     :close-on-press-escape="false"
     :show-close="false"
   >
-    <el-row :gutter="20">
+    <el-row :gutter="20" v-if="dialogType === 'edit'">
       <el-col :span="8">
         <span>
           图片ID：1001
@@ -23,7 +23,7 @@
         </span>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
+    <el-row :gutter="20" v-if="dialogType === 'edit'">
       <el-col :span="8">
         <span>
           图片上传者：root

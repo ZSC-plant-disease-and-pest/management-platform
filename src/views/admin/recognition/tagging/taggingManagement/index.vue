@@ -9,8 +9,15 @@
       上传标注图片
     </el-button>
   </div>
-  <Navmenu :menuList="taggingTypeList" :defaultActive="'noTagging'" />
-  <Navmenu :menuList="imageTypeList" :defaultActive="'disease'" />
+  <el-tabs
+    v-model="activeName"
+    @tab-click="tabsClick"
+    style="width: 248px;"
+  >
+    <el-tab-pane label="病害图片" name="0"></el-tab-pane>
+    <el-tab-pane label="虫害图片" name="1"></el-tab-pane>
+    <el-tab-pane label="植物图片" name="2"></el-tab-pane>
+  </el-tabs>
   <div class="box-images">
     <img
       class="image"
@@ -25,38 +32,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
-import Navmenu from '@/components/common/navmenu/Navmenu.vue';
+import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
+import { taggingHttp, taggingParams } from '@/api/tagging';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
 import ImageTaggingDialog from './components/ImageTaggingDialog.vue';
 
 export default defineComponent({
-  components: { Navmenu, Pagenum, ImageTaggingDialog },
+  components: { Pagenum, ImageTaggingDialog },
   setup () {
-    const taggingTypeList = reactive([
-      {
-        index: 'noTagging',
-        label: '待标注图片'
-      },
-      {
-        index: 'isTagging',
-        label: '已标注图片'
-      }
-    ]);
-    const imageTypeList = reactive([
-      {
-        index: 'disease',
-        label: '病害图片'
-      },
-      {
-        index: 'pest',
-        label: '虫害图片'
-      },
-      {
-        index: 'plant',
-        label: '植物图片'
-      }
-    ]);
+    onBeforeMount(() => {
+      searchTaggingImages();
+    });
+
+    const state = reactive({
+      activeName: 'disease',
+      isLoading: false
+    });
+
+    const taggingParams = reactive({
+      datasetType: 0,
+      page: 0,
+      size: 10
+    } as taggingParams);
+    const searchTaggingImages = () => {
+      state.isLoading = true;
+      taggingHttp.searchTaggingImages(taggingParams)
+        .then((response: any) => {
+          console.log(response);
+        })
+        .finally(() => {
+          state.isLoading = false;
+        });
+    };
+
     const imageList = reactive([
       {
         value: '1'
@@ -122,16 +130,22 @@ export default defineComponent({
     };
     const imageClick = (value: any) => {
       console.log(value);
-      dialogType.value = 'update';
+      dialogType.value = 'edit';
+    };
+    const tabsClick = () => {
+      if (Number(state.activeName) !== taggingParams.datasetType) {
+        taggingParams.datasetType = Number(state.activeName);
+        searchTaggingImages();
+      }
     };
     return {
-      taggingTypeList,
-      imageTypeList,
+      ...toRefs(state),
       imageList,
       dialogType,
       dialogClose,
       upload,
-      imageClick
+      imageClick,
+      tabsClick
     };
   }
 });
