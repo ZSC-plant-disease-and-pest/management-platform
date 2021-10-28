@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <span>待标注图片：105张（说明：左键单击弹出标注对话框）</span>
+    <span>待标注图片：{{ waitTaggingTotal }}张（说明：左键单击弹出标注对话框）</span>
     <el-button
       class="button"
       type="primary"
@@ -23,12 +23,17 @@
       class="image"
       src="@/assets/images/disease.jpg"
       v-for="item in imageList"
-      :key="item.value"
-      @click="imageClick(item.value)"
+      :key="item.id"
+      @click="imageClick(item)"
     />
   </div>
   <Pagenum />
-  <ImageTaggingDialog :dialogType="dialogType" @dialogClose="dialogClose" />
+  <ImageTaggingDialog
+    ref="imageTaggingDialogRef"
+    :dialogType="dialogType"
+    @dialogClose="dialogClose"
+    :key="taggingDialogKey"
+  />
 </template>
 
 <script lang="ts">
@@ -45,8 +50,15 @@ export default defineComponent({
     });
 
     const state = reactive({
-      activeName: 'disease',
-      isLoading: false
+      imageList: [] as Array<any>,
+      activeName: '0',
+      taggingDialogKey: 0,
+      waitTaggingTotal: undefined as number | undefined,
+      imageTaggingDialogRef: ref(),
+      isLoading: false,
+      total: 0,
+      page: 1,
+      size: 10
     });
 
     const taggingParams = reactive({
@@ -58,79 +70,30 @@ export default defineComponent({
       state.isLoading = true;
       taggingHttp.searchTaggingImages(taggingParams)
         .then((response: any) => {
-          console.log(response);
+          state.total = response.totalElements;
+          state.size = response.size;
+          state.imageList = [];
+          for (let i = 0; i < response.content.length; i++) {
+            state.imageList.push(response.content[i]);
+          }
+          state.waitTaggingTotal = response.numberOfElements;
         })
         .finally(() => {
           state.isLoading = false;
         });
     };
 
-    const imageList = reactive([
-      {
-        value: '1'
-      },
-      {
-        value: '2'
-      },
-      {
-        value: '3'
-      },
-      {
-        value: '4'
-      },
-      {
-        value: '5'
-      },
-      {
-        value: '6'
-      },
-      {
-        value: '7'
-      },
-      {
-        value: '8'
-      },
-      {
-        value: '9'
-      },
-      {
-        value: '10'
-      },
-      {
-        value: '11'
-      },
-      {
-        value: '12'
-      },
-      {
-        value: '13'
-      },
-      {
-        value: '14'
-      },
-      {
-        value: '15'
-      },
-      {
-        value: '16'
-      },
-      {
-        value: '17'
-      },
-      {
-        value: '18'
-      }
-    ]);
     const dialogType = ref('close');
     const dialogClose = () => {
       dialogType.value = 'close';
+      state.taggingDialogKey += 1;
     };
     const upload = () => {
       dialogType.value = 'upload';
     };
     const imageClick = (value: any) => {
-      console.log(value);
       dialogType.value = 'edit';
+      state.imageTaggingDialogRef.edit(state.activeName, value);
     };
     const tabsClick = () => {
       if (Number(state.activeName) !== taggingParams.datasetType) {
@@ -140,7 +103,6 @@ export default defineComponent({
     };
     return {
       ...toRefs(state),
-      imageList,
       dialogType,
       dialogClose,
       upload,

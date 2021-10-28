@@ -6,7 +6,7 @@
     :close-on-press-escape="false"
     :show-close="false"
   >
-    <el-row :gutter="20" v-if="dialogType === 'edit'">
+    <el-row :gutter="15" v-if="dialogType === 'edit'">
       <el-col :span="8">
         <span>
           图片ID：1001
@@ -23,7 +23,7 @@
         </span>
       </el-col>
     </el-row>
-    <el-row :gutter="20" v-if="dialogType === 'edit'">
+    <el-row :gutter="15" v-if="dialogType === 'edit'">
       <el-col :span="8">
         <span>
           图片上传者：root
@@ -39,41 +39,72 @@
       ref="formRef"
       size="small"
       :model="form"
-      label-width="90px"
+      label-width="110px"
+      :rules="rules"
     >
-      <el-row :gutter="20">
+      <el-row :gutter="0">
         <el-col :span="12">
-          <img
-            src="@/assets/images/disease.jpg"
-            style="width: 100%; height: 100%;"
-            v-if="dialogType === 'update'"
-          />
           <el-form-item
-            label="病害图集："
-            prop="file"
+            label="上传图片："
+            prop="image"
             v-if="dialogType === 'upload'"
           >
             <el-upload
-              class="upload-common"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
+              ref="uploadImageRef"
+              :class="{ uploadImage: havingUploadImage }"
+              action="#"
+              list-type="picture-card"
+              :auto-upload="false"
+              :on-change="onChange"
+              :limit="1"
+              :multiple="false"
+              accept=".gif,.jpg,.jpeg,.png,.bmp,.webp"
             >
-              <i class="el-icon-plus upload-icon"></i>
+              <template #default>
+                <i class="el-icon-plus"></i>
+              </template>
+              <template #file="{ file }">
+                <div>
+                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                  <span class="el-upload-list__item-actions">
+                    <span
+                      class="el-upload-list__item-preview"
+                      @click="handlePictureCardPreview(file)"
+                    >
+                      <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="handleRemove"
+                    >
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
+                </div>
+              </template>
             </el-upload>
+          </el-form-item>
+          <el-form-item label="待标注图片：" v-if="dialogType === 'edit'">
+            <img
+              class="edit-image"
+              src="@/assets/images/disease.jpg"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-row>
             <el-col :span="24">
-              <el-form-item label="图片类别：">
+              <el-form-item label="图片类别：" prop="datasetType">
                 <el-select
-                  v-model="form.imageType"
+                  v-model="form.datasetType"
                   placeholder="请选择"
                   style="width: 100%"
+                  @change="datasetTypeChange"
+                  :disabled="dialogType === 'edit'"
                 >
-                  <el-option label="病害" value="disease" />
-                  <el-option label="虫害" value="pest" />
-                  <el-option label="植物" value="plant" />
+                  <el-option label="病害" value="0" />
+                  <el-option label="虫害" value="1" />
+                  <el-option label="植物" value="2" />
                 </el-select>
               </el-form-item>
             </el-col>
@@ -81,15 +112,11 @@
           <el-row>
             <el-col :span="24">
               <el-form-item label="图片标注：">
-                <el-select
-                  v-model="form.imageTagging"
-                  placeholder="请选择"
+                <TaggingSelect
+                  ref="taggingSelectRef"
+                  @selectChange="TaggingSelectChange"
                   style="width: 100%"
-                >
-                  <el-option label="菊花黑锈病" value="菊花黑锈病" />
-                  <el-option label="桂花叶斑病" value="桂花叶斑病" />
-                  <el-option label="菜豆锈病" value="菜豆锈病" />
-                </el-select>
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -110,9 +137,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRefs, watch } from 'vue';
+import { taggingHttp, taggingParams } from '@/api/tagging';
+import { ElMessage } from 'element-plus';
+import { defineComponent, onUpdated, reactive, ref, toRefs, watch } from 'vue';
+import TaggingSelect from './TaggingSelect.vue';
 
 export default defineComponent({
+  components: { TaggingSelect },
   props: {
     dialogType: {
       type: String,
@@ -121,31 +152,143 @@ export default defineComponent({
   },
   emits: ['dialogClose'],
   setup (props, { emit }) {
-    const dialogOpen = ref(false);
+    onUpdated(() => {
+      if (props.dialogType === 'edit') {
+        datasetTypeChange();
+      }
+    });
     watch(() => props.dialogType, (newProps) => {
       if (newProps !== 'close') {
-        dialogOpen.value = true;
+        state.dialogOpen = true;
       } else {
-        dialogOpen.value = false;
+        state.dialogOpen = false;
       }
     });
+
     const state = reactive({
       form: {
-        imageType: '',
-        imageTagging: ''
-      }
+        datasetType: '',
+        datasetId: undefined as number | undefined
+      },
+      rules: {
+        datasetType: [{
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            if (state.form.datasetType === '' || state.form.datasetType === undefined) {
+              callback(new Error('请选择图片类别'));
+            } else {
+              callback();
+            }
+          },
+          trigger: ['blur', 'change']
+        }],
+        image: [{
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            if (state.fileList.length === 0) {
+              callback(new Error('请上传一张图片'));
+            } else {
+              callback();
+            }
+          },
+          trigger: ['blur', 'change']
+        }]
+      },
+      dialogOpen: false,
+      formRef: ref(),
+      taggingSelectRef: ref(),
+      uploadImageRef: ref(),
+      havingUploadImage: false,
+      dialogImageUrl: '',
+      dialogImageVisible: false,
+      fileList: [] as Array<any>,
+      isLoading: false
     });
+
+    const taggingParams = reactive({
+      datasetType: undefined,
+      datasetId: undefined
+    } as taggingParams);
+    const uploadImage = () => {
+      taggingParams.datasetType = Number(state.form.datasetType);
+      if (state.form.datasetId) {
+        taggingParams.datasetId = state.form.datasetId;
+      }
+      taggingHttp.uploadImage(taggingParams, state.fileList)
+        .then(() => {
+          ElMessage.success('添加图片成功');
+          emit('dialogClose', 'close');
+        })
+        .finally(() => {
+          state.isLoading = false;
+        });
+    };
+    const taggingImage = () => {
+      taggingParams.datasetType = Number(state.form.datasetType);
+      if (state.form.datasetId) {
+        taggingParams.datasetId = state.form.datasetId;
+      }
+      taggingHttp.taggingImage(taggingParams)
+        .then(() => {
+          ElMessage.success('标注图片成功');
+          emit('dialogClose', 'close');
+        })
+        .finally(() => {
+          state.isLoading = false;
+        });
+    };
+    const edit = (datasetType: number, data: any) => {
+      state.form.datasetType = String(datasetType);
+      taggingParams.imgId = data.id;
+    };
     const close = () => {
       emit('dialogClose', 'close');
     };
     const submit = () => {
-      emit('dialogClose', 'close');
+      state.formRef.validate().then((valid: boolean) => {
+        if (valid) {
+          state.isLoading = true;
+          if (props.dialogType === 'upload') {
+            uploadImage();
+          } else {
+            taggingImage();
+          }
+        }
+      });
     };
+    const datasetTypeChange = () => {
+      state.form.datasetId = undefined;
+      state.taggingSelectRef.loadingSelect(state.form.datasetType);
+    };
+    const TaggingSelectChange = (data: number) => {
+      state.form.datasetId = data;
+    };
+    const onChange = (file: any, fileList: Array<any>) => {
+      state.havingUploadImage = true;
+      state.fileList = fileList;
+    };
+    const handleRemove = () => {
+      state.uploadImageRef.clearFiles();
+      state.fileList = [];
+      setTimeout(() => {
+        state.havingUploadImage = false;
+      }, 1001);
+    };
+    const handlePictureCardPreview = (file: any) => {
+      state.dialogImageUrl = file.url;
+      state.dialogImageVisible = true;
+    };
+
     return {
       ...toRefs(state),
-      dialogOpen,
+      edit,
       close,
-      submit
+      submit,
+      datasetTypeChange,
+      TaggingSelectChange,
+      onChange,
+      handleRemove,
+      handlePictureCardPreview
     };
   }
 });
@@ -161,7 +304,7 @@ export default defineComponent({
   text-align: center;
 }
 .upload-common {
-  width: 150px;
+  width: 175px;
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
   cursor: pointer;
@@ -171,10 +314,20 @@ export default defineComponent({
   .upload-icon {
     font-size: 28px;
     color: #8c939d;
-    width: 150px;
-    height: 150px;
-    line-height: 150px;
+    width: 175px;
+    height: 175px;
+    line-height: 175px;
     text-align: center;
   }
+}
+.edit-image {
+  height: 175px;
+  width: 175px;
+}
+.uploadImage ::v-deep .el-upload.el-upload--picture-card {
+  display: none;
+}
+.uploadImage ::v-deep .el-upload-list__item.is-ready {
+  margin-bottom: 0px;
 }
 </style>
