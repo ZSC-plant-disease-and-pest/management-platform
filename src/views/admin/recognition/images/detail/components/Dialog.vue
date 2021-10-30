@@ -7,6 +7,7 @@
     :close-on-press-escape="false"
     @closed="closed"
     destroy-on-close
+    :key="formKey"
   >
     <el-form
       ref="formRef"
@@ -27,27 +28,47 @@
       </el-row>
       <el-row :gutter="0">
         <el-col :span="12">
-          <el-form-item label="上传病害图集：" prop="picture">
+          <el-form-item
+            label="上传图片："
+            prop="image"
+          >
             <el-upload
-              ref="uploadRef"
-              action=""
+              ref="uploadImageRef"
+              :class="{ uploadImage: havingUploadImage }"
+              action="#"
+              list-type="picture-card"
               :auto-upload="false"
               :on-change="onChange"
-              :on-remove="onRemove"
-              multiple
-              drag
+              :limit="1"
+              :multiple="false"
               accept=".gif,.jpg,.jpeg,.png,.bmp,.webp"
             >
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">
-                将图片放在此处或单击上传
-              </div>
-              <template #tip>
-                <div class="el-upload__tip">
-                  仅限常见类型图片，最大不超过5M
+              <template #default>
+                <i class="el-icon-plus"></i>
+              </template>
+              <template #file="{ file }">
+                <div>
+                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                  <span class="el-upload-list__item-actions">
+                    <span
+                      class="el-upload-list__item-preview"
+                      @click="handlePictureCardPreview(file)"
+                    >
+                      <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span
+                      class="el-upload-list__item-delete"
+                      @click="handleRemove"
+                    >
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
                 </div>
               </template>
             </el-upload>
+            <el-dialog v-model="dialogImageVisible" title="查看图片">
+              <img style="width: 100%; height: 75%;" :src="dialogImageUrl" alt="" />
+            </el-dialog>
           </el-form-item>
         </el-col>
       </el-row>
@@ -74,16 +95,20 @@
 import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
 import { datasetHttp, datasetParams } from '@/api/dataset';
 import { ElMessage } from 'element-plus';
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   emits: ['refreshTable'],
   setup (prop, { emit }) {
+    const route = useRoute();
+
     const state = reactive({
       type: '',
       name: '',
       form: {} as datasetParams,
       formRef: ref(),
       uploadRef: ref(),
+      uploadImageRef: ref(),
       rules: {
         datasetId: [{
           required: true,
@@ -96,10 +121,10 @@ export default defineComponent({
           },
           trigger: ['blur', 'change']
         }],
-        picture: [{
+        image: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
-            if (state.fileImg.length === 0) {
+            if (state.fileList.length === 0) {
               callback(new Error('请上传至少一张图片'));
             } else {
               callback();
@@ -110,7 +135,11 @@ export default defineComponent({
       },
       isLoading: false,
       dialogVisible: false,
-      fileImg: [] as Array<any>
+      fileList: [] as Array<any>,
+      havingUploadImage: false,
+      dialogImageUrl: '',
+      dialogImageVisible: false,
+      formKey: 0
     });
 
     const typeWord = computed(() => {
@@ -125,21 +154,22 @@ export default defineComponent({
       }
     });
 
-    const openDialog = (type: string, id: number, name: string) => {
+    const openDialog = (type: string) => {
       state.type = type;
-      state.name = name;
-      state.form.id = id;
+      state.name = String(route.query.name);
+      state.form.id = Number(route.params.id);
       state.dialogVisible = true;
     };
     const closed = () => {
       state.form.informationId = undefined;
+      state.formKey += 1;
     };
     const submit = () => {
       state.formRef.validate().then((valid: boolean) => {
         if (valid) {
           state.isLoading = true;
           if (state.type === 'disease') {
-            datasetHttp.uploadDiseaseImg(Number(state.form.id), state.fileImg)
+            datasetHttp.uploadDiseaseImg(Number(state.form.id), state.fileList)
               .then(() => {
                 ElMessage.success('添加成功');
                 state.dialogVisible = false;
@@ -149,7 +179,7 @@ export default defineComponent({
                 state.isLoading = false;
               });
           } else if (state.type === 'pest') {
-            datasetHttp.uploadPestImg(Number(state.form.id), state.fileImg)
+            datasetHttp.uploadPestImg(Number(state.form.id), state.fileList)
               .then(() => {
                 ElMessage.success('添加成功');
                 state.dialogVisible = false;
@@ -159,7 +189,7 @@ export default defineComponent({
                 state.isLoading = false;
               });
           } else if (state.type === 'plants') {
-            datasetHttp.uploadPlantsImg(Number(state.form.id), state.fileImg)
+            datasetHttp.uploadPlantsImg(Number(state.form.id), state.fileList)
               .then(() => {
                 ElMessage.success('添加成功');
                 state.dialogVisible = false;
@@ -174,34 +204,24 @@ export default defineComponent({
     };
     const refreshTable = () => {
       emit('refreshTable');
+      state.formKey += 1;
     };
-    const onChange = (file: any) => {
-      const type = file.raw.type.split('/').pop();
-      if (
-        type !== 'gif' &&
-        type !== 'jpg' &&
-        type !== 'jpeg' &&
-        type !== 'png' &&
-        type !== 'bmp' &&
-        type !== 'webp') {
-        ElMessage.error(`名称为${file.raw.name}的图片格式有误 !`);
-        setImageList();
-      } else if (file.raw.size / 1024 / 1024 > 5) {
-        ElMessage.error(`名称为${file.raw.name}的图片大小不能超过 5MB !`);
-        setImageList();
-      } else {
-        state.fileImg.push(file);
+    const onChange = (file: any, fileList: Array<any>) => {
+      state.havingUploadImage = true;
+      state.fileList = fileList;
+    };
+    const handleRemove = () => {
+      state.uploadImageRef.clearFiles();
+      state.fileList = [];
+      setTimeout(() => {
+        state.havingUploadImage = false;
+      }, 1);
+    };
+    const handlePictureCardPreview = (file: any) => {
+      if (file !== null) {
+        state.dialogImageUrl = file.url;
       }
-    };
-    const onRemove = (file: any, fileList: any) => {
-      state.fileImg = fileList;
-      setImageList();
-    };
-    const setImageList = () => {
-      state.uploadRef.clearFiles();
-      for (const index in state.fileImg) {
-        state.uploadRef.uploadFiles.push(state.fileImg[index]);
-      }
+      state.dialogImageVisible = true;
     };
 
     return {
@@ -211,10 +231,21 @@ export default defineComponent({
       closed,
       submit,
       onChange,
-      onRemove
+      handleRemove,
+      handlePictureCardPreview
     };
   }
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+::v-deep .el-upload-list__item {
+  transition: none !important;
+}
+.uploadImage ::v-deep .el-upload.el-upload--picture-card {
+  display: none;
+}
+.uploadImage ::v-deep .el-upload-list__item.is-ready {
+  margin-bottom: 0px;
+}
+</style>

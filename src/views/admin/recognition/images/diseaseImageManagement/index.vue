@@ -152,8 +152,13 @@ export default defineComponent({
       window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
     };
     const checkDateset = (data: any) => {
-      router.push(`/admin/recognition/datasetDetail/disease/${data.id}`);
-      console.log(data);
+      router.push({
+        path: `/admin/recognition/datasetDetail/disease/${data.id}`,
+        query: {
+          name: data.name,
+          informationId: data.informationId
+        }
+      });
     };
     const search = (data: any) => {
       for (const index in data) {

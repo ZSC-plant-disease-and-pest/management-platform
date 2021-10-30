@@ -22,6 +22,27 @@
       </div>
     </el-col>
   </el-row>
+  <div class="box-images">
+    <div
+      v-for="item in describeList"
+      :key="item.id"
+      class="describe"
+    >
+      <Describe
+        :id="item.id"
+        :src="item.src"
+        :size="item.size"
+      />
+    </div>
+  </div>
+  <Pagenum
+    :total="total"
+    :currentPage="page"
+    :pageSize="size"
+    @handleSizeChange="handleSizeChange"
+    @handleCurrentChange="handleCurrentChange"
+    :pageSizes="[12, 50, 100]"
+  />
   <Dialog ref="dialogRef" @refreshTable="refreshTable" />
 </template>
 
@@ -36,46 +57,97 @@ import {
 import { datasetHttp, datasetParams } from '@/api/dataset';
 import { useRoute } from 'vue-router';
 import Dialog from './components/Dialog.vue';
+import Describe from './components/Describe.vue';
+import Pagenum from '@/components/common/pagenum/Pagenum.vue';
 
 export default defineComponent({
   name: 'detail',
-  components: { Dialog },
+  components: { Dialog, Describe, Pagenum },
   setup () {
     const route = useRoute();
     onBeforeMount(() => {
       state.type = String(route.params.type);
       datasetParams.id = Number(route.params.id);
-      datasetParams.informationId = Number(route.params.id);
+      datasetParams.informationId = Number(route.query.informationId);
+      state.form.name = String(route.query.name);
       getDatasetImage();
     });
 
     const state = reactive({
       type: '',
       form: {} as datasetParams,
+      describeList: [] as Array<any>,
       dialogRef: ref(),
-      isLoading: false
+      isLoading: false,
+      total: 0,
+      page: 1,
+      size: 12
     });
 
     const datasetParams = reactive({
       page: 0,
-      size: 10
+      size: 12
     } as datasetParams);
     const getDatasetImage = () => {
       state.isLoading = true;
-      datasetHttp.searchDiseaseDatasetImage(datasetParams)
-        .then((response: any) => {
-          console.log(response);
-        })
-        .finally(() => {
-          state.isLoading = false;
-        });
+      if (state.type === 'disease') {
+        datasetHttp.searchDiseaseDatasetImage(datasetParams)
+          .then((response: any) => {
+            state.form.imgAmount = response.totalElements;
+            state.total = response.totalElements;
+            state.size = response.size;
+            state.describeList = [];
+            for (let i = 0; i < response.content.length; i++) {
+              state.describeList.push({
+                id: response.content[i].id,
+                src: `http://localhost:8080${response.content[i].path}`,
+                size: response.content[i].size
+              });
+            }
+          })
+          .finally(() => {
+            state.isLoading = false;
+          });
+      } else if (state.type === 'pest') {
+        datasetHttp.searchPestDatasetImage(datasetParams)
+          .then((response: any) => {
+            state.form.imgAmount = response.totalElements;
+            state.total = response.totalElements;
+            state.size = response.size;
+            state.describeList = [];
+            for (let i = 0; i < response.content.length; i++) {
+              state.describeList.push({
+                id: response.content[i].id,
+                src: `http://localhost:8080${response.content[i].path}`,
+                size: response.content[i].size
+              });
+            }
+          })
+          .finally(() => {
+            state.isLoading = false;
+          });
+      } else if (state.type === 'plants') {
+        datasetHttp.searchPlantsDatasetImage(datasetParams)
+          .then((response: any) => {
+            state.form.imgAmount = response.totalElements;
+            state.total = response.totalElements;
+            state.size = response.size;
+            state.describeList = [];
+            for (let i = 0; i < response.content.length; i++) {
+              state.describeList.push({
+                id: response.content[i].id,
+                src: `http://localhost:8080${response.content[i].path}`,
+                size: response.content[i].size
+              });
+            }
+          })
+          .finally(() => {
+            state.isLoading = false;
+          });
+      }
     };
     const add = () => {
-      state.dialogRef.openDialog(
-        state.type,
-        state.form.informationId,
-        state.form.name
-      );
+      state.dialogRef.openDialog(state.type);
     };
     const checkDetail = () => {
       window.open(`http://localhost:8082/${state.type}/detail/${datasetParams.informationId}`, '_blank');
@@ -83,12 +155,26 @@ export default defineComponent({
     const refreshTable = () => {
       getDatasetImage();
     };
+    const handleSizeChange = (newSize: any) => {
+      datasetParams.size = newSize;
+      datasetParams.page = 0;
+      state.size = newSize;
+      state.page = 1;
+      getDatasetImage();
+    };
+    const handleCurrentChange = (newPage: any) => {
+      datasetParams.page = newPage;
+      state.page = newPage + 1;
+      getDatasetImage();
+    };
 
     return {
       ...toRefs(state),
       add,
       checkDetail,
-      refreshTable
+      refreshTable,
+      handleSizeChange,
+      handleCurrentChange
     };
   }
 });
@@ -106,6 +192,15 @@ export default defineComponent({
 
   .link:hover {
     color: #40aaff;
+  }
+}
+.box-images {
+  display: flex;
+  flex-wrap: wrap;
+
+  .describe {
+    width: 263px;
+    margin: 15px;
   }
 }
 </style>

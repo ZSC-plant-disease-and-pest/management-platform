@@ -83,16 +83,17 @@
                 </div>
               </template>
             </el-upload>
-            <el-dialog v-model="dialogImageVisible" title="查看图片">
-              <img style="width: 100%; height: 75%;" :src="dialogImageUrl" alt="" />
-            </el-dialog>
           </el-form-item>
           <el-form-item label="待标注图片：" v-if="dialogType === 'edit'">
             <img
               class="edit-image"
               :src="dialogImageUrl"
+              @click="handlePictureCardPreview(null)"
             />
           </el-form-item>
+          <el-dialog v-model="dialogImageVisible" title="查看图片">
+            <img style="width: 100%; height: 75%;" :src="dialogImageUrl" alt="" />
+          </el-dialog>
         </el-col>
         <el-col :span="12">
           <el-row>
@@ -276,11 +277,12 @@ export default defineComponent({
       state.fileList = [];
       setTimeout(() => {
         state.havingUploadImage = false;
-      }, 1001);
+      }, 1);
     };
     const handlePictureCardPreview = (file: any) => {
-      console.log(file);
-      state.dialogImageUrl = file.url;
+      if (file !== null) {
+        state.dialogImageUrl = file.url;
+      }
       state.dialogImageVisible = true;
     };
 
@@ -328,6 +330,10 @@ export default defineComponent({
 .edit-image {
   width: 90%;
   height: 60%;
+  cursor: pointer;
+}
+::v-deep .el-upload-list__item {
+  transition: none !important;
 }
 .uploadImage ::v-deep .el-upload.el-upload--picture-card {
   display: none;

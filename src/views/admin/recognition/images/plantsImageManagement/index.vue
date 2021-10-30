@@ -35,7 +35,7 @@ import {
   ref
 } from 'vue';
 import { datasetHttp, datasetParams } from '@/api/dataset';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import Table from '../components/Table.vue';
 import Search from '@/components/common/search/Search.vue';
@@ -51,6 +51,7 @@ export default defineComponent({
   },
   setup () {
     const route = useRoute();
+    const router = useRouter();
     onBeforeMount(() => {
       searchPlantsDataset();
     });
@@ -151,7 +152,13 @@ export default defineComponent({
       window.open(`http://localhost:8082/plants/detail/${data.id}`, '_blank');
     };
     const checkDateset = (data: any) => {
-      console.log(data);
+      router.push({
+        path: `/admin/recognition/datasetDetail/plants/${data.id}`,
+        query: {
+          name: data.name,
+          informationId: data.informationId
+        }
+      });
     };
     const search = (data: any) => {
       for (const index in data) {
