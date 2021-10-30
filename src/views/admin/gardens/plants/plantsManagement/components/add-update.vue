@@ -7,6 +7,7 @@
     :model="form"
     label-width="130px"
     v-show="status === 'incomplete'"
+    :key="formKey"
   >
     <el-row :gutter="20">
       <el-col :span="12">
@@ -385,7 +386,8 @@ export default defineComponent({
       isLoading: false,
       // 表单状态：complete 完成，incomplete 未完成
       status: 'incomplete',
-      fileImg: [] as Array<any>
+      fileImg: [] as Array<any>,
+      formKey: 0
     });
     const functionOptions: Array<any> = reactive([
       { value: '耐阴树种' },
@@ -484,6 +486,7 @@ export default defineComponent({
       // 重置植物园林信息
       state.form.plantsClassify = {};
       state.status = 'incomplete';
+      state.formKey += 1;
     };
     const familyChange = (params: any) => {
       state.form.family = params;

@@ -21,13 +21,20 @@
   <div class="box-images">
     <img
       class="image"
-      src="@/assets/images/disease.jpg"
       v-for="item in imageList"
+      :src="'http://localhost:8080' + item.path"
       :key="item.id"
       @click="imageClick(item)"
     />
   </div>
-  <Pagenum />
+  <Pagenum
+    :total="total"
+    :currentPage="page"
+    :pageSize="size"
+    @handleSizeChange="handleSizeChange"
+    @handleCurrentChange="handleCurrentChange"
+    :pageSizes="[18, 50, 100]"
+  />
   <ImageTaggingDialog
     ref="imageTaggingDialogRef"
     :dialogType="dialogType"
@@ -58,13 +65,13 @@ export default defineComponent({
       isLoading: false,
       total: 0,
       page: 1,
-      size: 10
+      size: 18
     });
 
     const taggingParams = reactive({
       datasetType: 0,
       page: 0,
-      size: 10
+      size: 18
     } as taggingParams);
     const searchTaggingImages = () => {
       state.isLoading = true;
@@ -87,6 +94,7 @@ export default defineComponent({
     const dialogClose = () => {
       dialogType.value = 'close';
       state.taggingDialogKey += 1;
+      searchTaggingImages();
     };
     const upload = () => {
       dialogType.value = 'upload';
@@ -101,13 +109,28 @@ export default defineComponent({
         searchTaggingImages();
       }
     };
+    const handleSizeChange = (newSize: any) => {
+      taggingParams.size = newSize;
+      taggingParams.page = 0;
+      state.size = newSize;
+      state.page = 1;
+      searchTaggingImages();
+    };
+    const handleCurrentChange = (newPage: any) => {
+      taggingParams.page = newPage;
+      state.page = newPage + 1;
+      searchTaggingImages();
+    };
+
     return {
       ...toRefs(state),
       dialogType,
       dialogClose,
       upload,
       imageClick,
-      tabsClick
+      tabsClick,
+      handleSizeChange,
+      handleCurrentChange
     };
   }
 });
@@ -127,8 +150,8 @@ export default defineComponent({
   flex-wrap: wrap;
 
   .image {
-    width: 242px;
-    height: 181px;
+    width: 263px;
+    height: 197px;
     margin: 15px;
     cursor: pointer;
   }

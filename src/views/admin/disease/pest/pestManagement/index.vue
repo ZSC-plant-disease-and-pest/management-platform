@@ -62,8 +62,8 @@ export default defineComponent({
     });
     const tableColumn = reactive([
       {
-        prop: '序号',
-        label: 'ID',
+        prop: 'id',
+        label: '序号',
         width: '75px'
       },
       {

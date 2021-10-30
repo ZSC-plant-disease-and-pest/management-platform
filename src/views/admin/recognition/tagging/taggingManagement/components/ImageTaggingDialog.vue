@@ -83,11 +83,14 @@
                 </div>
               </template>
             </el-upload>
+            <el-dialog v-model="dialogImageVisible" title="查看图片">
+              <img style="width: 100%; height: 75%;" :src="dialogImageUrl" alt="" />
+            </el-dialog>
           </el-form-item>
           <el-form-item label="待标注图片：" v-if="dialogType === 'edit'">
             <img
               class="edit-image"
-              src="@/assets/images/disease.jpg"
+              :src="dialogImageUrl"
             />
           </el-form-item>
         </el-col>
@@ -240,6 +243,7 @@ export default defineComponent({
     const edit = (datasetType: number, data: any) => {
       state.form.datasetType = String(datasetType);
       taggingParams.imgId = data.id;
+      state.dialogImageUrl = 'http://localhost:8080' + data.path;
     };
     const close = () => {
       emit('dialogClose', 'close');
@@ -275,6 +279,7 @@ export default defineComponent({
       }, 1001);
     };
     const handlePictureCardPreview = (file: any) => {
+      console.log(file);
       state.dialogImageUrl = file.url;
       state.dialogImageVisible = true;
     };
@@ -321,8 +326,8 @@ export default defineComponent({
   }
 }
 .edit-image {
-  height: 175px;
-  width: 175px;
+  width: 90%;
+  height: 60%;
 }
 .uploadImage ::v-deep .el-upload.el-upload--picture-card {
   display: none;
