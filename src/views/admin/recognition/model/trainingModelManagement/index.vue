@@ -43,12 +43,12 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
-      getModel();
+      // getModel();
     });
     onUpdated(() => {
       if (route.params.type === 'refresh') {
         route.params.type = '';
-        getModel();
+        // getModel();
       }
     });
 
@@ -120,7 +120,7 @@ export default defineComponent({
     const add = () => {
       router.push({
         path: router.currentRoute.value.path + '/add',
-        name: 'diseaseManagementAdd'
+        name: 'trainingModelManagementAdd'
       });
     };
     const remove = (selectedIds: any) => {

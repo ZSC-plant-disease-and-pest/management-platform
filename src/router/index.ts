@@ -51,13 +51,15 @@ const plantsImageManagement = () => import('@/views/admin/recognition/images/pla
 // recognition/datasetDetail 病虫害图像数据集详情
 const datasetDetail = () => import('@/views/admin/recognition/images/detail/index.vue');
 
-// recognition/imagesTaggingManagement 病害图像数据集管理
+// recognition/imagesTaggingManagement 图片标注管理
 const imagesTaggingManagement = () => import('@/views/admin/recognition/tagging/taggingManagement/index.vue');
 
-// recognition/trainingModelManagement 病害图像数据集管理
+// recognition/trainingModelManagement 训练模型管理
 const trainingModelManagement = () => import('@/views/admin/recognition/model/trainingModelManagement/index.vue');
+// recognition/trainingModelManagement 训练模型详情
+const trainingModelManagementAddUpdate = () => import('@/views/admin/recognition/model/trainingModelManagement/components/add-update.vue');
 
-// recognition/trainingParamManagement 病害图像数据集管理
+// recognition/trainingParamManagement AI系统配置
 const trainingParamManagement = () => import('@/views/admin/recognition/config/trainingParamManagement/index.vue');
 
 // 6 系统管理
@@ -335,6 +337,16 @@ const routes: Array<RouteRecordRaw> = [
         path: 'recognition/trainingModelManagement',
         name: 'trainingModelManagement',
         component: trainingModelManagement
+      },
+      {
+        path: 'recognition/trainingModelManagement/add',
+        name: 'trainingModelManagementAdd',
+        component: trainingModelManagementAddUpdate
+      },
+      {
+        path: 'recognition/trainingModelManagement/update',
+        name: 'trainingModelManagementUpdate',
+        component: trainingModelManagementAddUpdate
       },
       {
         path: 'recognition/trainingParamManagement',
