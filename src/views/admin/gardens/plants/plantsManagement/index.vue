@@ -161,7 +161,7 @@ export default defineComponent({
       console.log(data);
     };
     const check = (data: any) => {
-      window.open(`http://localhost:8082/plants/detail/${data.id}`, '_blank');
+      window.open(`http://localhost:8082/plant/detail/${data.id}`, '_blank');
     };
     const search = (data: any) => {
       for (const index in data) {
