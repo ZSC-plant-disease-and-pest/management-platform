@@ -14,7 +14,7 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
-              像素：123 x 456
+              像素：{{ resolution }}
             </el-col>
             <el-col :span="12">
               创建者：{{ creator }}
@@ -47,9 +47,13 @@ export default defineComponent({
       type: String,
       default: ''
     },
+    resolution: {
+      type: String,
+      default: ''
+    },
     size: {
       type: String,
-      default: '123 x 456'
+      default: ''
     },
     creator: {
       type: String,
@@ -57,7 +61,7 @@ export default defineComponent({
     },
     createTime: {
       type: String,
-      default: '2021/10/30 15:08'
+      default: ''
     }
   },
   emits: ['checkDetail'],
@@ -93,7 +97,7 @@ export default defineComponent({
     top: -6px;
     position: relative;
     padding: 0px 10px;
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 ::v-deep .el-card__body {

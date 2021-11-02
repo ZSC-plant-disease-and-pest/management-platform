@@ -9,29 +9,29 @@
     <el-row :gutter="15" v-if="dialogType === 'edit'">
       <el-col :span="8">
         <span>
-          图片ID：1001
+          图片ID：{{ imageInfo.id }}
         </span>
       </el-col>
       <el-col :span="8">
         <span>
-          图片分辨率：240 × 160 pt
+          图片分辨率：{{ imageInfo.resolution }}
         </span>
       </el-col>
       <el-col :span="8">
         <span>
-          图片大小：426 KB
+          图片大小：{{ imageInfo.size }}
         </span>
       </el-col>
     </el-row>
     <el-row :gutter="15" v-if="dialogType === 'edit'">
       <el-col :span="8">
         <span>
-          图片上传者：root
+          图片上传者：{{ imageInfo.creator }}
         </span>
       </el-col>
       <el-col :span="16">
         <span>
-          图片上传时间：2021/8/27 18:39:21
+          图片上传时间：{{ imageInfo.createTime }}
         </span>
       </el-col>
     </el-row>
@@ -198,6 +198,7 @@ export default defineComponent({
           trigger: ['blur', 'change']
         }]
       },
+      imageInfo: {} as any,
       dialogOpen: false,
       formRef: ref(),
       taggingSelectRef: ref(),
@@ -245,6 +246,8 @@ export default defineComponent({
       state.form.datasetType = String(datasetType);
       taggingParams.imgId = data.id;
       state.dialogImageUrl = 'http://localhost:8080' + data.path;
+      state.imageInfo = data;
+      console.log(data);
     };
     const close = () => {
       emit('dialogClose', 'close');

@@ -32,6 +32,9 @@
         :id="item.id"
         :src="item.src"
         :size="item.size"
+        :resolution="item.resolution"
+        :creator="item.creator"
+        :createTime="item.createTime"
       />
     </div>
   </div>
@@ -101,7 +104,10 @@ export default defineComponent({
               state.describeList.push({
                 id: response.content[i].id,
                 src: `http://localhost:8080${response.content[i].path}`,
-                size: response.content[i].size
+                size: response.content[i].size,
+                resolution: response.content[i].resolution,
+                creator: response.content[i].creator,
+                createTime: response.content[i].createTime
               });
             }
           })
