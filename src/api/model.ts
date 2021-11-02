@@ -37,6 +37,9 @@ export interface modelParams extends searchByInfo {
 
   // 测试次数
   testCount?: number
+
+  // 数据集列表
+  datasetList?: Array<any>
 }
 
 export class modelHttp {
