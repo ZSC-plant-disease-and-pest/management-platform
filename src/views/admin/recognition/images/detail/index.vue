@@ -46,7 +46,11 @@
     @handleCurrentChange="handleCurrentChange"
     :pageSizes="[12, 50, 100]"
   />
-  <Dialog ref="dialogRef" @refreshTable="refreshTable" />
+  <Dialog
+    ref="dialogRef"
+    @refreshTable="refreshTable"
+    :key="dialogKey"
+  />
 </template>
 
 <script lang="ts">
@@ -84,7 +88,8 @@ export default defineComponent({
       isLoading: false,
       total: 0,
       page: 1,
-      size: 12
+      size: 12,
+      dialogKey: 0
     });
 
     const datasetParams = reactive({
@@ -132,7 +137,7 @@ export default defineComponent({
           .finally(() => {
             state.isLoading = false;
           });
-      } else if (state.type === 'plants') {
+      } else if (state.type === 'plant') {
         datasetHttp.searchPlantsDatasetImage(datasetParams)
           .then((response: any) => {
             state.form.imgAmount = response.totalElements;
@@ -160,6 +165,7 @@ export default defineComponent({
     };
     const refreshTable = () => {
       getDatasetImage();
+      state.dialogKey += 1;
     };
     const handleSizeChange = (newSize: any) => {
       datasetParams.size = newSize;

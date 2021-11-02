@@ -28,7 +28,7 @@ export class datasetHttp {
     const { informationId } = params;
     return http({
       url: '/api/diseaseDs/create',
-      method: 'get',
+      method: 'post',
       params: { informationId }
     });
   }
@@ -96,7 +96,7 @@ export class datasetHttp {
     const { informationId } = params;
     return http({
       url: '/api/pestDs/create',
-      method: 'get',
+      method: 'post',
       params: { informationId }
     });
   }
@@ -164,7 +164,7 @@ export class datasetHttp {
     const { informationId } = params;
     return http({
       url: '/api/plantsDs/create',
-      method: 'get',
+      method: 'post',
       params: { informationId }
     });
   }

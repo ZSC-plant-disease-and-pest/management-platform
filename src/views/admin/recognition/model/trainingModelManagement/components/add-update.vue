@@ -357,22 +357,26 @@
   </el-form>
 
   <!-- 步骤四：创建完成 -->
+
+  <!-- 步骤控制按键 -->
   <el-row :gutter="0">
     <el-col :span="24" style="text-align: center;">
       <el-button
         :loading="isLoading"
         @click="back"
-        style="margin-right: 50px;"
+        style="margin-right: 50px; width: 110px;"
       >
-        上一步
+        <span v-show="step === 1 || step === 5"> 返 回 </span>
+        <span v-show="step === 2 || step === 3 || step === 4"> 上 一 步 </span>
       </el-button>
       <el-button
         type="primary"
         :loading="isLoading"
         @click="next"
-        style="margin-left: 50px;"
+        style="margin-left: 50px; width: 110px;"
       >
-        下一步
+        <span v-show="step === 5"> 继 续 创 建 </span>
+        <span v-show="step === 1 || step === 2 || step === 3 || step === 4"> 下 一 步 </span>
       </el-button>
     </el-col>
   </el-row>
@@ -712,7 +716,7 @@ export default defineComponent({
       if (state.step === 1) {
         router.push({
           path: '/admin/recognition/trainingModelManagement',
-          name: 'trainingModelManagementAdd',
+          name: 'trainingModelManagement',
           params: {
             type: 'refresh'
           }
@@ -726,7 +730,7 @@ export default defineComponent({
       } else if (state.step === 5) {
         router.push({
           path: '/admin/recognition/trainingModelManagement',
-          name: 'trainingModelManagementAdd',
+          name: 'trainingModelManagement',
           params: {
             type: 'refresh'
           }

@@ -22,20 +22,19 @@
     @handleSizeChange="handleSizeChange"
     @handleCurrentChange="handleCurrentChange"
   />
-  <Dialog ref="dialogRef" />
+  <Dialog ref="dialogRef" @refreshTable="refreshTable" />
 </template>
 
 <script lang="ts">
 import {
   toRefs,
   reactive,
-  onUpdated,
   onBeforeMount,
   defineComponent,
   ref
 } from 'vue';
 import { datasetHttp, datasetParams } from '@/api/dataset';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import Table from '../components/Table.vue';
 import Search from '@/components/common/search/Search.vue';
@@ -50,18 +49,9 @@ export default defineComponent({
     Dialog
   },
   setup () {
-    const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
       searchPlantsDataset();
-    });
-    onUpdated(() => {
-      // 判断是否从添加界面返回
-      if (route.params.type === 'refresh') {
-        // 是的话则重新请求数据
-        route.params.type = '';
-        searchPlantsDataset();
-      }
     });
 
     const state = reactive({
@@ -149,11 +139,11 @@ export default defineComponent({
       }
     };
     const check = (data: any) => {
-      window.open(`http://localhost:8082/plants/detail/${data.id}`, '_blank');
+      window.open(`http://localhost:8082/plant/detail/${data.informationId}`, '_blank');
     };
     const checkDateset = (data: any) => {
       router.push({
-        path: `/admin/recognition/datasetDetail/plants/${data.id}`,
+        path: `/admin/recognition/datasetDetail/plant/${data.id}`,
         query: {
           name: data.name,
           informationId: data.informationId
@@ -173,6 +163,9 @@ export default defineComponent({
         searchList[index].value = '';
         datasetParams.name = undefined;
       }
+      searchPlantsDataset();
+    };
+    const refreshTable = () => {
       searchPlantsDataset();
     };
     const handleSizeChange = (newSize: any) => {
@@ -199,6 +192,7 @@ export default defineComponent({
       search,
       reset,
       searchList,
+      refreshTable,
       handleSizeChange,
       handleCurrentChange
     };
