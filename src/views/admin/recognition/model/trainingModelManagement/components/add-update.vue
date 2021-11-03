@@ -118,7 +118,7 @@
 
       <!-- 事件控件 -->
       <el-row style="margin-top: 15px;">
-        <el-col :span="4">
+        <el-col :span="16">
           <DatasetSelect
             ref="diseasedatasetSelectRef"
             :key="diseaseDatasetSelectKey"
@@ -126,12 +126,12 @@
             placeholder="请选择需要添加的病害数据集"
             @selectChange="datasetSelected(0, $event)"
           />
+          <el-button type="primary" @click="add(0)" size="small"> 添加 </el-button>
+          <el-button type="success" @click="addAll(0)" size="small"> 添加全部 </el-button>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="8">
           <div style="float: right;">
-            <el-button type="primary" @click="add(0)"> 添加 </el-button>
-            <el-button type="success" @click="addAll(0)"> 选择全部 </el-button>
-            <el-button type="warning"> 批量导入 </el-button>
+            <el-button type="warning" size="small"> 批量导入 </el-button>
           </div>
         </el-col>
       </el-row>
@@ -191,7 +191,7 @@
 
       <!-- 事件控件 -->
       <el-row style="margin-top: 15px;">
-        <el-col :span="4">
+        <el-col :span="16">
           <DatasetSelect
             ref="pestdatasetSelectRef"
             :key="pestDatasetSelectKey"
@@ -199,12 +199,12 @@
             placeholder="请选择需要添加的虫害数据集"
             @selectChange="datasetSelected(1, $event)"
           />
+          <el-button type="primary" @click="add(1)" size="small"> 添加 </el-button>
+          <el-button type="success" @click="addAll(1)" size="small"> 添加全部 </el-button>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="8">
           <div style="float: right;">
-            <el-button type="primary" @click="add(1)"> 添加 </el-button>
-            <el-button type="success" @click="addAll(1)"> 选择全部 </el-button>
-            <el-button type="warning"> 批量导入 </el-button>
+            <el-button type="warning" size="small"> 批量导入 </el-button>
           </div>
         </el-col>
       </el-row>
@@ -264,7 +264,7 @@
 
       <!-- 事件控件 -->
       <el-row style="margin-top: 15px;">
-        <el-col :span="4">
+        <el-col :span="16">
           <DatasetSelect
             ref="plantsdatasetSelectRef"
             :key="plantsDatasetSelectKey"
@@ -272,12 +272,12 @@
             placeholder="请选择需要添加的植物数据集"
             @selectChange="datasetSelected(2, $event)"
           />
+          <el-button type="primary" @click="add(2)" size="small"> 添加 </el-button>
+          <el-button type="success" @click="addAll(2)" size="small"> 添加全部 </el-button>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="8">
           <div style="float: right;">
-            <el-button type="primary" @click="add(2)"> 添加 </el-button>
-            <el-button type="success" @click="addAll(2)"> 选择全部 </el-button>
-            <el-button type="warning"> 批量导入 </el-button>
+            <el-button type="warning" size="small"> 批量导入 </el-button>
           </div>
         </el-col>
       </el-row>
@@ -357,6 +357,51 @@
   </el-form>
 
   <!-- 步骤四：创建完成 -->
+  <el-form
+    ref="step4FormRef"
+    class="form-common"
+    size="small"
+    :model="form"
+    label-width="130px"
+    v-show="step === 4"
+  >
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="模型名称：">
+          <span> {{form.name}} </span>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="模型标识符：">
+          <span> {{form.identifier}} </span>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="数据集来源：">
+          <span> {{form.recognizeType}} </span>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="识别分类数：">
+          <span> {{form.recognizeAmount}} </span>
+        </el-form-item>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">
+        <el-form-item label="算法来源：">
+          <span> {{form.algorithm}} </span>
+        </el-form-item>
+      </el-col>
+      <el-col :span="12">
+        <el-form-item label="模型输出位置：">
+          <span> {{form.outputPath}} </span>
+        </el-form-item>
+      </el-col>
+    </el-row>
+  </el-form>
 
   <!-- 步骤控制按键 -->
   <el-row :gutter="0">
@@ -376,10 +421,13 @@
         style="margin-left: 50px; width: 110px;"
       >
         <span v-show="step === 5"> 继 续 创 建 </span>
-        <span v-show="step === 1 || step === 2 || step === 3 || step === 4"> 下 一 步 </span>
+        <span v-show="step === 1 || step === 2 || step === 3"> 下 一 步 </span>
+        <span v-show="step === 4"> 创 建 </span>
       </el-button>
     </el-col>
   </el-row>
+
+  <!-- 创建训练模型成功后提示 -->
   <el-result
     icon="success"
     :title="type === 'add' ? '新增成功' : '更新成功'"
@@ -701,15 +749,12 @@ export default defineComponent({
       modelHttp.createModel(state.form)
         .then((response: any) => {
           ElMessage.success('新建训练模型成功');
+          state.step += 1;
           console.log(response);
         })
         .finally(() => {
           state.isLoading = false;
         });
-    };
-    // 提交数据
-    const submit = () => {
-      createModel();
     };
     // 上一步
     const back = () => {
@@ -785,8 +830,7 @@ export default defineComponent({
           }
         });
       } else if (state.step === 4) {
-        // 创建中，显示训练模型信息
-        state.step += 1;
+        createModel();
       } else if (state.step === 5) {
         // 创建完成，下一步变成 继续创建训练模型
       }
@@ -839,7 +883,6 @@ export default defineComponent({
       datasetSelected,
       add,
       addAll,
-      submit,
       back,
       next,
       keep,

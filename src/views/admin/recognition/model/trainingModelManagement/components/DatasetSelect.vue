@@ -143,6 +143,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .select {
-  width: 100%;
+  width: 230px;
+  margin-right: 10px;
 }
 </style>
