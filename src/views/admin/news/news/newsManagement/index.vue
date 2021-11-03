@@ -32,7 +32,7 @@
       />
     </div>
   </el-row>
-  <Detail ref="newsDetailRef" />
+  <NewsDetail ref="newsDetailRef" />
 </template>
 
 <script lang="ts">
@@ -45,7 +45,7 @@ import NewsTypeTable from './components/NewsTypeTable.vue';
 import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
-import Detail from '@/views/admin/news/news/newsManagement/components/Detail.vue';
+import NewsDetail from './components/NewsDetail.vue';
 
 export default defineComponent({
   components: {
@@ -53,7 +53,7 @@ export default defineComponent({
     Table,
     Search,
     Pagenum,
-    Detail
+    NewsDetail
   },
   setup () {
     const route = useRoute();

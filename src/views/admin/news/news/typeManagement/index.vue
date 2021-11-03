@@ -22,7 +22,7 @@
     @handleCurrentChange="handleCurrentChange"
   />
   <NewsTypeDialog ref="newsTypeDialogRef" @refreshTable="refreshTable" />
-  <Detail ref="newsTypeDetailRef" />
+  <NewsTypeDetail ref="newsTypeDetailRef" />
 </template>
 
 <script lang="ts">
@@ -34,7 +34,7 @@ import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
 import NewsTypeDialog from '@/components/pages/newsType/Dialog.vue';
-import Detail from '@/views/admin/news/news/typeManagement/components/Detail.vue';
+import NewsTypeDetail from './components/NewsTypeDetail.vue';
 
 export default defineComponent({
   components: {
@@ -42,7 +42,7 @@ export default defineComponent({
     Search,
     Pagenum,
     NewsTypeDialog,
-    Detail
+    NewsTypeDetail
   },
   setup () {
     const route = useRoute();
