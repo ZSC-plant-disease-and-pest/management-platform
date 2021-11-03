@@ -34,7 +34,7 @@ import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
 import NewsTypeDialog from '@/components/pages/newsType/Dialog.vue';
-import Detail from './components/Detail.vue';
+import Detail from '@/views/admin/news/news/typeManagement/components/Detail.vue';
 
 export default defineComponent({
   components: {
