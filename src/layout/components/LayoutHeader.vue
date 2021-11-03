@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" v-loading.fullscreen="isLoading" element-loading-text="退出中...">
     <div class="logo">
       <img class="img" src="~@/assets/images/plant.png" />
       <span class="title">
@@ -45,7 +45,7 @@
           shape="square"
           :style="{ backgroundColor: avatarColor }"
         >
-          root
+          {{ name }}
         </el-avatar>
         <template #dropdown>
           <el-dropdown-menu>
@@ -62,14 +62,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onBeforeMount, ref } from 'vue';
+import { defineComponent, computed, onBeforeMount, ref, onUpdated } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   // 子传父事件定义
   emits: ['menuSelect'],
   setup (props, { emit }) {
+    const store = useStore();
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
@@ -78,13 +80,29 @@ export default defineComponent({
       if (path) {
         menuSelect(path);
         defaultActive.value = path;
+        name.value = store.getters['user/getName'];
       }
     });
+    onUpdated(() => {
+      name.value = store.getters['user/getName'];
+    });
+
     const defaultActive = ref('');
+    const name = ref('');
+    const isLoading = ref(false);
     // 退出登录
     const logout = () => {
-      router.push('/login');
-      ElMessage.success('退出成功');
+      isLoading.value = true;
+      store.dispatch('user/logout')
+        .then((response: any) => {
+          if (response === 'OK') {
+            router.push('/login');
+            ElMessage.success('退出成功');
+          }
+        })
+        .finally(() => {
+          isLoading.value = false;
+        });
     };
     // 静态头部名称(后面改成登录名称)
     const avatarColor = computed(() => {
@@ -255,7 +273,9 @@ export default defineComponent({
     };
     return {
       defaultActive,
+      name,
       logout,
+      isLoading,
       avatarColor,
       menuSelect
     };

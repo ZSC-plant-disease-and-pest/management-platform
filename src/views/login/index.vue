@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login" v-loading="isLoading" element-loading-text="登录中...">
     <div class="box">
       <div class="header">
         <span class="title">
@@ -48,6 +48,7 @@ import {
 } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 interface userForm {
   username: string;
@@ -59,31 +60,42 @@ export default defineComponent({
   components: {},
   setup () {
     const router = useRouter();
+    const store = useStore();
+
     const state = reactive({
       loginForm: {
-        username: 'root',
-        password: 'root'
+        username: 'xgj',
+        password: '123456'
       } as userForm,
       loginFormRef: ref(),
       rules: {
         username: [
           { required: true, message: '请输入账号', trigger: 'change' },
-          { min: 4, max: 16, message: '账号长度为 4-16 位', trigger: 'change' }
+          { min: 3, max: 16, message: '账号长度为 3-16 位', trigger: 'change' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'change' },
           { min: 4, max: 16, message: '密码长度为 4-16 位', trigger: 'change' }
         ]
-      }
+      },
+      isLoading: false
     });
+
     const submitForm = () => {
       state.loginFormRef.validate().then((valid: boolean) => {
-        console.log(valid);
         if (valid) {
           // 登陆
-          console.log(state.loginForm);
-          router.push('/admin/home');
-          ElMessage.success('登录成功');
+          state.isLoading = true;
+          store.dispatch('user/login', state.loginForm)
+            .then((response: any) => {
+              if (response === 'OK') {
+                router.push('/admin/home');
+                ElMessage.success('登录成功');
+              }
+            })
+            .finally(() => {
+              state.isLoading = false;
+            });
         }
       });
     };

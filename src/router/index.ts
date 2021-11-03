@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import store from '@/store';
+import { ElMessage } from 'element-plus';
 
 // 登录
 const login = () => import('@/views/login/index.vue');
@@ -375,6 +377,20 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+});
+
+// 全局路由守卫
+router.beforeEach((to, from, next) => {
+  // 当前状态 1：已登录 0：未登录
+  const currentState = store.getters['user/getState'];
+  if (to.path === '/login') {
+    next();
+  } else {
+    currentState === 1 ? next() : next('/login');
+    if (currentState === 0) {
+      ElMessage.warning('请先登录');
+    }
+  }
 });
 
 export default router;
