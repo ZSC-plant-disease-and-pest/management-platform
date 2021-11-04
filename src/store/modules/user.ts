@@ -17,7 +17,7 @@ class UserStoreModule implements Module<UserStore, any> {
   namespaced = true;
 
   state: loginParams = {
-    state: 0,
+    state: 1,
     name: ''
   };
 

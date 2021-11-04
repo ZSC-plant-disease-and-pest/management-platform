@@ -48,7 +48,7 @@ export class modelHttp {
     return http({
       url: '/api/model/create',
       method: 'post',
-      body: params
+      data: params
     });
   }
 
@@ -67,7 +67,7 @@ export class modelHttp {
       url: '/api/model/search',
       method: 'get',
       params,
-      body: {
+      data: {
         algorithm,
         name,
         status

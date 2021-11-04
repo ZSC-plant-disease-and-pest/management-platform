@@ -8,11 +8,11 @@
     :tableData="tableData"
     :tableColumn="tableColumn"
     :loading="isLoading"
-    :tableType="'model'"
     @check="check"
     @edit="edit"
     @remove="remove"
     @add="add"
+    @deploy="deploy"
     @sortChange="sortChange"
   />
   <Pagenum
@@ -22,22 +22,25 @@
     @handleSizeChange="handleSizeChange"
     @handleCurrentChange="handleCurrentChange"
   />
+  <DeployModelDialog ref="deployModelDialogRef" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
+import { defineComponent, onBeforeMount, onUpdated, reactive, ref, toRefs } from 'vue';
 import { modelHttp, modelParams } from '@/api/model';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import Table from '@/components/common/table/Table.vue';
+import Table from './components/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
+import DeployModelDialog from './components/DeployModelDialog.vue';
 
 export default defineComponent({
   components: {
     Table,
     Search,
-    Pagenum
+    Pagenum,
+    DeployModelDialog
   },
   setup () {
     const route = useRoute();
@@ -57,7 +60,8 @@ export default defineComponent({
       isLoading: false,
       total: 0,
       page: 1,
-      size: 10
+      size: 10,
+      deployModelDialogRef: ref()
     });
     const tableColumn = reactive([
       {
@@ -123,6 +127,9 @@ export default defineComponent({
         name: 'trainingModelManagementAdd'
       });
     };
+    const deploy = (data: any) => {
+      state.deployModelDialogRef.openDialog(data);
+    };
     const remove = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
@@ -181,6 +188,7 @@ export default defineComponent({
       tableColumn,
       sortChange,
       add,
+      deploy,
       remove,
       edit,
       check,

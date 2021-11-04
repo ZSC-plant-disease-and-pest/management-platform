@@ -237,28 +237,44 @@
       </el-col>
     </el-row>
     <el-row :gutter="0" v-if="type === 'add'">
-      <el-col :span="12">
-        <el-form-item label="上传植物图集：" prop="picture">
+      <el-col :span="24">
+        <el-form-item label="上传图片：" prop="picture" >
           <el-upload
-            ref="uploadRef"
-            action=""
+            ref="uploadImageRef"
+            action="#"
+            list-type="picture-card"
             :auto-upload="false"
             :on-change="onChange"
-            :on-remove="onRemove"
-            multiple
-            drag
-            accept=".gif,.jpg,.jpeg,.png,.bmp,.webp"
+            :limit="10"
+            :multiple="true"
+            accept=".gif,.jpg,.jpeg,.png,.bmp"
           >
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">
-              将图片放在此处或单击上传
-            </div>
-            <template #tip>
-              <div class="el-upload__tip">
-                仅限常见类型图片，最大不超过5M
+            <template #default>
+              <i class="el-icon-plus"></i>
+            </template>
+            <template #file="{ file }">
+              <div>
+                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                <span class="el-upload-list__item-actions">
+                  <span
+                    class="el-upload-list__item-preview"
+                    @click="handlePictureCardPreview(file)"
+                  >
+                    <i class="el-icon-zoom-in"></i>
+                  </span>
+                  <span
+                    class="el-upload-list__item-delete"
+                    @click="handleRemove(file)"
+                  >
+                    <i class="el-icon-delete"></i>
+                  </span>
+                </span>
               </div>
             </template>
           </el-upload>
+          <el-dialog v-model="dialogImageVisible" title="查看图片">
+            <img style="width: 100%; height: 75%;" :src="dialogImageUrl" alt="" />
+          </el-dialog>
         </el-form-item>
       </el-col>
     </el-row>
@@ -307,7 +323,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { illegalVisit } from '@/utils/global';
 import FamilyPagingSelect from '@/components/pages/family/FamilyPagingSelect.vue';
 import GenusPagingSelect from '@/components/pages/genus/GenusPagingSelect.vue';
-import { ElMessage } from 'element-plus';
 
 export default defineComponent({
   name: 'add-update',
@@ -343,10 +358,11 @@ export default defineComponent({
       } as plantsParams,
       formRef: ref(),
       uploadRef: ref(),
+      uploadImageRef: ref(),
       rules: {
-        name: [
-          { required: true, message: '请输入植物名称', trigger: ['blur', 'change'] }
-        ],
+        name: [{
+          required: true, message: '请输入植物名称', trigger: ['blur', 'change']
+        }],
         family: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
@@ -372,7 +388,7 @@ export default defineComponent({
         picture: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
-            if (state.fileImg.length === 0) {
+            if (state.fileList.length === 0) {
               callback(new Error('请上传至少一张植物图片'));
             } else {
               callback();
@@ -386,8 +402,10 @@ export default defineComponent({
       isLoading: false,
       // 表单状态：complete 完成，incomplete 未完成
       status: 'incomplete',
-      fileImg: [] as Array<any>,
-      formKey: 0
+      fileList: [] as Array<any>,
+      formKey: 0,
+      dialogImageUrl: '',
+      dialogImageVisible: false
     });
     const functionOptions: Array<any> = reactive([
       { value: '耐阴树种' },
@@ -453,7 +471,7 @@ export default defineComponent({
         if (valid) {
           state.isLoading = true;
           if (route.path.split('/').slice(-1)[0] === 'add') {
-            plantsHttp.createPlants(state.form, state.fileImg)
+            plantsHttp.createPlants(state.form, state.fileList)
               .then(() => {
                 state.status = 'complete';
               })
@@ -482,11 +500,12 @@ export default defineComponent({
       });
     };
     const keep = () => {
-      state.formRef.resetFields();
-      // 重置植物园林信息
-      state.form.plantsClassify = {};
-      state.status = 'incomplete';
       state.formKey += 1;
+      state.formRef.resetFields();
+      state.uploadImageRef.clearFiles();
+      state.form.plantsClassify = {};
+      state.fileList = [];
+      state.status = 'incomplete';
     };
     const familyChange = (params: any) => {
       state.form.family = params;
@@ -494,33 +513,18 @@ export default defineComponent({
     const genusChange = (params: any) => {
       state.form.genus = params;
     };
-    const onChange = (file: any) => {
-      const type = file.raw.type.split('/').pop();
-      if (
-        type !== 'gif' &&
-        type !== 'jpg' &&
-        type !== 'jpeg' &&
-        type !== 'png' &&
-        type !== 'bmp' &&
-        type !== 'webp') {
-        ElMessage.error(`名称为${file.raw.name}的图片格式有误 !`);
-        setImageList();
-      } else if (file.raw.size / 1024 / 1024 > 5) {
-        ElMessage.error(`名称为${file.raw.name}的图片大小不能超过 5MB !`);
-        setImageList();
-      } else {
-        state.fileImg.push(file);
-      }
+    const onChange = (file: any, fileList: Array<any>) => {
+      state.fileList = fileList;
     };
-    const onRemove = (file: any, fileList: any) => {
-      state.fileImg = fileList;
-      setImageList();
+    const handleRemove = (file: any) => {
+      const removeIndex = state.fileList.findIndex((value: any) => value.uid === file.uid);
+      state.fileList.splice(removeIndex, 1);
     };
-    const setImageList = () => {
-      state.uploadRef.clearFiles();
-      for (const index in state.fileImg) {
-        state.uploadRef.uploadFiles.push(state.fileImg[index]);
+    const handlePictureCardPreview = (file: any) => {
+      if (file.url !== undefined) {
+        state.dialogImageUrl = file.url;
       }
+      state.dialogImageVisible = true;
     };
 
     return {
@@ -536,7 +540,8 @@ export default defineComponent({
       familyChange,
       genusChange,
       onChange,
-      onRemove
+      handleRemove,
+      handlePictureCardPreview
     };
   }
 });

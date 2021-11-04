@@ -41,7 +41,7 @@
               :on-change="onChange"
               :limit="1"
               :multiple="false"
-              accept=".gif,.jpg,.jpeg,.png,.bmp,.webp"
+              accept=".gif,.jpg,.jpeg,.png,.bmp"
             >
               <template #default>
                 <i class="el-icon-plus"></i>
@@ -218,7 +218,7 @@ export default defineComponent({
       }, 1);
     };
     const handlePictureCardPreview = (file: any) => {
-      if (file !== null) {
+      if (file.url !== undefined) {
         state.dialogImageUrl = file.url;
       }
       state.dialogImageVisible = true;

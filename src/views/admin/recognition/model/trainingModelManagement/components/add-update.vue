@@ -746,7 +746,9 @@ export default defineComponent({
     // 创建训练模型
     const createModel = () => {
       state.isLoading = true;
-      modelHttp.createModel(state.form)
+      const { ...tempForm } = state.form;
+      console.log(tempForm);
+      modelHttp.createModel(tempForm)
         .then((response: any) => {
           ElMessage.success('新建训练模型成功');
           state.step += 1;
