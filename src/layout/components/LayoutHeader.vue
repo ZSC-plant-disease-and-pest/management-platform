@@ -32,7 +32,7 @@
         <i class="el-icon-search"></i>
         AI 智能识别
       </el-menu-item>
-      <el-menu-item index="systemManagement">
+      <el-menu-item index="system">
         <i class="el-icon-set-up"></i>
         系统管理
       </el-menu-item>
@@ -125,14 +125,8 @@ export default defineComponent({
             icon: 'el-icon-watermelon',
             label: '新闻公告',
             list: [
-              {
-                name: 'newsManagement',
-                label: '新闻管理'
-              },
-              {
-                name: 'typeManagement',
-                label: '类型管理'
-              }
+              { name: 'newsManagement', label: '新闻管理' },
+              { name: 'typeManagement', label: '类型管理' }
             ]
           }
         ];
@@ -145,10 +139,7 @@ export default defineComponent({
             icon: 'el-icon-apple',
             label: '病害数据库',
             list: [
-              {
-                name: 'diseaseManagement',
-                label: '植物病害管理'
-              }
+              { name: 'diseaseManagement', label: '植物病害管理' }
             ]
           },
           {
@@ -156,10 +147,7 @@ export default defineComponent({
             icon: 'el-icon-soccer',
             label: '虫害数据库',
             list: [
-              {
-                name: 'pestManagement',
-                label: '植物虫害管理'
-              }
+              { name: 'pestManagement', label: '植物虫害管理' }
             ]
           }
         ];
@@ -171,14 +159,8 @@ export default defineComponent({
             icon: 'el-icon-watermelon',
             label: '植物数据集',
             list: [
-              {
-                name: 'plantsManagement',
-                label: '植物管理'
-              },
-              {
-                name: 'familyManagement',
-                label: '科属管理'
-              }
+              { name: 'plantsManagement', label: '植物管理' },
+              { name: 'familyManagement', label: '科属管理' }
             ]
           },
           {
@@ -186,10 +168,7 @@ export default defineComponent({
             icon: 'el-icon-watermelon',
             label: '园林植物护养',
             list: [
-              {
-                name: 'videoManagement',
-                label: '盆景养护视频'
-              }
+              { name: 'videoManagement', label: '盆景养护视频' }
             ]
           }
         ];
@@ -201,18 +180,9 @@ export default defineComponent({
             icon: 'el-icon-watermelon',
             label: 'AI 图像数据集',
             list: [
-              {
-                name: 'diseaseImageManagement',
-                label: '病害图像数据集管理'
-              },
-              {
-                name: 'pestImageManagement',
-                label: '虫害图像数据集管理'
-              },
-              {
-                name: 'plantsImageManagement',
-                label: '植物图像数据集管理'
-              }
+              { name: 'diseaseImageManagement', label: '病害图像数据集管理' },
+              { name: 'pestImageManagement', label: '虫害图像数据集管理' },
+              { name: 'plantsImageManagement', label: '植物图像数据集管理' }
             ]
           },
           {
@@ -220,10 +190,7 @@ export default defineComponent({
             icon: 'el-icon-watermelon',
             label: '数据集标注',
             list: [
-              {
-                name: 'imagesTaggingManagement',
-                label: '图片标注管理'
-              }
+              { name: 'imagesTaggingManagement', label: '图片标注管理' }
             ]
           },
           {
@@ -231,10 +198,7 @@ export default defineComponent({
             icon: 'el-icon-watermelon',
             label: '机器学习模型训练',
             list: [
-              {
-                name: 'trainingModelManagement',
-                label: '训练模型管理'
-              }
+              { name: 'trainingModelManagement', label: '训练模型管理' }
             ]
           },
           {
@@ -242,29 +206,23 @@ export default defineComponent({
             icon: 'el-icon-watermelon',
             label: 'AI 系统配置',
             list: [
-              {
-                name: 'trainingParamManagement',
-                label: '训练参数配置'
-              }
+              { name: 'trainingParamManagement', label: '训练参数配置' }
             ]
           }
         ];
         path = '/admin/recognition/diseaseImageManagement';
-      } else if (params === 'systemManagement') {
+      } else if (params === 'system') {
         asideList = [
           {
-            name: 'systemManagement',
+            name: 'system',
             icon: 'el-icon-watermelon',
             label: '系统管理',
             list: [
-              {
-                name: 'authorityManagement',
-                label: '权限管理'
-              }
+              { name: 'roleManagement', label: '角色管理' }
             ]
           }
         ];
-        path = '/admin/systemManagement/authorityManagement';
+        path = '/admin/system/roleManagement';
       }
       // params 是头部菜单路径
       emit('menuSelect', params, asideList);

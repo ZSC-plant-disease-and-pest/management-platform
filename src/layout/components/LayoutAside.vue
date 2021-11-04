@@ -56,8 +56,8 @@ export default defineComponent({
           return 'plantsManagement';
         case 'recognition':
           return 'diseaseImageManagement';
-        // case 'system':
-        //   return 'diseaseManagement';
+        case 'system':
+          return 'roleManagement';
         default:
           return '';
       }

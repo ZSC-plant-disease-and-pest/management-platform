@@ -8,10 +8,10 @@
     :tableData="tableData"
     :tableColumn="tableColumn"
     :loading="isLoading"
-    @check="check"
     @edit="edit"
     @remove="remove"
     @add="add"
+    @change="change"
     @sortChange="sortChange"
   />
   <Pagenum
@@ -21,35 +21,37 @@
     @handleSizeChange="handleSizeChange"
     @handleCurrentChange="handleCurrentChange"
   />
+  <RoleDialog ref="roleDialogRef" :key="dialogKey" @refreshTable="refreshTable" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
-import { authorityHttp, authorityParams } from '@/api/authority';
-import { useRoute, useRouter } from 'vue-router';
+import { defineComponent, onBeforeMount, onUpdated, reactive, ref, toRefs } from 'vue';
+import { userHttp, userParams } from '@/api/user';
+import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import Table from '@/components/common/table/Table.vue';
+import Table from './components/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
+import RoleDialog from './components/RoleDialog.vue';
 
 export default defineComponent({
   components: {
     Table,
     Search,
-    Pagenum
+    Pagenum,
+    RoleDialog
   },
   setup () {
     const route = useRoute();
-    const router = useRouter();
     onBeforeMount(() => {
-      searchAuthority();
+      searchUser();
     });
     onUpdated(() => {
       // 判断是否从添加界面返回
       if (route.params.type === 'refresh') {
         // 是的话则重新请求数据
         route.params.type = '';
-        searchAuthority();
+        searchUser();
       }
     });
 
@@ -58,17 +60,34 @@ export default defineComponent({
       isLoading: false,
       total: 0,
       page: 1,
-      size: 10
+      size: 10,
+      roleDialogRef: ref(),
+      dialogKey: 0
     });
     const tableColumn = reactive([
       {
         prop: 'id',
-        label: 'ID',
+        label: '序号',
         width: '75px'
       },
       {
         prop: 'name',
         label: '用户名',
+        width: 'auto'
+      },
+      {
+        prop: 'username',
+        label: '登录名',
+        width: 'auto'
+      },
+      {
+        prop: 'mobile',
+        label: '手机号',
+        width: 'auto'
+      },
+      {
+        prop: 'e_mail',
+        label: '邮箱',
         width: 'auto'
       }
     ]);
@@ -80,20 +99,19 @@ export default defineComponent({
       }
     ]);
 
-    const authorityParams = reactive({
+    const userParams = reactive({
       page: 0,
       size: 10
-    } as authorityParams);
-    const searchAuthority = () => {
+    } as userParams);
+    const searchUser = () => {
       state.isLoading = true;
-      authorityHttp.searchAuthority(authorityParams)
+      userHttp.searchUser(userParams)
         .then((response: any) => {
           state.total = response.totalElements;
           state.size = response.size;
-          // 响应式的添加到表格中
           state.tableData = [];
-          for (let i = 0; i < response.length; i++) {
-            state.tableData.push(response[i]);
+          for (let i = 0; i < response.content.length; i++) {
+            state.tableData.push(response.content[i]);
           }
         })
         .finally(() => {
@@ -102,27 +120,24 @@ export default defineComponent({
     };
     const sortChange = (params: any) => {
       if (params.prop === null) {
-        authorityParams.sort = '';
+        userParams.sort = '';
       } else {
-        authorityParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
+        userParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
       }
-      searchAuthority();
+      searchUser();
     };
     const add = () => {
-      router.push({
-        path: route.path + '/add',
-        name: route.name as string + 'Add'
-      });
+      state.roleDialogRef.openDialog('add');
     };
     const remove = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
       } else {
         state.isLoading = true;
-        authorityHttp.deleteAuthority(selectedIds.join(','))
+        userHttp.deleteUser(selectedIds.join(','))
           .then(() => {
             ElMessage.success('删除成功');
-            searchAuthority();
+            searchUser();
           })
           .finally(() => {
             state.isLoading = false;
@@ -130,41 +145,41 @@ export default defineComponent({
       }
     };
     const edit = (data: any) => {
-      router.push({
-        path: route.path + '/update',
-        name: route.name as string + 'Update',
-        params: data
-      });
-    };
-    const check = (data: any) => {
-      console.log(data);
+      state.roleDialogRef.openDialog('edit', data);
     };
     const search = (data: any) => {
       for (const index in data) {
         if (data[index].name === 'name') {
-          authorityParams.name = data[index].value === '' ? undefined : data[index].value;
+          userParams.name = data[index].value === '' ? undefined : data[index].value;
         }
       }
-      searchAuthority();
+      searchUser();
+    };
+    const change = (data: any) => {
+      state.roleDialogRef.openDialog('change', data);
     };
     const reset = () => {
       for (const index in searchList) {
         searchList[index].value = '';
-        authorityParams.name = undefined;
+        userParams.name = undefined;
       }
-      searchAuthority();
+      searchUser();
     };
     const handleSizeChange = (newSize: any) => {
-      authorityParams.size = newSize;
-      authorityParams.page = 0;
+      userParams.size = newSize;
+      userParams.page = 0;
       state.size = newSize;
       state.page = 1;
-      searchAuthority();
+      searchUser();
     };
     const handleCurrentChange = (newPage: any) => {
-      authorityParams.page = newPage;
+      userParams.page = newPage;
       state.page = newPage + 1;
-      searchAuthority();
+      searchUser();
+    };
+    const refreshTable = () => {
+      state.dialogKey += 1;
+      searchUser();
     };
 
     return {
@@ -174,12 +189,13 @@ export default defineComponent({
       add,
       remove,
       edit,
-      check,
       search,
+      change,
       reset,
       searchList,
       handleSizeChange,
-      handleCurrentChange
+      handleCurrentChange,
+      refreshTable
     };
   }
 });

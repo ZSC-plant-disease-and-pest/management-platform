@@ -1,6 +1,7 @@
 import http from '@/utils/http';
+import { searchByInfo } from './baseInterface';
 
-export interface userParams {
+export interface userParams extends searchByInfo {
   // id
   id?: number
 
@@ -20,42 +21,45 @@ export interface userParams {
   e_mail?: string
 
   // 权限
-  status?: string
+  role?: string
 
-  // 状态;是否被禁用
+  // 状态 1正常 0禁用
   state?: number
 }
 
 export class userHttp {
-  // 注册
-  static createUser (params: userParams) {
+  // 删除用户信息
+  static deleteUser (ids: string) {
     return http({
-      url: '/api/user/create',
+      url: `/api/user/delete/${ids}`,
+      method: 'delete'
+    });
+  }
+
+  // 分页查询用户信息
+  static searchUser (params: (userParams | null)) {
+    return http({
+      url: '/api/user/search',
+      method: 'get',
+      params
+    });
+  }
+
+  // 通过ID查询用户详情
+  static searchUserById (id: number) {
+    return http({
+      url: `/api/user/search/${id}`,
+      method: 'get'
+    });
+  }
+
+  // 修改个人信息
+  static updateUser (params: userParams) {
+    const { id } = params;
+    return http({
+      url: `/api/user/update/${id}`,
       method: 'post',
       data: params
-    });
-  }
-  // 登录
-  static loginUser (params: userParams) {
-    const { username, password } = params;
-    return http({
-      url: `/api/user/login/${username}/${password}`,
-      method: 'post'
-    });
-  }
-  // 注销
-  static logoutUser () {
-    return http({
-      url: '/api/user/logout',
-      method: 'post'
-    });
-  }
-  // 更新个人信息(id, username 不可更改)
-  static updateUser (params: userParams) {
-    const { id, username } = params;
-    return http({
-      url: `/api/user/update/${id}/${username}`,
-      method: 'post'
     });
   }
 }
