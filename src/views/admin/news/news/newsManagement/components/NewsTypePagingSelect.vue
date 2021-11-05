@@ -30,18 +30,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, reactive, toRefs } from 'vue';
+import { defineComponent, onBeforeMount, onMounted, reactive, toRefs } from 'vue';
 import { newsTypeHttp, newsTypeParams } from '@/api/newsType';
 
 export default defineComponent({
   emits: ['selectChange'],
+  props: {
+    newsTypeId: {
+      type: Number,
+      default: -1
+    }
+  },
   setup (props, { emit }) {
     onBeforeMount(() => {
       getNews();
     });
+    onMounted(() => {
+      if (props.newsTypeId !== -1) {
+        state.defaultValue = props.newsTypeId;
+      }
+    });
 
     const state = reactive({
-      defaultValue: '',
+      defaultValue: '' as any,
       isLoading: false,
       total: 0,
       currentPage: 1,
@@ -89,6 +100,7 @@ export default defineComponent({
       state.defaultValue = params;
     };
     const setNewsType = (id: number) => {
+      state.defaultValue = id;
       newsTypeHttp.searchNewsTypeById(id)
         .then((response: any) => {
           console.log(response);

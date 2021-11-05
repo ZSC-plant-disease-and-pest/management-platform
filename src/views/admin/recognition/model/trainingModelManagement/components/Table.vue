@@ -5,7 +5,7 @@
     icon="el-icon-delete"
     class="button"
     style="height: 40px; position: relative; float: right"
-    @click="remove"
+    @click="remove(null)"
   >
     删除
   </el-button>
@@ -69,7 +69,7 @@
           icon="el-icon-view"
           style="color: rgb(63, 186, 246)"
           @click="check(scope.row)"
-          v-if="status !== 2"
+          v-if="scope.row.status !== '训练中'"
         >
           详情
         </el-button>
@@ -79,7 +79,7 @@
           icon="el-icon-edit"
           style="color: rgb(65, 209, 204)"
           @click="edit(scope.row)"
-          v-if="status === 1"
+          v-if="scope.row.status === '未训练'"
         >
           编辑
         </el-button>
@@ -89,7 +89,7 @@
           icon="el-icon-edit"
           style="color: rgb(65, 209, 204)"
           @click="remove(scope.row)"
-          v-if="status !== 2"
+          v-if="scope.row.status !== '训练中'"
         >
           删除
         </el-button>
@@ -99,7 +99,7 @@
           icon="el-icon-edit"
           style="color: rgb(65, 209, 204)"
           @click="deploy(scope.row)"
-          v-if="status === 3"
+          v-if="scope.row.status === '待部署'"
         >
           部署
         </el-button>
@@ -109,7 +109,7 @@
           icon="el-icon-edit"
           style="color: rgb(65, 209, 204)"
           @click="test(scope.row)"
-          v-if="status === 4"
+          v-if="scope.row.status === '已上线'"
         >
           在线测试
         </el-button>
@@ -123,11 +123,6 @@ import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
-    status: {
-      // 当前状态
-      type: Number,
-      default: 0
-    },
     tableType: {
       type: String,
       // 表格类型，默认普通表格
@@ -160,7 +155,7 @@ export default defineComponent({
     // 操作按钮的宽度
     buttonWidth: {
       type: Number,
-      default: 126
+      default: 250
     }
   },
   emits: [
@@ -195,8 +190,8 @@ export default defineComponent({
       emit('check', row);
     };
     // 模型管理：一键训练
-    const train = (row: any) => {
-      emit('train', row);
+    const train = () => {
+      emit('train', selectedIds);
     };
     // 模型管理：一键部署模型
     const deploy = (row: any) => {

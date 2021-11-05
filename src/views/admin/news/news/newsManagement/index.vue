@@ -99,7 +99,7 @@ export default defineComponent({
         width: 'auto'
       },
       {
-        prop: 'newTypeId',
+        prop: 'newTypeName',
         label: '新闻类型',
         width: 'auto'
       }

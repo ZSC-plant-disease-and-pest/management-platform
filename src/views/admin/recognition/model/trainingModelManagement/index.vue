@@ -12,6 +12,7 @@
     @edit="edit"
     @remove="remove"
     @add="add"
+    @train="train"
     @deploy="deploy"
     @sortChange="sortChange"
   />
@@ -75,8 +76,18 @@ export default defineComponent({
         width: 'auto'
       },
       {
-        prop: 'dataSetType',
-        label: '数据集类型',
+        prop: 'recognizeAmount',
+        label: '训练模型识别数量',
+        width: 'auto'
+      },
+      {
+        prop: 'recognizeType',
+        label: '训练模型类型',
+        width: 'auto'
+      },
+      {
+        prop: 'outputPath',
+        label: '输出路径',
         width: 'auto'
       },
       {
@@ -94,9 +105,6 @@ export default defineComponent({
     ]);
 
     const modelParams = reactive({
-      name: '',
-      algorithm: '',
-      status: '',
       page: 0,
       size: 10
     } as modelParams);
@@ -130,12 +138,34 @@ export default defineComponent({
         name: 'trainingModelManagementAdd'
       });
     };
+    const train = (selectedIds: any) => {
+      if (selectedIds.length === 0) {
+        ElMessage.warning('请选择需要开始训练的模型');
+      } else {
+        console.log(selectedIds);
+        state.isLoading = true;
+        for (let i = 0; i < selectedIds.length; i++) {
+          const index = state.tableData.findIndex((value: any) => value.id === selectedIds[i]);
+          if (state.tableData[index].status === '未训练') {
+            modelHttp.updateModelById(selectedIds[i])
+              .then(() => {
+                ElMessage.success(`第${state.tableData[index].id}号模型开始训练`);
+              })
+              .finally(() => {
+                if (i === selectedIds.length - 1) {
+                  state.isLoading = false;
+                }
+              });
+          }
+        }
+      }
+    };
     const deploy = (data: any) => {
       state.deployModelDialogRef.openDialog(data);
     };
     const remove = (selectedIds: any) => {
       if (selectedIds.length === 0) {
-        ElMessage.warning('请选择需要删除的内容');
+        ElMessage.warning('请选择需要删除的模型');
       } else {
         state.isLoading = true;
         modelHttp.deleteModel(selectedIds.join(','))
@@ -151,7 +181,7 @@ export default defineComponent({
     const edit = (data: any) => {
       router.push({
         path: router.currentRoute.value.path + '/update',
-        name: 'diseaseManagementUpdate',
+        name: 'trainingModelManagementAdd',
         params: data
       });
     };
@@ -191,6 +221,7 @@ export default defineComponent({
       tableColumn,
       sortChange,
       add,
+      train,
       deploy,
       remove,
       edit,
