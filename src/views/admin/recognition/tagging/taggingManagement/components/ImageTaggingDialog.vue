@@ -31,7 +31,7 @@
       </el-col>
       <el-col :span="16">
         <span>
-          图片上传时间：{{ imageInfo.createTime }}
+          图片上传时间：{{ getStandardTime(imageInfo.createTime, 'dateTime') }}
         </span>
       </el-col>
     </el-row>
@@ -145,6 +145,7 @@ import { taggingHttp, taggingParams } from '@/api/tagging';
 import { ElMessage } from 'element-plus';
 import { defineComponent, onUpdated, reactive, ref, toRefs, watch } from 'vue';
 import TaggingSelect from './TaggingSelect.vue';
+import { getStandardTime } from '@/utils/time';
 
 export default defineComponent({
   components: { TaggingSelect },
@@ -207,7 +208,8 @@ export default defineComponent({
       dialogImageUrl: '',
       dialogImageVisible: false,
       fileList: [] as Array<any>,
-      isLoading: false
+      isLoading: false,
+      getStandardTime
     });
 
     const taggingParams = reactive({

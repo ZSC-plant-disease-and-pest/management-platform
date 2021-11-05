@@ -4,7 +4,7 @@
       <el-card class="card-describe" shadow="never">
         <img class="image" :src="src" alt="" @click="checkDetail" />
         <div class="describe">
-          <el-row :gutter="20">
+          <el-row :gutter="0">
             <el-col :span="12">
               序号：{{ id }}
             </el-col>
@@ -12,7 +12,7 @@
               图像大小：{{ size }}
             </el-col>
           </el-row>
-          <el-row :gutter="20">
+          <el-row :gutter="0">
             <el-col :span="12">
               像素：{{ resolution }}
             </el-col>
@@ -20,9 +20,9 @@
               创建者：{{ creator }}
             </el-col>
           </el-row>
-          <el-row :gutter="20">
+          <el-row :gutter="0">
             <el-col :span="24">
-              创建时间：{{ createTime }}
+              创建时间：{{ getStandardTime(createTime, 'dateTime') }}
             </el-col>
           </el-row>
         </div>
@@ -36,6 +36,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from 'vue';
+import { getStandardTime } from '@/utils/time';
 
 export default defineComponent({
   props: {
@@ -67,7 +68,8 @@ export default defineComponent({
   emits: ['checkDetail'],
   setup () {
     const state = reactive({
-      dialogImageVisible: false
+      dialogImageVisible: false,
+      getStandardTime
     });
 
     const checkDetail = () => {

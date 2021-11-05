@@ -29,7 +29,7 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="新闻类型：">
-            <span>{{ form.newTypeId }}</span>
+            <span>{{ form.newTypeName }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -42,12 +42,12 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="新闻创建时间：">
-            <span>{{ form.createTime }}</span>
+            <span>{{ getStandardTime(form.createTime, 'dateTime') }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="新闻更新时间：">
-            <span>{{ form.updateTime }}</span>
+            <span>{{ getStandardTime(form.updateTime, 'dateTime') }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -65,6 +65,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs } from 'vue';
 import { newsParams } from '@/api/news';
+import { getStandardTime } from '@/utils/time';
 
 export default defineComponent({
   setup () {
@@ -73,13 +74,14 @@ export default defineComponent({
         id: 0,
         author: '',
         title: '',
-        newTypeId: 0,
+        newTypeName: '',
         content: '',
         status: false
       } as newsParams,
       formRef: ref(),
       isLoading: false,
-      dialogVisible: false
+      dialogVisible: false,
+      getStandardTime
     });
 
     const openDialog = (data: any) => {
