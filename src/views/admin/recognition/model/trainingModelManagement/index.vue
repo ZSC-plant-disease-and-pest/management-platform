@@ -46,12 +46,12 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
-      // getModel();
+      getModel();
     });
     onUpdated(() => {
       if (route.params.type === 'refresh') {
         route.params.type = '';
-        // getModel();
+        getModel();
       }
     });
 
@@ -94,6 +94,9 @@ export default defineComponent({
     ]);
 
     const modelParams = reactive({
+      name: '',
+      algorithm: '',
+      status: '',
       page: 0,
       size: 10
     } as modelParams);
@@ -158,7 +161,7 @@ export default defineComponent({
     const search = (data: any) => {
       for (const index in data) {
         if (data[index].name === 'name') {
-          modelParams.name = data[index].value === '' ? undefined : data[index].value;
+          modelParams.name = data[index].value === '' ? '' : data[index].value;
         }
       }
       getModel();
@@ -166,7 +169,7 @@ export default defineComponent({
     const reset = () => {
       for (const index in searchList) {
         searchList[index].value = '';
-        modelParams.name = undefined;
+        modelParams.name = '';
       }
       getModel();
     };

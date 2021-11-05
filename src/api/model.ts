@@ -66,7 +66,10 @@ export class modelHttp {
     return http({
       url: '/api/model/search',
       method: 'get',
-      params,
+      params: {
+        page: 0,
+        size: 10
+      },
       data: {
         algorithm,
         name,

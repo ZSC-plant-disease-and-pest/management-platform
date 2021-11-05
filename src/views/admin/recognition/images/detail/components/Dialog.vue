@@ -188,7 +188,7 @@ export default defineComponent({
               .finally(() => {
                 state.isLoading = false;
               });
-          } else if (state.type === 'plants') {
+          } else if (state.type === 'plant') {
             datasetHttp.uploadPlantsImg(Number(state.form.id), state.fileList)
               .then(() => {
                 ElMessage.success('添加成功');

@@ -404,14 +404,14 @@
   </el-form>
 
   <!-- 步骤控制按键 -->
-  <el-row :gutter="0">
+  <el-row :gutter="0" v-show="step !== 5">
     <el-col :span="24" style="text-align: center;">
       <el-button
         :loading="isLoading"
         @click="back"
         style="margin-right: 50px; width: 110px;"
       >
-        <span v-show="step === 1 || step === 5"> 返 回 </span>
+        <span v-show="step === 1"> 返 回 </span>
         <span v-show="step === 2 || step === 3 || step === 4"> 上 一 步 </span>
       </el-button>
       <el-button
@@ -420,9 +420,11 @@
         @click="next"
         style="margin-left: 50px; width: 110px;"
       >
-        <span v-show="step === 5"> 继 续 创 建 </span>
         <span v-show="step === 1 || step === 2 || step === 3"> 下 一 步 </span>
-        <span v-show="step === 4"> 创 建 </span>
+        <span v-show="step === 4">
+          <span v-show="type === 'add'"> 创 建 </span>
+          <span v-show="type === 'update'"> 修 改 </span>
+        </span>
       </el-button>
     </el-col>
   </el-row>
@@ -430,19 +432,12 @@
   <!-- 创建训练模型成功后提示 -->
   <el-result
     icon="success"
-    :title="type === 'add' ? '新增成功' : '更新成功'"
-    v-show="status === 'complete'"
+    :title="type === 'add' ? '创 建 成 功' : '更 新 成 功'"
+    v-show="step === 5"
   >
     <template #extra>
       <el-button @click="back">
-        返回
-      </el-button>
-      <el-button
-        type="primary"
-        @click="keep"
-        v-show="type === 'add'"
-      >
-        继续新增
+        返 回
       </el-button>
     </template>
   </el-result>
@@ -461,7 +456,8 @@ import DatasetSelect from './DatasetSelect.vue';
 export default defineComponent({
   name: 'add-update',
   components: { Pagenum, DatasetSelect },
-  setup () {
+  emits: ['refreshForm'],
+  setup (props, { emit }) {
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
@@ -835,6 +831,8 @@ export default defineComponent({
         createModel();
       } else if (state.step === 5) {
         // 创建完成，下一步变成 继续创建训练模型
+        emit('refreshForm');
+        state.step = 1;
       }
     };
     const keep = () => {
