@@ -57,7 +57,6 @@
       <template #default="scope">
         <el-button
           type="text"
-          size="small"
           icon="el-icon-edit"
           style="color: rgb(65, 209, 204)"
           @click="edit(scope.row)"
@@ -66,7 +65,6 @@
         </el-button>
         <el-button
           type="text"
-          size="small"
           icon="el-icon-key"
           style="color: rgb(230, 162, 60)"
           @click="change(scope.row)"
@@ -115,7 +113,7 @@ export default defineComponent({
     // 操作按钮的宽度
     buttonWidth: {
       type: Number,
-      default: 148
+      default: 165
     }
   },
   emits: [
