@@ -6,37 +6,39 @@
         植物病虫害管理
       </span>
     </div>
-    <el-menu
-      class="menu"
-      mode="horizontal"
-      :default-active="defaultActive"
-      @select="menuSelect"
-    >
-      <el-menu-item index="home">
-        <i class="el-icon-s-home"></i>
-        首页
-      </el-menu-item>
-      <el-menu-item index="news">
-        <i class="el-icon-news"></i>
-        新闻公告
-      </el-menu-item>
-      <el-menu-item index="disease">
-        <i class="el-icon-s-data"></i>
-        病虫害数据库
-      </el-menu-item>
-      <el-menu-item index="gardens">
-        <i class="el-icon-sunny"></i>
-        园林花卉
-      </el-menu-item>
-      <el-menu-item index="recognition">
-        <i class="el-icon-search"></i>
-        AI 智能识别
-      </el-menu-item>
-      <el-menu-item index="system">
-        <i class="el-icon-set-up"></i>
-        系统管理
-      </el-menu-item>
-    </el-menu>
+    <div class="nav">
+      <el-menu
+        class="menu"
+        mode="horizontal"
+        :default-active="defaultActive"
+        @select="menuSelect"
+      >
+        <el-menu-item index="home">
+          <i class="el-icon-s-home"></i>
+          首页
+        </el-menu-item>
+        <el-menu-item index="news">
+          <i class="el-icon-news"></i>
+          新闻公告
+        </el-menu-item>
+        <el-menu-item index="disease">
+          <i class="el-icon-s-data"></i>
+          病虫害数据库
+        </el-menu-item>
+        <el-menu-item index="gardens">
+          <i class="el-icon-sunny"></i>
+          园林花卉
+        </el-menu-item>
+        <el-menu-item index="recognition">
+          <i class="el-icon-search"></i>
+          AI 智能识别
+        </el-menu-item>
+        <el-menu-item index="system">
+          <i class="el-icon-set-up"></i>
+          系统管理
+        </el-menu-item>
+      </el-menu>
+    </div>
     <div class="dropdown">
       <el-dropdown>
         <el-avatar
@@ -122,7 +124,7 @@ export default defineComponent({
         asideList = [
           {
             name: 'news',
-            icon: 'el-icon-watermelon',
+            icon: 'el-icon-postcard',
             label: '新闻公告',
             list: [
               { name: 'newsManagement', label: '新闻管理' },
@@ -136,7 +138,7 @@ export default defineComponent({
         asideList = [
           {
             name: 'disease',
-            icon: 'el-icon-apple',
+            icon: 'el-icon-first-aid-kit',
             label: '病害数据库',
             list: [
               { name: 'diseaseManagement', label: '植物病害管理' }
@@ -156,7 +158,7 @@ export default defineComponent({
         asideList = [
           {
             name: 'plants',
-            icon: 'el-icon-watermelon',
+            icon: 'el-icon-cherry',
             label: '植物数据集',
             list: [
               { name: 'plantsManagement', label: '植物管理' },
@@ -165,7 +167,7 @@ export default defineComponent({
           },
           {
             name: 'gardens',
-            icon: 'el-icon-watermelon',
+            icon: 'el-icon-video-camera',
             label: '园林植物护养',
             list: [
               { name: 'videoManagement', label: '盆景养护视频' }
@@ -177,7 +179,7 @@ export default defineComponent({
         asideList = [
           {
             name: 'images',
-            icon: 'el-icon-watermelon',
+            icon: 'el-icon-picture',
             label: 'AI 图像数据集',
             list: [
               { name: 'diseaseImageManagement', label: '病害图像数据集管理' },
@@ -187,7 +189,7 @@ export default defineComponent({
           },
           {
             name: 'dataset',
-            icon: 'el-icon-watermelon',
+            icon: 'el-icon-price-tag',
             label: '数据集标注',
             list: [
               { name: 'imagesTaggingManagement', label: '图片标注管理' }
@@ -195,7 +197,7 @@ export default defineComponent({
           },
           {
             name: 'model',
-            icon: 'el-icon-watermelon',
+            icon: 'el-icon-menu',
             label: '机器学习模型训练',
             list: [
               { name: 'trainingModelManagement', label: '训练模型管理' }
@@ -203,7 +205,7 @@ export default defineComponent({
           },
           {
             name: 'config',
-            icon: 'el-icon-watermelon',
+            icon: 'el-icon-s-tools',
             label: 'AI 系统配置',
             list: [
               { name: 'trainingParamManagement', label: '训练参数配置' }
@@ -215,7 +217,7 @@ export default defineComponent({
         asideList = [
           {
             name: 'system',
-            icon: 'el-icon-watermelon',
+            icon: 'el-icon-setting',
             label: '系统管理',
             list: [
               { name: 'roleManagement', label: '角色管理' }
@@ -245,7 +247,6 @@ export default defineComponent({
 .header {
   height: 59px;
   display: flex;
-  justify-content: space-between;
   border-bottom: 1px solid #d8dce5;
 
   .logo {
@@ -266,20 +267,19 @@ export default defineComponent({
 
     .title {
       font-size: 18px;
-      font-weight: 600;
     }
   }
 
   .menu {
     position: relative;
-    right: 4%;
     border: 0px;
   }
 
   .dropdown {
     top: 6px;
     right: 45px;
-    position: relative;
+    width: auto;
+    position: absolute;
   }
 }
 </style>

@@ -39,21 +39,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-    <el-row :gutter="20" class="textarea-row">
-      <el-col :span="24">
-        <el-form-item label="新闻简介：" prop="description">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 3, maxRows: 4}"
-            placeholder="请输入新闻简介"
-            clearable
-            v-model="form.description"
-          />
-        </el-form-item>
-      </el-col>
-    </el-row>
       <el-row :gutter="0">
         <el-col :span="24">
           <el-form-item label="新闻内容：" prop="content">
@@ -143,7 +128,6 @@ export default defineComponent({
       rules: {
         author: [{ required: true, message: '请输入新闻作者', trigger: ['blur', 'change'] }],
         title: [{ required: true, message: '请输入新闻标题', trigger: ['blur', 'change'] }],
-        description: [{ required: true, message: '请输入新闻简介', trigger: ['blur', 'change'] }],
         newsType: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {

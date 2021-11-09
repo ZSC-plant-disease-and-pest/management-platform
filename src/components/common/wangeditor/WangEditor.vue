@@ -84,4 +84,8 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+::v-deep .w-e-text-container {
+  height: 600px !important;
+}
+</style>

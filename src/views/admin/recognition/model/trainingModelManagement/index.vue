@@ -73,17 +73,17 @@ export default defineComponent({
       {
         prop: 'name',
         label: '模型名称',
-        width: 'auto'
+        width: '250px'
       },
       {
         prop: 'recognizeAmount',
         label: '训练模型识别数量',
-        width: 'auto'
+        width: '200px'
       },
       {
         prop: 'recognizeType',
         label: '训练模型类型',
-        width: 'auto'
+        width: '250px'
       },
       {
         prop: 'outputPath',
@@ -93,7 +93,7 @@ export default defineComponent({
       {
         prop: 'status',
         label: '状态',
-        width: 'auto'
+        width: '200px'
       }
     ]);
     const searchList = reactive([

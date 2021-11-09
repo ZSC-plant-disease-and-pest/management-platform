@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <span>待标注图片：{{ waitTaggingTotal }}张（说明：左键单击弹出标注对话框）</span>
+    <span><span style="color: #FF6347">待标注图片：{{ waitTaggingTotal }}张</span>（说明：左键单击弹出标注对话框）</span>
     <el-button
       class="button"
       type="primary"

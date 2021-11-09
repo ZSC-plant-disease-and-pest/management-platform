@@ -69,7 +69,6 @@
       <template #default="scope">
         <el-button
           type="text"
-          size="small"
           icon="el-icon-search"
           style="color: rgb(63, 186, 246)"
           @click="checkFamily(scope.row)"
@@ -79,7 +78,6 @@
         </el-button>
         <el-button
           type="text"
-          size="small"
           icon="el-icon-view"
           style="color: rgb(63, 186, 246)"
           @click="check(scope.row)"
@@ -88,7 +86,6 @@
         </el-button>
         <el-button
           type="text"
-          size="small"
           icon="el-icon-edit"
           style="color: rgb(65, 209, 204)"
           @click="edit(scope.row)"
@@ -137,7 +134,7 @@ export default defineComponent({
     // 操作按钮的宽度
     buttonWidth: {
       type: Number,
-      default: 126
+      default: 137
     }
   },
   emits: [

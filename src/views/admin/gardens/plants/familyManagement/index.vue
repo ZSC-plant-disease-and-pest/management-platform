@@ -18,7 +18,7 @@
           :tableColumn="familyTableColumn"
           :loading="familyIsLoading"
           :rowId="familyRowId"
-          :buttonWidth="204"
+          :buttonWidth="228"
           @check="checkFamilyDetail"
           @checkFamily="familyCheck"
           @edit="familyEdit"
@@ -148,7 +148,7 @@ export default defineComponent({
       {
         prop: 'scientificName',
         label: '拉丁学名',
-        width: '200px'
+        width: '250px'
       }
     ]);
     const genusTableColumn = reactive([

@@ -17,7 +17,7 @@
     style="height: 40px; position: relative; float: right;"
     @click="add"
   >
-    注册
+    添加用户
   </el-button>
   <el-table
     :data="tableData"

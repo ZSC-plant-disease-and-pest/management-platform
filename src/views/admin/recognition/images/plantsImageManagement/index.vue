@@ -40,6 +40,7 @@ import Table from '../components/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
 import Dialog from '@/components/pages/dataset/Dialog.vue';
+import { getStandardTime } from '@/utils/time';
 
 export default defineComponent({
   components: {
@@ -71,16 +72,21 @@ export default defineComponent({
       {
         prop: 'name',
         label: '植物名称',
-        width: '200px'
+        width: '250px'
       },
       {
         prop: 'imgAmount',
         label: '图片数量',
-        width: '150px'
+        width: '200px'
       },
       {
-        prop: 'path',
-        label: '保存路径',
+        prop: 'creator',
+        label: '创建人',
+        width: '250px'
+      },
+      {
+        prop: 'standardCreateTime',
+        label: '创建时间',
         width: 'auto'
       }
     ]);
@@ -106,6 +112,7 @@ export default defineComponent({
           state.tableData = [];
           for (let i = 0; i < response.content.length; i++) {
             state.tableData.push(response.content[i]);
+            state.tableData[i].standardCreateTime = getStandardTime(state.tableData[i].createTime, 'dateTime');
           }
         })
         .finally(() => {
