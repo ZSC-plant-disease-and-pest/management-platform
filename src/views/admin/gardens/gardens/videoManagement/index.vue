@@ -14,6 +14,7 @@
     @add="add"
     @sortChange="sortChange"
   />
+  <Dialog ref="dialogRef" />
   <Pagenum
     :total="total"
     :currentPage="page"
@@ -38,60 +39,15 @@ import {
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import Dialog from './components/Dialog.vue';
 
 export default defineComponent({
-  components: { Table, Search, Pagenum },
+  components: { Table, Search, Pagenum, Dialog },
   setup () {
     // 使用路由
     const router = useRouter();
-    // 渲染前
-    onBeforeMount(() => {
-      // getVideo();
-    });
-    // 发生更新时
-    onUpdated(() => {
-      // 判断是否从添加界面返回
-      // if (router.currentRoute.value.params.type === 'refresh') {
-      //   // 是的话则重新请求数据
-      //   router.currentRoute.value.params.type = '';
-      //   getVideo();
-      // }
-    });
-    // 是否加载
-    const loading = ref(false);
-    // 表格信息的总数
-    const total = ref(0);
-    // 表格的页数
-    const page = ref(1);
-    // 表格每页的信息大小
-    const size = ref(10);
-    // 视频参数
-    // const videoParams = reactive({
-    //   page: 0,
-    //   size: 10
-    // } as videoParams);
-    // 请求数据集
-    const getVideo = () => {
-      // loading.value = true;
-      // plantsHttp.searchPlants(videoParams)
-      //   .then((response: any) => {
-      //     console.log(response);
-      //     // 将表格的总数赋值
-      //     total.value = response.totalElements;
-      //     // 将表格的大小赋值
-      //     size.value = response.size;
-      //     // 响应式的添加到表格中
-      //     state.tableData = [];
-      //     for (let i = 0; i < response.content.length; i++) {
-      //       state.tableData.push(response.content[i]);
-      //     }
-      //   })
-      //   .finally(() => {
-      //     loading.value = false;
-      //   });
-    };
-    // 方便内部数据响应式的改变
     const state = reactive({
+      dialogRef: ref(),
       tableData: [] as Array<any>
     });
     // 表头信息
@@ -134,22 +90,11 @@ export default defineComponent({
     ]);
     // 排序
     const sortChange = (params: any) => {
-      // if (params.prop === null) {
-      //   // 无规则
-      //   videoParams.sort = '';
-      // } else {
-      //   // 排序规则
-      //   videoParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
-      // }
-      // getVideo();
+      console.log(params);
     };
     // 新增
-    const add = (data: any) => {
-      console.log(data);
-      router.push({
-        path: router.currentRoute.value.path + '/add',
-        name: 'videoManagementAdd'
-      });
+    const add = () => {
+      state.dialogRef.openDialog();
     };
     // 删除
     const remove = (selectedIds: any) => {
@@ -226,10 +171,6 @@ export default defineComponent({
     };
     // 导出
     return {
-      loading,
-      total,
-      page,
-      size,
       ...toRefs(state),
       tableColumn,
       sortChange,

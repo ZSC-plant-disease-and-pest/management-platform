@@ -49,17 +49,20 @@ export class videoHttp {
 
   // 上传视频
   static uploadVideo (params: videoParams, body: any) {
-    const fileVideo = new FormData();
-    const { videoInfo } = params;
-    fileVideo.append('video', body.raw);
+    const data = new FormData();
+    console.log(body)
+    for (const item in body) {
+      if (body[item].raw) {
+        console.log(body[item].raw)
+        data.append('video', body[item].raw);
+      }
+    }
+    const JSONParams = JSON.stringify(params);
+    data.append('videoInfo', new Blob([JSONParams], { type: 'application/json' }));
     return http({
       url: '/api/video/upload',
       method: 'post',
-      params: { videoInfo },
-      data: fileVideo,
-      headers: {
-        'Content-type': 'multipart/form-data'
-      }
+      data
     });
   }
 }
