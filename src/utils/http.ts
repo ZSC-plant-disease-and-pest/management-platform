@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { ElMessage } from 'element-plus';
 // import router from '@/router';
-// import { getToken, removeInfo, removeToken } from "@/utils/cookie";
+import { getToken, setToken, removeToken } from '@/utils/cookie';
 
 const service = axios.create({
   timeout: 10000
@@ -9,9 +9,6 @@ const service = axios.create({
 
 service.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    // if (getToken()) {
-    //   config.headers['X-Access-Token'] = getToken()
-    // }
     return config;
   },
   (err: any) => {
@@ -38,6 +35,9 @@ export default function request (reqData: any): any {
 
     if (tempData.headers === undefined) {
       tempData.headers = {};
+    }
+    if (getToken()) {
+      tempData.headers.authorization = `Bearer ${getToken()}`;
     }
 
     console.log('send request: %o', tempData.url, tempData.method, tempData);

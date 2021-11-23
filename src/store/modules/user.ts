@@ -1,6 +1,7 @@
 import { ActionTree, GetterTree, Module, MutationTree } from 'vuex';
 import { loginHttp, loginParams } from '@/api/login';
 import { ElMessage } from 'element-plus';
+import { removeToken, setToken } from '@/utils/cookie';
 
 interface UserStore {
   id?: number;
@@ -17,7 +18,7 @@ class UserStoreModule implements Module<UserStore, any> {
   namespaced = true;
 
   state: loginParams = {
-    state: 1,
+    state: 0,
     name: ''
   };
 
@@ -62,6 +63,7 @@ class UserStoreModule implements Module<UserStore, any> {
               commit('setMobile', response.user.mobile);
               commit('setEMail', response.user.e_mail);
               commit('setToken', response.token);
+              setToken(response.token);
               resolve('OK');
             } else {
               ElMessage.warning(response);
@@ -86,6 +88,7 @@ class UserStoreModule implements Module<UserStore, any> {
               commit('setMobile', '');
               commit('setToken', '');
               commit('setState', 0);
+              removeToken();
               resolve('OK');
             } else {
               ElMessage.warning(response);

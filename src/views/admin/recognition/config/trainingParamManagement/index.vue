@@ -7,23 +7,23 @@
     </template>
     <el-row :gutter="20">
       <el-col :span="12">
-        <span>CPU型号：Intel 酷睿i9 9900K</span>
+        <span>CPU型号：{{ serverConfig.cpu }}</span>
       </el-col>
       <el-col :span="12">
-        <span>GPU信息：NVIDIA GeForce GTX 1650 SUPER</span>
-      </el-col>
-    </el-row>
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <span>内存大小：32G</span>
-      </el-col>
-      <el-col :span="12">
-        <span>硬盘大小：1024G</span>
+        <span>GPU信息：{{ serverConfig.gpu }}</span>
       </el-col>
     </el-row>
     <el-row :gutter="20">
       <el-col :span="12">
-        <span>操作系统类型：Linux</span>
+        <span>内存大小：{{ serverConfig.memory }}</span>
+      </el-col>
+      <el-col :span="12">
+        <span>硬盘大小：{{ serverConfig.hdd }}</span>
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="12">
+        <span>操作系统类型：{{ serverConfig.operatingSystem }}</span>
       </el-col>
     </el-row>
   </el-card>
@@ -74,7 +74,6 @@
           <el-form-item label="训练数据目录：">
             <el-input
               class="input-common"
-              v-model="form.id"
               placeholder="请输入训练数据目录"
             />
           </el-form-item>
@@ -83,13 +82,12 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item>
-            <el-button :loading="isLoading" @click="back">
+            <el-button :loading="isLoading">
               返回
             </el-button>
             <el-button
               type="primary"
               :loading="isLoading"
-              @click="submit"
             >
               提交
             </el-button>
@@ -101,7 +99,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, ref } from 'vue';
+import { defineComponent, reactive, toRefs, ref, onBeforeMount } from 'vue';
+import { configHttp, configParams } from '@/api/config';
 
 export default defineComponent({
   setup () {
@@ -110,10 +109,21 @@ export default defineComponent({
         pythonVersion: '',
         frame: ''
       },
+      serverConfig: {} as configParams,
       formRef: ref(),
-      rules: {}
+      rules: {},
+      isLoading: false
     });
     const status = ref('incomplete');
+    onBeforeMount(() => {
+      getServerConfig();
+    });
+    const getServerConfig = () => {
+      configHttp.getServerConfig()
+        .then((response: any) => {
+          state.serverConfig = response;
+        });
+    };
     return {
       ...toRefs(state),
       status

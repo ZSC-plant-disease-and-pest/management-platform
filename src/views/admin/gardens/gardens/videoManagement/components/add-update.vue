@@ -37,59 +37,41 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="视频类型：" prop="type">
-            <el-select
-              class="select-common"
-              v-model="form.type"
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in typeOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="植物名称：" prop="plantName">
-            <el-select
-              class="select-common"
-              v-model="form.plantName"
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="item in plantNameOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="标签：" prop="tag">
-            <el-input
-              class="input-common"
-              v-model="form.tag"
-              placeholder="请输入标签"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="上传视频：" prop="file">
+          <el-form-item
+            label="上传图片："
+            prop="image"
+          >
             <el-upload
-              class="upload-common"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
+              ref="uploadVideoRef"
+              :class="{ uploadVideo: havingUploadVideo }"
+              action="#"
+              list-type="picture-card"
+              :auto-upload="false"
+              :on-change="onChange"
+              :limit="1"
+              :multiple="false"
+              accept=".mp4"
             >
-              <i class="el-icon-plus upload-icon"></i>
+              <template #default>
+                <i class="el-icon-plus"></i>
+              </template>
+              <template #file="{ file }">
+                <div>
+                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                  <span class="el-upload-list__item-actions">
+                    <span class="el-upload-list__item-preview" @click="handlePictureCardPreview(file)">
+                      <i class="el-icon-zoom-in"></i>
+                    </span>
+                    <span class="el-upload-list__item-delete" @click="handleRemove">
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </span>
+                </div>
+              </template>
             </el-upload>
+            <el-dialog v-model="dialogVideoVisible" title="查看图片">
+              <video style="width: 100%; height: 75%;" :src="dialogVideoUrl" alt="" />
+            </el-dialog>
           </el-form-item>
         </el-col>
       </el-row>
@@ -167,30 +149,13 @@ export default defineComponent({
       rules: {
         name: [
           { required: true, message: '请输入病害名称', trigger: ['blur', 'change'] }
-        ],
-        type: [{
-          required: true,
-          validator: (rule: any, value: any, callback: any) => {
-            if (state.form.type === undefined) {
-              callback(new Error('请选择视频类型'));
-            } else {
-              callback();
-            }
-          },
-          trigger: ['blur', 'change']
-        }],
-        plantName: [{
-          required: true,
-          validator: (rule: any, value: any, callback: any) => {
-            if (state.form.plantName === undefined) {
-              callback(new Error('请选择植物名称'));
-            } else {
-              callback();
-            }
-          },
-          trigger: ['blur', 'change']
-        }]
-      }
+        ]
+      },
+      uploadVideoRef: ref(),
+      fileList: [] as Array<any>,
+      havingUploadVideo: false,
+      dialogVideoUrl: '',
+      dialogVideoVisible: false
     });
     // 界面类型：add 新增，update 更新
     const type = ref('');
@@ -198,59 +163,6 @@ export default defineComponent({
     const isLoading = ref(false);
     // 表单状态：complete 完成，incomplete 未完成
     const status = ref('incomplete');
-    // 提取路由中的 params
-    // const getParams = () => {
-    //   // 强转类型
-    //   type.value = router.currentRoute.value.meta.type as string;
-    //   if (type.value === 'update') {
-    //     // 若 params 有 id，则是合法访问
-    //     if (router.currentRoute.value.params.id !== undefined) {
-    //       const { ...tempParams } = router.currentRoute.value.params;
-    //       state.form = tempParams;
-    //       state.typeSelect = state.form.type === undefined ? [] : state.form.type.split(',');
-    //       state.plantNameSelect = state.form.plantName === undefined ? [] : state.form.plantName.split(',');
-    //     } else {
-    //       // 非法访问更新界面
-    //       illegalVisit();
-    //       // 设置全局路由守卫，当 meta.type = 'update' 时
-    //       // 判断 route.params.id 是否存在，不存在则返回上个界面并弹出警告提示
-    //       // 返回上一页
-    //       router.go(-1);
-    //     }
-    //   }
-    // };
-    const typeOptions: Array<any> = reactive([
-      {
-        value: 'avi',
-        label: 'avi'
-      },
-      {
-        value: 'mp4',
-        label: 'mp4'
-      },
-      {
-        value: 'mov',
-        label: 'mov'
-      },
-      {
-        value: 'f4v',
-        label: 'f4v'
-      },
-      {
-        value: '3gp',
-        label: '3gp'
-      }
-    ]);
-    const plantNameOptions: Array<any> = reactive([
-      {
-        value: 'Pinus armandii',
-        label: '华山松'
-      },
-      {
-        value: 'Sabina vulgaris',
-        label: '地柏'
-      }
-    ]);
     // 提交表单
     const submit = () => {
       console.log('submit');
@@ -300,6 +212,25 @@ export default defineComponent({
       // 返回到新增界面
       status.value = 'incomplete';
     };
+    const onChange = (file: any, fileList: Array<any>) => {
+      state.havingUploadVideo = true;
+      console.log(fileList)
+      state.fileList = fileList[0];
+    };
+    const handleRemove = () => {
+      state.uploadVideoRef.clearFiles();
+      state.fileList = [];
+      setTimeout(() => {
+        state.havingUploadVideo = false;
+      }, 1);
+    };
+    const handlePictureCardPreview = (file: any) => {
+      if (file.url !== undefined) {
+        state.dialogVideoUrl = file.url;
+      }
+      state.dialogVideoVisible = true;
+    };
+
     return {
       // 解构后创建对象的响应式数据
       ...toRefs(state),
@@ -309,11 +240,22 @@ export default defineComponent({
       submit,
       back,
       keep,
-      typeOptions,
-      plantNameOptions
+      onChange,
+      handleRemove,
+      handlePictureCardPreview
     };
   }
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+::v-deep .el-upload-list__item {
+  transition: none !important;
+}
+.uploadVideo ::v-deep .el-upload.el-upload--picture-card {
+  display: none;
+}
+.uploadVideo ::v-deep .el-upload-list__item.is-ready {
+  margin-bottom: 0px;
+}
+</style>
