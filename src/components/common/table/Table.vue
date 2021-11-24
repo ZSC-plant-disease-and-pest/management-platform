@@ -76,7 +76,7 @@
     />
     <!-- 自定义列模块(仅限自定义字段) -->
     <el-table-column
-      v-for="item in customTableColumn"
+      v-for="item in customColumnList"
       :key="item.index"
       :prop="item.prop"
       :label="item.label"
@@ -98,7 +98,7 @@
           :key="item.name"
           :icon="item.icon"
           :style="{'color': item.color}"
-          @click="tableButtonClick(item.name)"
+          @click="tableButtonClick(item.name, scope.row)"
           type="text"
         >
           {{ item.label }}
@@ -192,6 +192,8 @@ export default defineComponent({
     }
   },
   emits: [
+    'topButtonClick',
+    'tableButtonClick',
     'add',
     'remove',
     'edit',
@@ -202,6 +204,58 @@ export default defineComponent({
     'sortChange'
   ],
   setup (props, { emit }) {
+    // 表格头部按键
+    const topButtonClick = (name: string) => {
+      if (name === 'detele') {
+        emit('topButtonClick', name, selectedIds);
+      } else {
+        emit('topButtonClick', name);
+      }
+    };
+
+    // 表格操作栏按键
+    const tableButtonClick = (name: string, data: any) => {
+      if (name === 'detele') {
+        emit('topButtonClick', name, selectedIds);
+      } else {
+        emit('tableButtonClick', name, data);
+      }
+    };
+
+    // 表格改变排序
+    const sortChange = (data: any) => {
+      emit('sortChange', data);
+    };
+
+    // 被选中的 id
+    let selectedIds: Array<number> = [];
+    // 表格选择框改变
+    const selectChange = (selection: any) => {
+      selectedIds = [];
+      if (selection.length !== 0) {
+        for (const index in selection) {
+          selectedIds.push(selection[index].id);
+        }
+      }
+    };
+
+    // 表格选择全部选择框
+    const selectAll = (selection: any) => {
+      selectedIds = [];
+      for (const index in selection) {
+        selectedIds.push(selection[index].id);
+      }
+    };
+
+    // 被选中行的样式
+    const tableRowStyle = (data: any) => {
+      if (data.row.id === props.rowId) {
+        return 'background-color: #fafafa';
+      } else {
+        return '';
+      }
+    };
+
     // 新增
     const add = () => {
       emit('add', 'add');
@@ -230,38 +284,10 @@ export default defineComponent({
     const deploy = (row: any) => {
       emit('deploy', row);
     };
-    // 改变排序
-    const sortChange = (params: any) => {
-      emit('sortChange', params);
-    };
-    // 被选中的 id
-    let selectedIds: Array<number> = [];
-    // 表格多选框发生改变
-    const selectChange = (selection: any) => {
-      // 清空
-      selectedIds = [];
-      if (selection.length !== 0) {
-        for (const index in selection) {
-          selectedIds.push(selection[index].id);
-        }
-      }
-    };
-    // 选择全部多选框
-    const selectAll = (selection: any) => {
-      selectedIds = [];
-      for (const index in selection) {
-        selectedIds.push(selection[index].id);
-      }
-    };
-    // 被选中行的样式
-    const tableRowStyle = (data: any) => {
-      if (data.row.id === props.rowId) {
-        return 'background-color: #fafafa';
-      } else {
-        return '';
-      }
-    };
+
     return {
+      topButtonClick,
+      tableButtonClick,
       add,
       remove,
       edit,

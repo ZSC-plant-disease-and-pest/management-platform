@@ -6,7 +6,7 @@
   />
   <Table
     :tableData="tableData"
-    :tableColumn="tableColumn"
+    :tableColumn="tableColumnList"
     :loading="isLoading"
     @check="check"
     @edit="edit"
@@ -14,6 +14,16 @@
     @add="add"
     @sortChange="sortChange"
   />
+  <!-- <Table
+    :tableData="tableData"
+    :tableColumn="tableColumnList"
+    :loading="isLoading"
+    :topButtonList="topButtonList"
+    :tableButtonList="tableButtonList"
+    @topButtonClick="topButtonClick"
+    @tableButtonClick="tableButtonClick"
+    @sortChange="sortChange"
+  /> -->
   <Pagenum
     :total="total"
     :currentPage="page"
@@ -31,6 +41,7 @@ import { ElMessage } from 'element-plus';
 import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
+import { topButtonList, tableButtonList, tableColumnList } from './table-data';
 
 export default defineComponent({
   components: {
@@ -45,9 +56,7 @@ export default defineComponent({
       getDisease();
     });
     onUpdated(() => {
-      // 判断是否从添加界面返回
       if (route.params.type === 'refresh') {
-        // 是的话则重新请求数据
         route.params.type = '';
         getDisease();
       }
@@ -55,33 +64,14 @@ export default defineComponent({
 
     const state = reactive({
       tableData: [] as Array<any>,
+      topButtonList: topButtonList,
+      tableButtonList: tableButtonList,
+      tableColumnList: tableColumnList,
       isLoading: false,
       total: 0,
       page: 1,
       size: 10
     });
-    const tableColumn = reactive([
-      {
-        prop: 'id',
-        label: '序号',
-        width: '75px'
-      },
-      {
-        prop: 'name',
-        label: '病害名称',
-        width: 'auto'
-      },
-      {
-        prop: 'overview',
-        label: '植物表现',
-        width: 'auto'
-      },
-      {
-        prop: 'damagedParts',
-        label: '危害部位',
-        width: 'auto'
-      }
-    ]);
     const searchList = reactive([
       {
         name: 'name',
@@ -109,6 +99,20 @@ export default defineComponent({
         .finally(() => {
           state.isLoading = false;
         });
+    };
+    const topButtonClick = (name: string, selectedIds: string) => {
+      if (name === 'add') {
+        router.push({ path: route.path + '/add', name: route.name as string + 'Add' });
+      } else if (name === 'delete') {
+        remove(selectedIds);
+      }
+    };
+    const tableButtonClick = (name: string, data: any) => {
+      if (name === 'view') {
+        window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
+      } else if (name === 'edit') {
+        // 利用Id来进入编辑页面(查询后填入表单)
+      }
     };
     const sortChange = (params: any) => {
       if (params.prop === null) {
@@ -179,7 +183,8 @@ export default defineComponent({
 
     return {
       ...toRefs(state),
-      tableColumn,
+      topButtonClick,
+      tableButtonClick,
       sortChange,
       add,
       remove,
