@@ -1,4 +1,16 @@
 <template>
+  <!-- 表格的多个自定义按钮 -->
+  <el-button
+    v-for="item in topButtonList"
+    :key="item.name"
+    :type="item.type"
+    :icon="item.icon"
+    @click="topButtonClick(item.name)"
+    size="medium"
+    style="height: 40px; position: relative; float: right"
+  >
+    {{ item.label }}
+  </el-button>
   <el-button
     type="danger"
     size="medium"
@@ -62,11 +74,35 @@
       :width="item.width"
       sortable="custom"
     />
+    <!-- 自定义列模块(仅限自定义字段) -->
+    <el-table-column
+      v-for="item in customTableColumn"
+      :key="item.index"
+      :prop="item.prop"
+      :label="item.label"
+      :width="item.width"
+      sortable="custom"
+    >
+      <template #default="scope">
+        {{ item.alias(scope.row.name) }}
+      </template>
+    </el-table-column>
     <el-table-column
       label="操作"
       :width="buttonWidth"
     >
       <template #default="scope">
+        <!-- 表格内操作栏自定义按钮 -->
+        <el-button
+          v-for="item in tableButtonList"
+          :key="item.name"
+          :icon="item.icon"
+          :style="{'color': item.color}"
+          @click="tableButtonClick(item.name)"
+          type="text"
+        >
+          {{ item.label }}
+        </el-button>
         <el-button
           type="text"
           icon="el-icon-search"
@@ -135,6 +171,24 @@ export default defineComponent({
     buttonWidth: {
       type: Number,
       default: 137
+    },
+    topButtonList: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    },
+    tableButtonList: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    },
+    customColumnList: {
+      type: Array,
+      default: () => {
+        return [];
+      }
     }
   },
   emits: [
