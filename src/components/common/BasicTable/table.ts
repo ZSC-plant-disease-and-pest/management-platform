@@ -31,6 +31,20 @@ export interface tableButtonInterface {
 }
 
 /**
+ * 表格头部接口
+ */
+export interface tableColumnInterface {
+  [index: number]: {
+    // 表格头部属性
+    prop: string
+    // 表格头部标签
+    label: string
+    // 表格头部宽度
+    width: string
+  }
+}
+
+/**
  * 表格自定义列接口
  */
 export interface customTableInterface {

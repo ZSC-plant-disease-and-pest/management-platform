@@ -13,9 +13,9 @@
   </el-button>
 
   <el-table
-    :data="tableData"
+    :data="tableDataList"
     :row-style="tableRowStyle"
-    v-loading="loading"
+    v-loading="isLoading"
     @sort-change="sortChange"
     @selection-change="selectChange"
     @select-all="selectAll"
@@ -71,7 +71,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   props: {
     // 表格内容
-    tableData: {
+    tableDataList: {
       type: Object,
       default: () => {
         return {};

@@ -63,7 +63,7 @@ export class diseaseHttp {
   }
 
   // 分页查询病害信息
-  static searchDisease (params: (diseaseParams | null)) {
+  static getDisease (params: (diseaseParams | null)) {
     return http({
       url: '/api/diseaseInfo/search',
       method: 'get',

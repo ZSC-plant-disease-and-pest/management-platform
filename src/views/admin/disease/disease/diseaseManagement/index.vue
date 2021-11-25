@@ -1,25 +1,21 @@
 <template>
-  <Search
+  <BasicSearch
     :searchList="searchList"
-    @search="search"
-    @reset="reset"
+    @topButtonClick="topButtonClick"
   />
   <BasicTable
-    :tableData="tableData"
-    :isLoading="isLoading"
+    :tableDataList="tableDataList"
     :tableColumnList="tableColumnList"
     :topButtonList="topButtonList"
     :tableButtonList="tableButtonList"
+    :isLoading="isLoading"
     @topButtonClick="topButtonClick"
     @tableButtonClick="tableButtonClick"
     @sortChange="sortChange"
   />
-  <Pagenum
-    :total="total"
-    :currentPage="page"
-    :pageSize="size"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
+  <BasicPage
+    :pageList="pageList"
+    @handleChange="handleChange"
   />
 </template>
 
@@ -29,16 +25,12 @@ import { diseaseHttp, diseaseParams } from '@/api/disease';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import BasicTable from '@/components/common/BasicTable/index.vue';
-import Search from '@/components/common/search/Search.vue';
-import Pagenum from '@/components/common/pagenum/Pagenum.vue';
-import { topButtonList, tableButtonList, tableColumnList } from './table-data';
+import BasicSearch from '@/components/common/BasicSearch/index.vue';
+import BasicPage from '@/components/common/BasicPage/index.vue';
+import { searchList, topButtonList, tableButtonList, tableColumnList } from './data';
 
 export default defineComponent({
-  components: {
-    BasicTable,
-    Search,
-    Pagenum
-  },
+  components: { BasicTable, BasicSearch, BasicPage },
   setup () {
     const route = useRoute();
     const router = useRouter();
@@ -53,22 +45,18 @@ export default defineComponent({
     });
 
     const state = reactive({
-      tableData: [] as Array<any>,
-      topButtonList: topButtonList,
-      tableButtonList: tableButtonList,
-      tableColumnList: tableColumnList,
+      tableDataList: [] as Array<any>,
+      searchList,
+      topButtonList,
+      tableButtonList,
+      tableColumnList,
       isLoading: false,
-      total: 0,
-      page: 1,
-      size: 10
-    });
-    const searchList = reactive([
-      {
-        name: 'name',
-        placeholder: '病害名称',
-        value: ''
+      pageList: {
+        total: 0,
+        page: 1,
+        size: 10
       }
-    ]);
+    });
 
     const diseaseParams = reactive({
       page: 0,
@@ -76,49 +64,20 @@ export default defineComponent({
     } as diseaseParams);
     const getDisease = () => {
       state.isLoading = true;
-      diseaseHttp.searchDisease(diseaseParams)
+      diseaseHttp.getDisease(diseaseParams)
         .then((response: any) => {
-          state.total = response.totalElements;
-          state.size = response.size;
-          // 响应式的添加到表格中
-          state.tableData = [];
+          state.pageList.total = response.totalElements;
+          state.pageList.size = response.size;
+          state.tableDataList = [];
           for (let i = 0; i < response.content.length; i++) {
-            state.tableData.push(response.content[i]);
+            state.tableDataList.push(response.content[i]);
           }
         })
         .finally(() => {
           state.isLoading = false;
         });
     };
-    const topButtonClick = (name: string, selectedIds: string) => {
-      if (name === 'add') {
-        router.push({ path: route.path + '/add', name: route.name as string + 'Add' });
-      } else if (name === 'delete') {
-        remove(selectedIds);
-      }
-    };
-    const tableButtonClick = (name: string, data: any) => {
-      if (name === 'view') {
-        window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
-      } else if (name === 'edit') {
-        // 利用Id来进入编辑页面(查询后填入表单)
-      }
-    };
-    const sortChange = (params: any) => {
-      if (params.prop === null) {
-        diseaseParams.sort = '';
-      } else {
-        diseaseParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
-      }
-      getDisease();
-    };
-    const add = () => {
-      router.push({
-        path: route.path + '/add',
-        name: route.name as string + 'Add'
-      });
-    };
-    const remove = (selectedIds: any) => {
+    const deleteDisease = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
       } else {
@@ -133,41 +92,52 @@ export default defineComponent({
           });
       }
     };
-    const edit = (data: any) => {
-      router.push({
-        path: route.path + '/update',
-        name: route.name as string + 'Update',
-        params: data
-      });
-    };
-    const check = (data: any) => {
-      window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
-    };
-    const search = (data: any) => {
-      for (const index in data) {
-        if (data[index].name === 'name') {
-          diseaseParams.name = data[index].value === '' ? undefined : data[index].value;
+    const topButtonClick = (name: string, data: any) => {
+      if (name === 'search') {
+        for (const index in data) {
+          if (data[index].name === 'name') {
+            diseaseParams.name = data[index].value === '' ? undefined : data[index].value;
+          }
         }
+        getDisease();
+      } else if (name === 'reset') {
+        for (const index in state.searchList) {
+          state.searchList[index].value = '';
+          diseaseParams.name = undefined;
+        }
+        getDisease();
+      } else if (name === 'add') {
+        router.push({ path: route.path + '/add', name: route.name as string + 'Add' });
+      } else if (name === 'delete') {
+        deleteDisease(data);
+      }
+    };
+    const tableButtonClick = (name: string, data: any) => {
+      if (name === 'view') {
+        window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
+      } else if (name === 'edit') {
+        // 利用Id来进入编辑页面(查询后填入表单)
+        router.push({ path: route.path + '/update', name: route.name as string + 'Update', params: data });
+      }
+    };
+    const sortChange = (params: any) => {
+      if (params.prop === null) {
+        diseaseParams.sort = '';
+      } else {
+        diseaseParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
       }
       getDisease();
     };
-    const reset = () => {
-      for (const index in searchList) {
-        searchList[index].value = '';
-        diseaseParams.name = undefined;
+    const handleChange = (name: string, data: any) => {
+      if (name === 'page') {
+        diseaseParams.page = data - 1;
+        state.pageList.page = data;
+      } else if (name === 'size') {
+        diseaseParams.size = data;
+        diseaseParams.page = 0;
+        state.pageList.size = data;
+        state.pageList.page = 1;
       }
-      getDisease();
-    };
-    const handleSizeChange = (newSize: any) => {
-      diseaseParams.size = newSize;
-      diseaseParams.page = 0;
-      state.size = newSize;
-      state.page = 1;
-      getDisease();
-    };
-    const handleCurrentChange = (newPage: any) => {
-      diseaseParams.page = newPage;
-      state.page = newPage + 1;
       getDisease();
     };
 
@@ -176,15 +146,8 @@ export default defineComponent({
       topButtonClick,
       tableButtonClick,
       sortChange,
-      add,
-      remove,
-      edit,
-      check,
-      search,
-      reset,
-      searchList,
-      handleSizeChange,
-      handleCurrentChange
+      deleteDisease,
+      handleChange
     };
   }
 });
