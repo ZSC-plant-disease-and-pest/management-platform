@@ -22,7 +22,10 @@
     border
     style="width: 100%; margin-top: 15px"
   >
+    <!-- 选择框 -->
     <el-table-column type="selection" width="55"/>
+
+    <!-- 表格数据 -->
     <el-table-column
       v-for="item in tableColumnList"
       :key="item.prop"
@@ -30,24 +33,14 @@
       :label="item.label"
       :width="item.width"
       sortable="custom"
-    />
-    <!-- 自定义列模块(仅限自定义字段) -->
-    <!-- <el-table-column
-      v-for="item in customColumnList"
-      :key="item.index"
-      :prop="item.prop"
-      :label="item.label"
-      :width="item.width"
-      sortable="custom"
     >
-      <template #default="scope">
-        {{ item.alias(scope.row.name) }}
+      <template #default="scope" v-if="item.alias">
+        {{ item.getAlias(scope.row[item.prop]) }}
       </template>
-    </el-table-column> -->
-    <el-table-column
-      label="操作"
-      :width="tableButtonWidth"
-    >
+    </el-table-column>
+
+    <!-- 操作框 -->
+    <el-table-column label="操作" :width="tableButtonWidth" >
       <template #default="scope">
         <!-- 表格内操作栏自定义按钮 -->
         <el-button
@@ -106,12 +99,6 @@ export default defineComponent({
       }
     },
     tableButtonList: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    },
-    customColumnList: {
       type: Array,
       default: () => {
         return [];

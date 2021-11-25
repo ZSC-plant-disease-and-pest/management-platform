@@ -1,5 +1,6 @@
 import { searchInterface } from '@/components/common/BasicSearch/search';
 import { topButtonInterface, tableButtonInterface, tableColumnInterface } from '@/components/common/BasicTable/table';
+import { pageInterface } from '@/components/common/BasicPage/page';
 
 export const searchList: searchInterface = [
   { name: 'name', placeholder: '病害名称', value: '' }
@@ -21,3 +22,9 @@ export const tableColumnList: tableColumnInterface = [
   { prop: 'overview', label: '植物表现', width: 'auto' },
   { prop: 'damagedParts', label: '危害部位', width: 'auto' }
 ];
+
+export const pageList: pageInterface = {
+  total: 0,
+  page: 1,
+  size: 10
+};

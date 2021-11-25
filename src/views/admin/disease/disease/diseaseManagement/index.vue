@@ -27,7 +27,7 @@ import { ElMessage } from 'element-plus';
 import BasicTable from '@/components/common/BasicTable/index.vue';
 import BasicSearch from '@/components/common/BasicSearch/index.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
-import { searchList, topButtonList, tableButtonList, tableColumnList } from './data';
+import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
 
 export default defineComponent({
   components: { BasicTable, BasicSearch, BasicPage },
@@ -50,12 +50,8 @@ export default defineComponent({
       topButtonList,
       tableButtonList,
       tableColumnList,
-      isLoading: false,
-      pageList: {
-        total: 0,
-        page: 1,
-        size: 10
-      }
+      pageList,
+      isLoading: false
     });
 
     const diseaseParams = reactive({
@@ -92,6 +88,7 @@ export default defineComponent({
           });
       }
     };
+
     const topButtonClick = (name: string, data: any) => {
       if (name === 'search') {
         for (const index in data) {

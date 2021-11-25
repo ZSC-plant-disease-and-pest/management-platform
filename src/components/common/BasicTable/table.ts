@@ -41,22 +41,11 @@ export interface tableColumnInterface {
     label: string
     // 表格头部宽度
     width: string
-  }
-}
-
-/**
- * 表格自定义列接口
- */
-export interface customTableInterface {
-  [index: number]: {
-    name?: string
-
-    type?: string
-
-    icon?: string
-
-    label?: string
-
-    width?: string
+    // 表格是否需要自定义字段
+    alias?: boolean
+    // 自定义字段的函数
+    getAlias?: {
+      (data: string): string
+    }
   }
 }
