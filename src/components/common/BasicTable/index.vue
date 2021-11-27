@@ -111,10 +111,30 @@ export default defineComponent({
     'sortChange'
   ],
   setup (props, { emit }) {
+    // 表格中被选择的 ids
+    let selectedIds: Array<number> = [];
+
+    // 表格选择框改变
+    const selectChange = (selection: any) => {
+      selectedIds = [];
+      if (selection.length !== 0) {
+        for (const index in selection) {
+          selectedIds.push(selection[index].id);
+        }
+      }
+    };
+
+    // 表格选择全部选择框
+    const selectAll = (selection: any) => {
+      selectedIds = [];
+      for (const index in selection) {
+        selectedIds.push(selection[index].id);
+      }
+    };
+
     // 表格头部按键
     const topButtonClick = (name: string) => {
-      console.log(props);
-      if (name === 'detele') {
+      if (name === 'deletee') {
         emit('topButtonClick', name, selectedIds);
       } else {
         emit('topButtonClick', name);
@@ -133,26 +153,6 @@ export default defineComponent({
     // 表格改变排序
     const sortChange = (data: any) => {
       emit('sortChange', data);
-    };
-
-    // 被选中的 id
-    let selectedIds: Array<number> = [];
-    // 表格选择框改变
-    const selectChange = (selection: any) => {
-      selectedIds = [];
-      if (selection.length !== 0) {
-        for (const index in selection) {
-          selectedIds.push(selection[index].id);
-        }
-      }
-    };
-
-    // 表格选择全部选择框
-    const selectAll = (selection: any) => {
-      selectedIds = [];
-      for (const index in selection) {
-        selectedIds.push(selection[index].id);
-      }
     };
 
     // 被选中行的样式
