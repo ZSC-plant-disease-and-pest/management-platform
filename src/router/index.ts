@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import store from '@/store';
 import { ElMessage } from 'element-plus';
 import { getToken } from '@/utils/cookie';
 

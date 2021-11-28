@@ -15,34 +15,23 @@
     @sortChange="sortChange"
   />
   <Dialog ref="dialogRef" />
-  <Pagenum
-    :total="total"
-    :currentPage="page"
-    :pageSize="size"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  />
 </template>
 
 <script lang="ts">
 import Table from '@/components/common/table/Table.vue';
 import Search from '@/components/common/search/Search.vue';
-import Pagenum from '@/components/common/pagenum/Pagenum.vue';
-// import { plantsHttp, videoParams } from '@/api/plants';
 import {
   defineComponent,
   reactive,
-  onBeforeMount,
   ref,
-  toRefs,
-  onUpdated
+  toRefs
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import Dialog from './components/Dialog.vue';
 
 export default defineComponent({
-  components: { Table, Search, Pagenum, Dialog },
+  components: { Table, Search, Dialog },
   setup () {
     // 使用路由
     const router = useRouter();
@@ -126,7 +115,7 @@ export default defineComponent({
       console.log(data);
     };
     // 搜索
-    const search = (data: any) => {
+    const search = () => {
       // for (const index in data) {
       //   if (data[index].name === 'name') {
       //     videoParams.name = data[index].value === '' ? undefined : data[index].value;
@@ -155,20 +144,6 @@ export default defineComponent({
         value: ''
       }
     ]);
-    // 表格每页信息大小改变
-    const handleSizeChange = (newSize: any) => {
-      // videoParams.size = newSize;
-      // videoParams.page = 0;
-      // size.value = newSize;
-      // page.value = 1;
-      // getVideo();
-    };
-    // 表格页数改变
-    const handleCurrentChange = (newPage: any) => {
-      // videoParams.page = newPage;
-      // page.value = newPage + 1;
-      // getVideo();
-    };
     // 导出
     return {
       ...toRefs(state),
@@ -180,9 +155,7 @@ export default defineComponent({
       check,
       search,
       reset,
-      searchList,
-      handleSizeChange,
-      handleCurrentChange
+      searchList
     };
   }
 });

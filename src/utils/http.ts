@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { ElMessage } from 'element-plus';
 // import router from '@/router';
-import { getToken, setToken, removeToken } from '@/utils/cookie';
+import { getToken, removeToken } from '@/utils/cookie';
 
 const service = axios.create({
   timeout: 10000
@@ -56,9 +56,7 @@ export default function request (reqData: any): any {
           switch (err.status) {
             case 401:
               result = '登录状态失效，请重新登录';
-              // removeToken();
-              // removeInfo();
-              // router.push('/login');
+              removeToken();
               break;
             case 404:
               result = '找不到目标资源';

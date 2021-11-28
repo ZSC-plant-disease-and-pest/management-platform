@@ -50,10 +50,8 @@ export class videoHttp {
   // 上传视频
   static uploadVideo (params: videoParams, body: any) {
     const data = new FormData();
-    console.log(body)
     for (const item in body) {
       if (body[item].raw) {
-        console.log(body[item].raw)
         data.append('video', body[item].raw);
       }
     }

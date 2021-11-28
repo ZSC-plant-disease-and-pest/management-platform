@@ -214,7 +214,6 @@ export default defineComponent({
     };
     const onChange = (file: any, fileList: Array<any>) => {
       state.havingUploadVideo = true;
-      console.log(fileList)
       state.fileList = fileList[0];
     };
     const handleRemove = () => {
