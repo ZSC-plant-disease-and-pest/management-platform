@@ -1,6 +1,15 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { getToken } from '@/utils/cookie';
+/**
+ * 重构后路由
+ */
+// import home from './modules/home';
+// import news from './modules/news';
+// import disease from './modules/disease';
+// import gardens from './modules/gardens';
+// import ai from './modules/ai';
+// import system from './modules/system';
 
 // 登录
 const login = () => import('@/views/login/index.vue');
@@ -356,6 +365,11 @@ const routes: Array<RouteRecordRaw> = [
   }
 ];
 
+/**
+ * 重构后路由配置
+ */
+// routes.push(home, news, disease, gardens, ai, system);
+
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
@@ -363,7 +377,6 @@ const router = createRouter({
 
 // 全局路由守卫
 router.beforeEach((to, from, next) => {
-  // 当前状态 1：已登录 0：未登录
   if (to.path === '/login') {
     next();
   } else {
