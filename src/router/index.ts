@@ -10,6 +10,8 @@ import { getToken } from '@/utils/cookie';
 // import gardens from './modules/gardens';
 // import ai from './modules/ai';
 // import system from './modules/system';
+// 测试
+import disease from './modules/disease';
 
 // 登录
 const login = () => import('@/views/login/index.vue');
@@ -369,6 +371,9 @@ const routes: Array<RouteRecordRaw> = [
  * 重构后路由配置
  */
 // routes.push(home, news, disease, gardens, ai, system);
+
+// 测试
+routes.push(disease);
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
