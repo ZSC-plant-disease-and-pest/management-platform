@@ -13,9 +13,9 @@
   </el-button>
 
   <el-table
+    v-loading="isLoading"
     :data="tableDataList"
     :row-style="tableRowStyle"
-    v-loading="isLoading"
     @sort-change="sortChange"
     @selection-change="selectChange"
     @select-all="selectAll"
