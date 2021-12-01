@@ -18,8 +18,7 @@ class UserStoreModule implements Module<UserStore, any> {
   namespaced = true;
 
   state: loginParams = {
-    state: 0,
-    name: ''
+    status: false
   };
 
   mutations: MutationTree<loginParams> = {
@@ -46,6 +45,9 @@ class UserStoreModule implements Module<UserStore, any> {
     },
     setState (state, userstate) {
       state.state = userstate;
+    },
+    setStatus (state, status) {
+      state.status = status;
     }
   };
 
@@ -55,15 +57,10 @@ class UserStoreModule implements Module<UserStore, any> {
         loginHttp.login(loginForm)
           .then((response: any) => {
             if (response.data === '登录成功') {
-              commit('setUserId', response.user.id);
-              commit('setUsername', response.user.username);
-              commit('setName', response.user.name);
-              commit('setRole', response.user.role);
-              commit('setState', response.user.state);
-              commit('setMobile', response.user.mobile);
-              commit('setEMail', response.user.e_mail);
+              commit('setStatus', true);
               commit('setToken', response.token);
               setToken(response.token);
+              this.dispatch('user/getUserInfo');
               resolve('OK');
             } else {
               ElMessage.warning(response);
@@ -87,13 +84,35 @@ class UserStoreModule implements Module<UserStore, any> {
               commit('setEMail', '');
               commit('setMobile', '');
               commit('setToken', '');
-              commit('setState', 0);
+              commit('setStatus', false);
               removeToken();
               resolve('OK');
             } else {
               ElMessage.warning(response);
               reject(response);
             }
+          })
+          .catch((error: any) => {
+            reject(error);
+          });
+      });
+    },
+    getUserInfo ({ commit }) {
+      return new Promise((resolve, reject) => {
+        loginHttp.getUserInfo()
+          .then((response: any) => {
+            if (!response.id) {
+              reject(response);
+            }
+            commit('setUserId', response.id);
+            commit('setUsername', response.username);
+            commit('setName', response.name);
+            commit('setRole', response.role);
+            commit('setState', response.state);
+            commit('setMobile', response.mobile);
+            commit('setEMail', response.e_mail);
+            commit('setStatus', true);
+            resolve(response);
           })
           .catch((error: any) => {
             reject(error);
@@ -117,6 +136,9 @@ class UserStoreModule implements Module<UserStore, any> {
     },
     getState (state: loginParams) {
       return state.state;
+    },
+    getStatus (state: loginParams) {
+      return state.status;
     }
   };
 }

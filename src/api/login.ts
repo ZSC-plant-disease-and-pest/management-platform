@@ -20,6 +20,9 @@ export interface loginParams extends searchByInfo {
   // 用户状态 0：可用 1：不可用
   state?: number
 
+  // 当前登录状态 true: 已登录
+  status?: boolean
+
   // 手机号
   mobile?: string
 
@@ -57,6 +60,14 @@ export class loginHttp {
     return http({
       url: '/api/login/logout',
       method: 'post'
+    });
+  }
+
+  // 通过token获取个人信息
+  static getUserInfo () {
+    return http({
+      url: '/api/login/getLogin',
+      method: 'get'
     });
   }
 }

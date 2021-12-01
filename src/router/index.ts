@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { getToken } from '@/utils/cookie';
+import store from '@/store';
 /**
  * 重构后路由
  */
@@ -385,11 +386,17 @@ router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next();
   } else {
-    if (getToken()) {
+    if (getToken() && store.getters['user/getStatus']) {
       next();
     } else {
-      next('/login');
-      ElMessage.warning('请先登录');
+      store.dispatch('user/getUserInfo')
+        .then(() => {
+          next();
+        })
+        .catch(() => {
+          next('/login');
+          ElMessage.warning('请先登录');
+        });
     }
   }
 });

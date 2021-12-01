@@ -206,12 +206,26 @@
 </template>
 
 <script lang="ts">
-
 import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { diseaseHttp, diseaseParams } from '@/api/disease';
 import { useRouter, useRoute } from 'vue-router';
 import { validateDamagedParts, validateOverview } from './rules';
 import BasicImageUpload from '@/components/common/BasicImageUpload/index.vue';
+
+const damagedPartsOptions = [
+  { value: '根' },
+  { value: '茎' },
+  { value: '叶' },
+  { value: '花' },
+  { value: '果实' }
+];
+const overviewOptions = [
+  { value: '腐烂' },
+  { value: '变色' },
+  { value: '坏死' },
+  { value: '萎蔫' },
+  { value: '畸形' }
+];
 
 export default defineComponent({
   components: { BasicImageUpload },
@@ -255,6 +269,8 @@ export default defineComponent({
           trigger: ['blur', 'change']
         }]
       },
+      damagedPartsOptions,
+      overviewOptions,
       isLoading: false,
       mode: '',
       completed: false,
@@ -262,20 +278,6 @@ export default defineComponent({
       imagePreviewUrl: '',
       imagePreviewDialog: false
     });
-    const damagedPartsOptions: Array<any> = reactive([
-      { value: '根' },
-      { value: '茎' },
-      { value: '叶' },
-      { value: '花' },
-      { value: '果实' }
-    ]);
-    const overviewOptions: Array<any> = reactive([
-      { value: '腐烂' },
-      { value: '变色' },
-      { value: '坏死' },
-      { value: '萎蔫' },
-      { value: '畸形' }
-    ]);
 
     const getDiseaseById = (id: number) => {
       if (id < 0) back();
