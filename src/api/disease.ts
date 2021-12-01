@@ -106,4 +106,32 @@ export class diseaseHttp {
       data: params
     });
   }
+
+  /**
+   * 重构代码
+   */
+  // 新增病害信息与对应数据集
+  static addDisease (params: diseaseParams, body: Array<any>) {
+    const data = new FormData();
+    for (const item in body) {
+      if (body[item].raw) {
+        data.append('img', body[item].raw);
+      }
+    }
+    const JSONParams = JSON.stringify(params);
+    data.append('diseaseVO', new Blob([JSONParams], { type: 'application/json' }));
+    return http({
+      url: '/api/diseaseInfo/create',
+      method: 'post',
+      data
+    });
+  }
+
+  // 通过 ID 查看病害详情
+  static getDiseaseById (id: number) {
+    return http({
+      url: `/api/diseaseInfo/searchById/${id}`,
+      method: 'get'
+    });
+  }
 }
