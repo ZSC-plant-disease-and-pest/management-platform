@@ -6,7 +6,7 @@
     :model="form"
     size="small"
     label-width="130px"
-    v-show="status === 'incomplete'"
+    v-show="!completed"
   >
     <el-row :gutter="20">
       <el-col :span="12">
@@ -144,7 +144,7 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="0" class="textarea-row">
+    <el-row :gutter="20" class="textarea-row">
       <el-col :span="24">
         <el-form-item label="治理建议：" prop="suggestion">
           <el-input
@@ -159,44 +159,17 @@
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row :gutter="0" v-if="type === 'add'">
+
+    <el-row :gutter="0" v-if="mode === 'new'">
       <el-col :span="24">
         <el-form-item label="上传图片：" prop="picture" >
-          <el-upload
-            ref="uploadImageRef"
-            action="#"
-            list-type="picture-card"
-            :auto-upload="false"
-            :on-change="onChange"
-            :limit="10"
-            :multiple="true"
-            accept=".gif,.jpg,.jpeg,.png,.bmp"
-          >
-            <template #default>
-              <i class="el-icon-plus"></i>
-            </template>
-            <template #file="{ file }">
-              <div>
-                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                <span class="el-upload-list__item-actions">
-                  <span
-                    class="el-upload-list__item-preview"
-                    @click="handlePictureCardPreview(file)"
-                  >
-                    <i class="el-icon-zoom-in"></i>
-                  </span>
-                  <span
-                    class="el-upload-list__item-delete"
-                    @click="handleRemove(file)"
-                  >
-                    <i class="el-icon-delete"></i>
-                  </span>
-                </span>
-              </div>
-            </template>
-          </el-upload>
-          <el-dialog v-model="dialogImageVisible" title="查看图片">
-            <img style="width: 100%; height: 75%;" :src="dialogImageUrl" alt="" />
+          <BasicImageUpload
+            ref="imageUploadRef"
+            @onChange="fileListChange"
+            @preview="filePreview"
+          />
+          <el-dialog v-model="imagePreviewDialog" title="查看图片">
+            <img style="width: 100%; height: 75%;" :src="imagePreviewUrl" alt="" />
           </el-dialog>
         </el-form-item>
       </el-col>
@@ -215,16 +188,17 @@
       </el-col>
     </el-row>
   </el-form>
+
   <el-result
+    v-show="completed"
+    :title="mode === 'new' ? '新增成功' : '更新成功'"
     icon="success"
-    :title="type === 'add' ? '新增成功' : '更新成功'"
-    v-show="status === 'complete'"
   >
     <template #extra>
       <el-button @click="back">
         返回
       </el-button>
-      <el-button type="primary" @click="keep" v-show="type === 'add'">
+      <el-button type="primary" @click="keep" v-show="mode === 'new'">
         继续新增
       </el-button>
     </template>
@@ -236,9 +210,11 @@
 import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { diseaseHttp, diseaseParams } from '@/api/disease';
 import { useRouter, useRoute } from 'vue-router';
+import { validateDamagedParts, validateOverview } from './rules';
+import BasicImageUpload from '@/components/common/BasicImageUpload/index.vue';
 
 export default defineComponent({
-  name: 'add-update',
+  components: { BasicImageUpload },
   setup () {
     const route = useRoute();
     const router = useRouter();
@@ -262,32 +238,11 @@ export default defineComponent({
         suggestion: ''
       } as diseaseParams,
       formRef: ref(),
-      uploadRef: ref(),
-      uploadImageRef: ref(),
+      imageUploadRef: ref(),
       rules: {
         name: [{ required: true, message: '请输入病害名称', trigger: ['blur', 'change'] }],
-        damagedParts: [{
-          required: true,
-          validator: (rule: any, value: any, callback: any) => {
-            if (state.form.damagedParts?.length === 0) {
-              callback(new Error('请选择危害部位'));
-            } else {
-              callback();
-            }
-          },
-          trigger: ['blur']
-        }],
-        overview: [{
-          required: true,
-          validator: (rule: any, value: any, callback: any) => {
-            if (state.form.overview?.length === 0) {
-              callback(new Error('请选择危害概述'));
-            } else {
-              callback();
-            }
-          },
-          trigger: ['blur']
-        }],
+        damagedParts: [{ required: true, validator: validateDamagedParts, trigger: ['blur'] }],
+        overview: [{ required: true, validator: validateOverview, trigger: ['blur'] }],
         picture: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
@@ -300,16 +255,12 @@ export default defineComponent({
           trigger: ['blur', 'change']
         }]
       },
-      // 界面类型：add 新增，update 更新
-      type: '',
       isLoading: false,
-      // 表单状态：complete 完成，incomplete 未完成
-      status: 'incomplete',
+      mode: '',
+      completed: false,
       fileList: [] as Array<any>,
-      dialogImageUrl: '',
-      dialogImageVisible: false,
-      // 模式
-      mode: ''
+      imagePreviewUrl: '',
+      imagePreviewDialog: false
     });
     const damagedPartsOptions: Array<any> = reactive([
       { value: '根' },
@@ -327,32 +278,34 @@ export default defineComponent({
     ]);
 
     const getDiseaseById = (id: number) => {
-      if (id <= 0) return 0;
+      if (id < 0) back();
+      else if (id === 0) return 0;
+      else {
+        state.isLoading = true;
+        diseaseHttp.getDiseaseById(id)
+          .then((response: any) => { state.form = response; })
+          .catch(() => { back(); })
+          .finally(() => { state.isLoading = false; });
+      }
     };
+
     const submit = () => {
       state.formRef.validate().then((valid: boolean) => {
         if (valid) {
           state.isLoading = true;
-          if (route.path.split('/').slice(-1)[0] === 'add') {
-            diseaseHttp.createDisease(state.form, state.fileList)
-              .then(() => {
-                state.status = 'complete';
-              })
-              .finally(() => {
-                state.isLoading = false;
-              });
-          } else if (route.path.split('/').slice(-1)[0] === 'update') {
+          if (state.mode === 'new') {
+            diseaseHttp.addDisease(state.form, state.fileList)
+              .then(() => { state.completed = true; })
+              .finally(() => { state.isLoading = false; });
+          } else if (state.mode === 'edit') {
             diseaseHttp.updateDisease(state.form)
-              .then(() => {
-                state.status = 'complete';
-              })
-              .finally(() => {
-                state.isLoading = false;
-              });
+              .then(() => { state.completed = true; })
+              .finally(() => { state.isLoading = false; });
           }
         }
       });
     };
+
     const back = () => {
       router.push({
         path: '/admin/disease-data',
@@ -360,24 +313,19 @@ export default defineComponent({
         params: { type: 'refresh' }
       });
     };
+
     const keep = () => {
       state.formRef.resetFields();
-      state.uploadImageRef.clearFiles();
-      state.fileList = [];
-      state.status = 'incomplete';
+      state.imageUploadRef.clear();
     };
-    const onChange = (file: any, fileList: Array<any>) => {
+
+    const fileListChange = (fileList: Array<any>) => {
       state.fileList = fileList;
     };
-    const handleRemove = (file: any) => {
-      const removeIndex = state.fileList.findIndex((value: any) => value.uid === file.uid);
-      state.fileList.splice(removeIndex, 1);
-    };
-    const handlePictureCardPreview = (file: any) => {
-      if (file.url !== undefined) {
-        state.dialogImageUrl = file.url;
-      }
-      state.dialogImageVisible = true;
+
+    const filePreview = (file: any) => {
+      state.imagePreviewUrl = file?.url;
+      state.imagePreviewDialog = true;
     };
 
     return {
@@ -387,16 +335,11 @@ export default defineComponent({
       keep,
       damagedPartsOptions,
       overviewOptions,
-      onChange,
-      handleRemove,
-      handlePictureCardPreview
+      fileListChange,
+      filePreview
     };
   }
 });
 </script>
 
-<style lang="scss" scoped>
-::v-deep .el-upload-list__item {
-  transition: none !important;
-}
-</style>
+<style lang="scss" scoped></style>
