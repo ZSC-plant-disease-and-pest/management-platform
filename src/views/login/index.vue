@@ -40,12 +40,7 @@
 </template>
 
 <script lang="ts">
-import {
-  ref,
-  toRefs,
-  reactive,
-  defineComponent
-} from 'vue';
+import { defineComponent, reactive, ref, toRefs } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
