@@ -175,7 +175,7 @@ export default defineComponent({
         if (valid) {
           state.isLoading = true;
           if (route.path.split('/').slice(-1)[0] === 'add') {
-            newsHttp.createNews(state.form)
+            newsHttp.addNews(state.form)
               .then(() => {
                 state.status = 'complete';
               })

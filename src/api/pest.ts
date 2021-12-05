@@ -113,7 +113,7 @@ export class pestHttp {
   /**
    * 重构代码
    */
-  // 新增病害信息与对应数据集
+  // 新增虫害信息与对应数据集
   static addPest (params: pestParams, body: Array<any>) {
     const data = new FormData();
     for (const item in body) {
@@ -130,7 +130,7 @@ export class pestHttp {
     });
   }
 
-  // 通过 ID 查看病害详情
+  // 通过 ID 查看虫害详情
   static getPestById (id: number) {
     return http({
       url: `/api/pestInfo/searchById/${id}`,

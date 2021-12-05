@@ -24,10 +24,10 @@ import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue
 import { pestHttp, pestParams } from '@/api/pest';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
 import BasicTable from '@/components/common/BasicTable/index.vue';
 import BasicSearch from '@/components/common/BasicSearch/index.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
-import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
 
 export default defineComponent({
   components: { BasicTable, BasicSearch, BasicPage },
@@ -55,10 +55,7 @@ export default defineComponent({
       isLoading: false
     });
 
-    const pestParams = reactive({
-      page: 0,
-      size: 10
-    } as pestParams);
+    const pestParams = reactive({ page: 0, size: 10 } as pestParams);
     const getPest = () => {
       state.isLoading = true;
       pestHttp.getPest(pestParams)
@@ -70,9 +67,7 @@ export default defineComponent({
             state.tableDataList.push(response.content[i]);
           }
         })
-        .finally(() => {
-          state.isLoading = false;
-        });
+        .finally(() => { state.isLoading = false; });
     };
 
     const deletePest = (selectedIds: any) => {
@@ -85,9 +80,7 @@ export default defineComponent({
             ElMessage.success('删除成功');
             getPest();
           })
-          .finally(() => {
-            state.isLoading = false;
-          });
+          .finally(() => { state.isLoading = false; });
       }
     };
 
@@ -124,11 +117,7 @@ export default defineComponent({
 
     // 排序改变
     const sortChange = (params: any) => {
-      if (params.prop === null) {
-        pestParams.sort = '';
-      } else {
-        pestParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
-      }
+      pestParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
       getPest();
     };
 

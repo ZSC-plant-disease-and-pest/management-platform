@@ -71,7 +71,7 @@ export class newsHttp {
   }
 
   // 创建新闻
-  static createNews (params: newsParams) {
+  static addNews (params: newsParams) {
     return http({
       url: '/api/news/addArticle',
       method: 'post',
@@ -88,7 +88,7 @@ export class newsHttp {
   }
 
   // 查询全部新闻
-  static searchNews (params: (newsParams | null)) {
+  static getNews (params: (newsParams | null)) {
     return http({
       url: '/api/news/search',
       method: 'get',
@@ -111,6 +111,17 @@ export class newsHttp {
       url: `/api/news/update/${id}`,
       method: 'put',
       data: params
+    });
+  }
+
+  /**
+   * 重构代码
+   */
+  // 通过 ID 查看新闻详情
+  static getNewsById (id: number) {
+    return http({
+      url: `/api/news/search/${id}`,
+      method: 'get'
     });
   }
 }

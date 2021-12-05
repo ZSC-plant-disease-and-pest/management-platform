@@ -28,7 +28,7 @@ export class newsTypeHttp {
   }
 
   // 查询全部新闻类型
-  static searchNewsType (params: (newsTypeParams | null)) {
+  static getNewsType (params: (newsTypeParams | null)) {
     return http({
       url: '/api/news/newType/search',
       method: 'get',

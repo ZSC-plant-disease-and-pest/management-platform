@@ -11,8 +11,10 @@ import store from '@/store';
 // import gardens from './modules/gardens';
 // import ai from './modules/ai';
 // import system from './modules/system';
+
 // 测试
 import disease from './modules/disease';
+import news from './modules/news';
 
 // 登录
 const login = () => import('@/views/login/index.vue');
@@ -375,6 +377,7 @@ const routes: Array<RouteRecordRaw> = [
 
 // 测试
 routes.push(disease);
+routes.push(news);
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

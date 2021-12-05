@@ -93,7 +93,7 @@ export default defineComponent({
     } as newsTypeParams);
     const searchNewsType = () => {
       state.isLoading = true;
-      newsTypeHttp.searchNewsType(newsTypeParams)
+      newsTypeHttp.getNewsType(newsTypeParams)
         .then((response: any) => {
           state.total = response.totalElements;
           state.size = response.size;

@@ -24,10 +24,10 @@ import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue
 import { diseaseHttp, diseaseParams } from '@/api/disease';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
 import BasicTable from '@/components/common/BasicTable/index.vue';
 import BasicSearch from '@/components/common/BasicSearch/index.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
+import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
 
 export default defineComponent({
   components: { BasicTable, BasicSearch, BasicPage },
@@ -55,7 +55,10 @@ export default defineComponent({
       isLoading: false
     });
 
-    const diseaseParams = reactive({ page: 0, size: 10 } as diseaseParams);
+    const diseaseParams = reactive({
+      page: 0,
+      size: 10
+    } as diseaseParams);
     const getDisease = () => {
       state.isLoading = true;
       diseaseHttp.getDisease(diseaseParams)
@@ -67,7 +70,9 @@ export default defineComponent({
             state.tableDataList.push(response.content[i]);
           }
         })
-        .finally(() => { state.isLoading = false; });
+        .finally(() => {
+          state.isLoading = false;
+        });
     };
 
     const deleteDisease = (selectedIds: any) => {
@@ -80,7 +85,9 @@ export default defineComponent({
             ElMessage.success('删除成功');
             getDisease();
           })
-          .finally(() => { state.isLoading = false; });
+          .finally(() => {
+            state.isLoading = false;
+          });
       }
     };
 
@@ -117,7 +124,11 @@ export default defineComponent({
 
     // 排序改变
     const sortChange = (params: any) => {
-      diseaseParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
+      if (params.prop === null) {
+        diseaseParams.sort = '';
+      } else {
+        diseaseParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
+      }
       getDisease();
     };
 

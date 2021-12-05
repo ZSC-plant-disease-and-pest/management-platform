@@ -130,7 +130,7 @@ export default defineComponent({
     } as newsParams);
     const searchNews = () => {
       state.isLoading = true;
-      newsHttp.searchNews(newsParams)
+      newsHttp.getNews(newsParams)
         .then((response: any) => {
           state.total = response.totalElements;
           state.size = response.size;
@@ -146,7 +146,7 @@ export default defineComponent({
     };
     const searchNewsType = () => {
       state.newsTypeIsLoading = true;
-      newsTypeHttp.searchNewsType(null)
+      newsTypeHttp.getNewsType(null)
         .then((response: any) => {
           console.log(response);
           // 响应式的添加到表格中
