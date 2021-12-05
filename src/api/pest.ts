@@ -63,7 +63,7 @@ export class pestHttp {
   }
 
   // 分页查询虫害信息
-  static searchPest (params: (pestParams | null)) {
+  static getPest (params: (pestParams | null)) {
     return http({
       url: '/api/pestInfo/search',
       method: 'get',
@@ -100,10 +100,41 @@ export class pestHttp {
   // 修改虫害与对应数据集信息
   static updatePest (params: pestParams) {
     const { id } = params;
+    const data = new FormData();
+    const JSONParams = JSON.stringify(params);
+    data.append('pestVO', new Blob([JSONParams], { type: 'application/json' }));
     return http({
       url: `/api/pestInfo/updateById/${id}`,
       method: 'put',
-      data: params
+      data
+    });
+  }
+
+  /**
+   * 重构代码
+   */
+  // 新增病害信息与对应数据集
+  static addPest (params: pestParams, body: Array<any>) {
+    const data = new FormData();
+    for (const item in body) {
+      if (body[item].raw) {
+        data.append('img', body[item].raw);
+      }
+    }
+    const JSONParams = JSON.stringify(params);
+    data.append('pestVO', new Blob([JSONParams], { type: 'application/json' }));
+    return http({
+      url: '/api/pestInfo/create',
+      method: 'post',
+      data
+    });
+  }
+
+  // 通过 ID 查看病害详情
+  static getPestById (id: number) {
+    return http({
+      url: `/api/pestInfo/searchById/${id}`,
+      method: 'get'
     });
   }
 }

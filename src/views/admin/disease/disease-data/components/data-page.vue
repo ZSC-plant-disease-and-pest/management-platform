@@ -228,6 +228,7 @@ const overviewOptions = [
 ];
 
 export default defineComponent({
+  name: 'exclude',
   components: { BasicImageUpload },
   setup () {
     const route = useRoute();

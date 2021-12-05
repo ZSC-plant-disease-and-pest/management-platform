@@ -74,6 +74,7 @@ export default defineComponent({
           state.isLoading = false;
         });
     };
+
     const deleteDisease = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
@@ -106,7 +107,7 @@ export default defineComponent({
         }
         getDisease();
       } else if (name === 'add') {
-        router.push({ path: route.path + '/add', name: route.name as string + 'Add' });
+        router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: '0' } });
       } else if (name === 'delete') {
         deleteDisease(data);
       }
@@ -117,8 +118,7 @@ export default defineComponent({
       if (name === 'view') {
         window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
       } else if (name === 'edit') {
-        // 利用Id来进入编辑页面(查询后填入表单)
-        router.push({ path: route.path + '/update', name: route.name as string + 'Update', params: data });
+        router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: data.id } });
       }
     };
 

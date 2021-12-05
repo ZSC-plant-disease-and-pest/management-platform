@@ -134,7 +134,7 @@ export default defineComponent({
 
     // 表格头部按键
     const topButtonClick = (name: string) => {
-      if (name === 'deletee') {
+      if (name === 'delete') {
         emit('topButtonClick', name, selectedIds);
       } else {
         emit('topButtonClick', name);

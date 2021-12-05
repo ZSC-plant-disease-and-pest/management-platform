@@ -91,7 +91,7 @@ export default defineComponent({
             state.isLoading = false;
           });
       } else if (props.type === 'pest') {
-        pestHttp.searchPest(datasetParams)
+        pestHttp.getPest(datasetParams)
           .then((response: any) => {
             state.total = response.totalElements;
             state.list = [];

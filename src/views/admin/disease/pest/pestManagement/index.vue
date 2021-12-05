@@ -96,7 +96,7 @@ export default defineComponent({
     } as pestParams);
     const getPest = () => {
       state.isLoading = true;
-      pestHttp.searchPest(pestParams)
+      pestHttp.getPest(pestParams)
         .then((response: any) => {
           state.total = response.totalElements;
           state.size = response.size;

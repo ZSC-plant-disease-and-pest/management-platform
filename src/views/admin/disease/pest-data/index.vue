@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
-import { diseaseHttp, diseaseParams } from '@/api/disease';
+import { pestHttp, pestParams } from '@/api/pest';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import BasicTable from '@/components/common/BasicTable/index.vue';
@@ -35,12 +35,12 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
-      getDisease();
+      getPest();
     });
     onUpdated(() => {
       if (route.params.type === 'refresh') {
         route.params.type = '';
-        getDisease();
+        getPest();
       }
     });
 
@@ -55,13 +55,13 @@ export default defineComponent({
       isLoading: false
     });
 
-    const diseaseParams = reactive({
+    const pestParams = reactive({
       page: 0,
       size: 10
-    } as diseaseParams);
-    const getDisease = () => {
+    } as pestParams);
+    const getPest = () => {
       state.isLoading = true;
-      diseaseHttp.getDisease(diseaseParams)
+      pestHttp.getPest(pestParams)
         .then((response: any) => {
           state.pageList.total = response.totalElements;
           state.pageList.size = response.size;
@@ -74,15 +74,16 @@ export default defineComponent({
           state.isLoading = false;
         });
     };
-    const deleteDisease = (selectedIds: any) => {
+
+    const deletePest = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
       } else {
         state.isLoading = true;
-        diseaseHttp.deleteDisease(selectedIds.join(','))
+        pestHttp.deletePest(selectedIds.join(','))
           .then(() => {
             ElMessage.success('删除成功');
-            getDisease();
+            getPest();
           })
           .finally(() => {
             state.isLoading = false;
@@ -95,55 +96,54 @@ export default defineComponent({
       if (name === 'search') {
         for (const index in data) {
           if (data[index].name === 'name') {
-            diseaseParams.name = data[index].value === '' ? undefined : data[index].value;
+            pestParams.name = data[index].value === '' ? undefined : data[index].value;
           }
         }
-        getDisease();
+        getPest();
       } else if (name === 'reset') {
         for (const index in state.searchList) {
           state.searchList[index].value = '';
-          diseaseParams.name = undefined;
+          pestParams.name = undefined;
         }
-        getDisease();
+        getPest();
       } else if (name === 'add') {
-        router.push({ path: route.path + '/add', name: route.name as string + 'Add' });
+        router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: '0' } });
       } else if (name === 'delete') {
-        deleteDisease(data);
+        deletePest(data);
       }
     };
 
     // 表格按键
     const tableButtonClick = (name: string, data: any) => {
       if (name === 'view') {
-        window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
+        window.open(`http://localhost:8082/pest/detail/${data.id}`, '_blank');
       } else if (name === 'edit') {
-        // 利用Id来进入编辑页面(查询后填入表单)
-        router.push({ path: route.path + '/update', name: route.name as string + 'Update', params: data });
+        router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: data.id } });
       }
     };
 
     // 排序改变
     const sortChange = (params: any) => {
       if (params.prop === null) {
-        diseaseParams.sort = '';
+        pestParams.sort = '';
       } else {
-        diseaseParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
+        pestParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
       }
-      getDisease();
+      getPest();
     };
 
     // 分页改变
     const handleChange = (name: string, data: any) => {
       if (name === 'page') {
-        diseaseParams.page = data - 1;
+        pestParams.page = data - 1;
         state.pageList.page = data;
       } else if (name === 'size') {
-        diseaseParams.size = data;
-        diseaseParams.page = 0;
+        pestParams.size = data;
+        pestParams.page = 0;
         state.pageList.size = data;
         state.pageList.page = 1;
       }
-      getDisease();
+      getPest();
     };
 
     return {
@@ -151,7 +151,7 @@ export default defineComponent({
       topButtonClick,
       tableButtonClick,
       sortChange,
-      deleteDisease,
+      deletePest,
       handleChange
     };
   }

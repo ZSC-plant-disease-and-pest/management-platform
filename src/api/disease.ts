@@ -100,10 +100,13 @@ export class diseaseHttp {
   // 修改病害与对应数据集信息
   static updateDisease (params: diseaseParams) {
     const { id } = params;
+    const data = new FormData();
+    const JSONParams = JSON.stringify(params);
+    data.append('diseaseVO', new Blob([JSONParams], { type: 'application/json' }));
     return http({
       url: `/api/diseaseInfo/updateById/${id}`,
       method: 'put',
-      data: params
+      data
     });
   }
 

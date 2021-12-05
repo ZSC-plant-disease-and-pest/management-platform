@@ -4,17 +4,18 @@
     class="form-common"
     :rules="rules"
     :model="form"
+    v-loading="isLoading"
     size="small"
     label-width="130px"
     v-show="!completed"
   >
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label="病害名称：" prop="name">
+        <el-form-item label="虫害名称：" prop="name">
           <el-input
             class="input-common"
             v-model="form.name"
-            placeholder="请输入病害名称"
+            placeholder="请输入虫害名称"
           />
         </el-form-item>
       </el-col>
@@ -72,14 +73,14 @@
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="病原信息：" prop="pathogen">
+        <el-form-item label="形态特征：" prop="appearance">
           <el-input
             class="textarea-common"
-            v-model="form.pathogen"
+            v-model="form.appearance"
             :autosize="{ minRows: 4, maxRows: 4}"
             type="textarea"
             resize="none"
-            placeholder="请输入病原信息"
+            placeholder="请输入形态特征"
             clearable
           />
         </el-form-item>
@@ -207,7 +208,7 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
-import { diseaseHttp, diseaseParams } from '@/api/disease';
+import { pestHttp, pestParams } from '@/api/pest';
 import { useRouter, useRoute } from 'vue-router';
 import { validateDamagedParts, validateOverview } from './rules';
 import BasicImageUpload from '@/components/common/BasicImageUpload/index.vue';
@@ -228,13 +229,14 @@ const overviewOptions = [
 ];
 
 export default defineComponent({
+  name: 'exclude',
   components: { BasicImageUpload },
   setup () {
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
       state.mode = Number(route.params.id) === 0 ? 'new' : 'edit';
-      getDiseaseById(Number(route.params.id));
+      getPestById(Number(route.params.id));
     });
 
     const state = reactive({
@@ -244,24 +246,24 @@ export default defineComponent({
         overview: [],
         damagedParts: [],
         affectedPlants: '',
-        pathogen: '',
+        appearance: '',
         description: '',
         regularity: '',
         seasons: '',
         regions: '',
         suggestion: ''
-      } as diseaseParams,
+      } as pestParams,
       formRef: ref(),
       imageUploadRef: ref(),
       rules: {
-        name: [{ required: true, message: '请输入病害名称', trigger: ['blur', 'change'] }],
+        name: [{ required: true, message: '请输入虫害名称', trigger: ['blur', 'change'] }],
         damagedParts: [{ required: true, validator: validateDamagedParts, trigger: ['blur'] }],
         overview: [{ required: true, validator: validateOverview, trigger: ['blur'] }],
         picture: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
             if (state.fileList.length === 0) {
-              callback(new Error('请上传至少一张病害图片'));
+              callback(new Error('请上传至少一张虫害图片'));
             } else {
               callback();
             }
@@ -279,12 +281,12 @@ export default defineComponent({
       imagePreviewDialog: false
     });
 
-    const getDiseaseById = (id: number) => {
+    const getPestById = (id: number) => {
       if (id < 0) back();
       else if (id === 0) return 0;
       else {
         state.isLoading = true;
-        diseaseHttp.getDiseaseById(id)
+        pestHttp.getPestById(id)
           .then((response: any) => { state.form = response; })
           .catch(() => { back(); })
           .finally(() => { state.isLoading = false; });
@@ -296,11 +298,11 @@ export default defineComponent({
         if (valid) {
           state.isLoading = true;
           if (state.mode === 'new') {
-            diseaseHttp.addDisease(state.form, state.fileList)
+            pestHttp.addPest(state.form, state.fileList)
               .then(() => { state.completed = true; })
               .finally(() => { state.isLoading = false; });
           } else if (state.mode === 'edit') {
-            diseaseHttp.updateDisease(state.form)
+            pestHttp.updatePest(state.form)
               .then(() => { state.completed = true; })
               .finally(() => { state.isLoading = false; });
           }
@@ -310,8 +312,8 @@ export default defineComponent({
 
     const back = () => {
       router.push({
-        path: '/admin/disease-data',
-        name: 'disease-data',
+        path: '/admin/pest-data',
+        name: 'pest-data',
         params: { type: 'refresh' }
       });
     };

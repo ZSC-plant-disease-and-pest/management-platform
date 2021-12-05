@@ -42,7 +42,6 @@ export default defineComponent({
     const onChange = (file: any, fileList: Array<any>) => {
       state.fileList = fileList;
       emit('onChange', state.fileList);
-      console.log(state.fileList);
     };
 
     // 移除文件时
@@ -50,20 +49,17 @@ export default defineComponent({
       const removeIndex = state.fileList.findIndex((value: any) => value.uid === file.uid);
       state.fileList.splice(removeIndex, 1);
       emit('onChange', state.fileList);
-      console.log(state.fileList);
     };
 
     // 预览文件(图片或视频)
     const preview = (file: any) => {
       emit('preview', file);
-      console.log(file);
     };
 
     // 清空文件
     const clear = () => {
-      state.fileList = [];
+      state.fileList.splice(0, state.fileList.length);
       emit('onChange', state.fileList);
-      console.log('clear');
     };
 
     return {
