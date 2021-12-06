@@ -1,15 +1,15 @@
 <template>
   <el-table
     class="newsTypeTable"
+    v-loading="loading"
     :data="tableDataList"
     :row-style="tableRowStyle"
-    v-loading="loading"
-    border
-    style="width: 100%; minWidth: 180px"
-    height="calc(100vh - 165px)"
     :header-row-style="{'color': '#666666'}"
     :header-cell-style="{'backgroundColor': '#8ccee8', 'textAlign': 'center'}"
     @row-click="rowClick"
+    border
+    height="798px"
+    style="width: 100%; minWidth: 180px"
   >
     <el-table-column
       v-for="item in tableColumnList"

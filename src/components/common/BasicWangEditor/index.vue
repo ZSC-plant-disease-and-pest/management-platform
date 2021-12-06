@@ -64,6 +64,7 @@ export default defineComponent({
 
     const edit = (data: any) => {
       state.editorData = data;
+      emit('editorContentChange', data);
     };
 
     return {

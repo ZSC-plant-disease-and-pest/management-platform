@@ -2,6 +2,7 @@
   <el-form
     ref="formRef"
     class="form-common"
+    v-loading="isLoading"
     :rules="rules"
     :model="form"
     size="small"
@@ -31,10 +32,9 @@
 
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label="新闻类型：" prop="newsType">
+        <el-form-item label="新闻类型：" prop="newTypeId">
           <NewsTypeSelector
             ref="newsTypeSelectorRef"
-            :newsTypeId="Number(form.newTypeId)"
             @selectChange="newsTypeSelectChange"
           />
         </el-form-item>
@@ -47,6 +47,7 @@
           <BasicWangEditor
             ref="basicWangEditorRef"
             :content="form.content"
+            :key="basicWangEditorKey"
             @editorContentChange="editorContentChange"
           />
         </el-form-item>
@@ -59,8 +60,15 @@
           <el-button :loading="isLoading" @click="back">
             返回
           </el-button>
-          <el-button type="primary" :loading="isLoading" @click="submit">
-            提交
+          <el-button type="primary" :loading="isLoading" @click="submit(0)">
+            保存
+          </el-button>
+          <el-button v-if="!form.status" type="success" :loading="isLoading" @click="submit(1)">
+            <span v-if="mode === 'edit'"> 发布 </span>
+            <span v-if="mode === 'new'"> 保存并发布 </span>
+          </el-button>
+          <el-button v-else type="warning" :loading="isLoading" @click="submit(2)">
+            下架
           </el-button>
         </el-form-item>
       </el-col>
@@ -87,6 +95,7 @@
 import { defineComponent, onBeforeMount, onMounted, reactive, ref, toRefs } from 'vue';
 import { newsHttp, newsParams } from '@/api/news';
 import { useRouter, useRoute } from 'vue-router';
+import { validateNewTypeId, validateContent } from './rules';
 import NewsTypeSelector from '@/components/selector/NewsTypeSelector.vue';
 import BasicWangEditor from '@/components/common/BasicWangEditor/index.vue';
 
@@ -109,31 +118,24 @@ export default defineComponent({
         id: undefined,
         author: '',
         title: '',
-        newTypeId: -1,
+        newTypeId: undefined,
         description: '',
         content: '',
         status: false
       } as newsParams,
       formRef: ref(),
+      newsTypeSelectorRef: ref(),
       basicWangEditorRef: ref(),
       rules: {
         author: [{ required: true, message: '请输入新闻作者', trigger: ['blur', 'change'] }],
         title: [{ required: true, message: '请输入新闻标题', trigger: ['blur', 'change'] }],
-        newsType: [{
-          required: true,
-          validator: (rule: any, value: any, callback: any) => {
-            if (state.form.newTypeId === undefined) {
-              callback(new Error('请选择新闻类型'));
-            } else {
-              callback();
-            }
-          },
-          trigger: ['blur', 'change']
-        }]
+        newTypeId: [{ required: true, validator: validateNewTypeId, trigger: ['blur', 'change'] }],
+        content: [{ required: true, validator: validateContent, trigger: ['blur', 'change'] }]
       },
       isLoading: false,
       mode: '',
-      completed: false
+      completed: false,
+      basicWangEditorKey: 0
     });
 
     const getNewsById = (id: number) => {
@@ -142,15 +144,25 @@ export default defineComponent({
       else {
         state.isLoading = true;
         newsHttp.getNewsById(id)
-          .then((response: any) => { state.form = response; })
+          .then((response: any) => {
+            state.form = response;
+            state.newsTypeSelectorRef.setNewsType(state.form.newTypeId);
+            state.basicWangEditorRef.edit(state.form.content);
+            state.basicWangEditorKey += 1;
+          })
           .catch(() => { back(); })
           .finally(() => { state.isLoading = false; });
       }
     };
 
-    const submit = () => {
+    const submit = (type: number) => {
       state.formRef.validate().then((valid: boolean) => {
         if (valid) {
+          if (type === 1) {
+            state.form.status = true;
+          } else if (type === 2) {
+            state.form.status = false;
+          }
           state.isLoading = true;
           if (state.mode === 'new') {
             newsHttp.addNews(state.form)
@@ -175,6 +187,8 @@ export default defineComponent({
 
     const keep = () => {
       state.formRef.resetFields();
+      state.newsTypeSelectorRef.setNewsType(undefined);
+      state.basicWangEditorKey += 1;
       state.completed = false;
     };
 

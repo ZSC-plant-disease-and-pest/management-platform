@@ -3,7 +3,8 @@ import { topButtonInterface, tableButtonInterface, tableColumnInterface } from '
 import { pageInterface } from '@/components/common/BasicPage/page';
 
 export const searchList: searchInterface = [
-  { name: 'name', placeholder: '病害名称', value: '' }
+  { name: 'title', placeholder: '新闻标题', value: '' },
+  { name: 'author', placeholder: '新闻作者', value: '' }
 ];
 
 export const topButtonList: topButtonInterface = [

@@ -2,9 +2,9 @@
   <el-form
     ref="formRef"
     class="form-common"
+    v-loading="isLoading"
     :rules="rules"
     :model="form"
-    v-loading="isLoading"
     size="small"
     label-width="130px"
     v-show="!completed"

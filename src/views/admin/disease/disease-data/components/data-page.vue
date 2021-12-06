@@ -2,6 +2,7 @@
   <el-form
     ref="formRef"
     class="form-common"
+    v-loading="isLoading"
     :rules="rules"
     :model="form"
     size="small"
