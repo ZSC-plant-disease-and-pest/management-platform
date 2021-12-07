@@ -73,6 +73,7 @@ export default defineComponent({
       newsTypeIsLoading: false
     });
 
+    // 请求表单数据
     const newsParams = reactive({ page: 0, size: 10 } as newsParams);
     const getNews = () => {
       state.isLoading = true;
@@ -88,6 +89,7 @@ export default defineComponent({
         .finally(() => { state.isLoading = false; });
     };
 
+    // 删除
     const deleteNews = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
@@ -102,6 +104,7 @@ export default defineComponent({
       }
     };
 
+    // 请求新闻类型
     const getNewsType = () => {
       state.newsTypeIsLoading = true;
       newsTypeHttp.getNewsType(null)

@@ -9,6 +9,7 @@
     :topButtonList="topButtonList"
     :tableButtonList="tableButtonList"
     :isLoading="isLoading"
+    :tableButtonWidth="72"
     @topButtonClick="topButtonClick"
     @tableButtonClick="tableButtonClick"
     @sortChange="sortChange"
@@ -17,31 +18,27 @@
     :pageList="pageList"
     @handleChange="handleChange"
   />
+  <DataPageModel
+    ref="dataPageModelRef"
+    @refreshTable="refreshTable"
+  />
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
-import { diseaseHttp, diseaseParams } from '@/api/disease';
-import { useRoute, useRouter } from 'vue-router';
+import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
+import { newsTypeHttp, newsTypeParams } from '@/api/newsType';
 import { ElMessage } from 'element-plus';
+import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
 import BasicTable from '@/components/common/BasicTable/index.vue';
 import BasicSearch from '@/components/common/BasicSearch/index.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
-import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
+import DataPageModel from './components/DataPageModel.vue';
 
 export default defineComponent({
-  components: { BasicTable, BasicSearch, BasicPage },
+  components: { BasicTable, BasicSearch, BasicPage, DataPageModel },
   setup () {
-    const route = useRoute();
-    const router = useRouter();
     onBeforeMount(() => {
-      getDisease();
-    });
-    onUpdated(() => {
-      if (route.params.type === 'refresh') {
-        route.params.type = '';
-        getDisease();
-      }
+      getNewsType();
     });
 
     // 数据仓库
@@ -52,16 +49,15 @@ export default defineComponent({
       tableButtonList,
       tableColumnList,
       pageList,
-      isLoading: false
+      isLoading: false,
+      dataPageModelRef: ref()
     });
 
-    const diseaseParams = reactive({
-      page: 0,
-      size: 10
-    } as diseaseParams);
-    const getDisease = () => {
+    // 请求表单数据
+    const newsTypeParams = reactive({ page: 0, size: 10 } as newsTypeParams);
+    const getNewsType = () => {
       state.isLoading = true;
-      diseaseHttp.getDisease(diseaseParams)
+      newsTypeHttp.getNewsType(newsTypeParams)
         .then((response: any) => {
           state.pageList.total = response.totalElements;
           state.pageList.size = response.size;
@@ -70,24 +66,21 @@ export default defineComponent({
             state.tableDataList.push(response.content[i]);
           }
         })
-        .finally(() => {
-          state.isLoading = false;
-        });
+        .finally(() => { state.isLoading = false; });
     };
 
-    const deleteDisease = (selectedIds: any) => {
+    // 删除
+    const deleteNewsType = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
       } else {
         state.isLoading = true;
-        diseaseHttp.deleteDisease(selectedIds.join(','))
+        newsTypeHttp.deleteNewsType(selectedIds.join(','))
           .then(() => {
             ElMessage.success('删除成功');
-            getDisease();
+            getNewsType();
           })
-          .finally(() => {
-            state.isLoading = false;
-          });
+          .finally(() => { state.isLoading = false; });
       }
     };
 
@@ -96,54 +89,55 @@ export default defineComponent({
       if (name === 'search') {
         for (const index in data) {
           if (data[index].name === 'name') {
-            diseaseParams.name = data[index].value === '' ? undefined : data[index].value;
+            newsTypeParams.name = data[index].value === '' ? undefined : data[index].value;
           }
         }
-        getDisease();
+        getNewsType();
       } else if (name === 'reset') {
         for (const index in state.searchList) {
           state.searchList[index].value = '';
-          diseaseParams.name = undefined;
+          newsTypeParams.name = undefined;
         }
-        getDisease();
+        getNewsType();
       } else if (name === 'add') {
-        router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: '0' } });
+        state.dataPageModelRef.openDialog('new');
       } else if (name === 'delete') {
-        deleteDisease(data);
+        deleteNewsType(data);
       }
     };
 
     // 表格按键
     const tableButtonClick = (name: string, data: any) => {
       if (name === 'view') {
-        window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
+        window.open(`http://localhost:8082/newsType/detail/${data.id}`, '_blank');
       } else if (name === 'edit') {
-        router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: data.id } });
+        state.dataPageModelRef.openDialog('edit', data);
       }
     };
 
     // 排序改变
     const sortChange = (params: any) => {
-      if (params.prop === null) {
-        diseaseParams.sort = '';
-      } else {
-        diseaseParams.sort = params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
-      }
-      getDisease();
+      newsTypeParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
+      getNewsType();
     };
 
     // 分页改变
     const handleChange = (name: string, data: any) => {
       if (name === 'page') {
-        diseaseParams.page = data - 1;
+        newsTypeParams.page = data - 1;
         state.pageList.page = data;
       } else if (name === 'size') {
-        diseaseParams.size = data;
-        diseaseParams.page = 0;
+        newsTypeParams.size = data;
+        newsTypeParams.page = 0;
         state.pageList.size = data;
         state.pageList.page = 1;
       }
-      getDisease();
+      getNewsType();
+    };
+
+    // 刷新
+    const refreshTable = () => {
+      getNewsType();
     };
 
     return {
@@ -151,8 +145,9 @@ export default defineComponent({
       topButtonClick,
       tableButtonClick,
       sortChange,
-      deleteDisease,
-      handleChange
+      deleteNewsType,
+      handleChange,
+      refreshTable
     };
   }
 });

@@ -55,6 +55,7 @@ export default defineComponent({
       isLoading: false
     });
 
+    // 请求表单数据
     const pestParams = reactive({ page: 0, size: 10 } as pestParams);
     const getPest = () => {
       state.isLoading = true;
@@ -70,6 +71,7 @@ export default defineComponent({
         .finally(() => { state.isLoading = false; });
     };
 
+    // 删除
     const deletePest = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
