@@ -2,12 +2,12 @@
   <el-form
     ref="formRef"
     class="form-common"
-    size="small"
+    v-loading="isLoading"
     :rules="rules"
     :model="form"
+    size="small"
     label-width="130px"
-    v-show="status === 'incomplete'"
-    :key="formKey"
+    v-show="!completed"
   >
     <el-row :gutter="20">
       <el-col :span="12">
@@ -20,6 +20,7 @@
         </el-form-item>
       </el-col>
     </el-row>
+
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label="植物学名：" prop="scientificName">
@@ -40,6 +41,7 @@
         </el-form-item>
       </el-col>
     </el-row>
+
     <el-row :gutter="20" class="textarea-row-space">
       <el-col :span="12">
         <el-form-item label="植物科类：" prop="family">
@@ -61,6 +63,7 @@
         </el-form-item>
       </el-col>
     </el-row>
+
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label="植物功能性状：" prop="function">
@@ -97,6 +100,7 @@
         </el-form-item>
       </el-col>
     </el-row>
+
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label="园林植物分类：" prop="garden">
@@ -133,6 +137,7 @@
         </el-form-item>
       </el-col>
     </el-row>
+
     <el-row :gutter="20" class="textarea-row-space">
       <el-col :span="12">
         <el-form-item label="草本植物性状：" prop="herbaceous">
@@ -152,6 +157,7 @@
         </el-form-item>
       </el-col>
     </el-row>
+
     <el-row :gutter="0" class="textarea-row">
       <el-col :span="12">
         <el-form-item label="外貌形态：" prop="appearance">
@@ -180,6 +186,7 @@
         </el-form-item>
       </el-col>
     </el-row>
+
     <el-row :gutter="0" class="textarea-row">
       <el-col :span="12">
         <el-form-item label="植物用途：" prop="usages">
@@ -208,6 +215,7 @@
         </el-form-item>
       </el-col>
     </el-row>
+
     <el-row :gutter="0" class="textarea-row">
       <el-col :span="12">
         <el-form-item label="繁殖方式：" prop="reproduceMethod">
@@ -236,79 +244,46 @@
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row :gutter="0" v-if="type === 'add'">
+
+    <el-row :gutter="0" v-if="mode === 'new'">
       <el-col :span="24">
         <el-form-item label="上传图片：" prop="picture" >
-          <el-upload
-            ref="uploadImageRef"
-            action="#"
-            list-type="picture-card"
-            :auto-upload="false"
-            :on-change="onChange"
-            :limit="10"
-            :multiple="true"
-            accept=".gif,.jpg,.jpeg,.png,.bmp"
-          >
-            <template #default>
-              <i class="el-icon-plus"></i>
-            </template>
-            <template #file="{ file }">
-              <div>
-                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                <span class="el-upload-list__item-actions">
-                  <span
-                    class="el-upload-list__item-preview"
-                    @click="handlePictureCardPreview(file)"
-                  >
-                    <i class="el-icon-zoom-in"></i>
-                  </span>
-                  <span
-                    class="el-upload-list__item-delete"
-                    @click="handleRemove(file)"
-                  >
-                    <i class="el-icon-delete"></i>
-                  </span>
-                </span>
-              </div>
-            </template>
-          </el-upload>
-          <el-dialog v-model="dialogImageVisible" title="查看图片">
-            <img style="width: 100%; height: 75%;" :src="dialogImageUrl" alt="" />
+          <BasicImageUpload
+            ref="imageUploadRef"
+            @onChange="fileListChange"
+            @preview="filePreview"
+          />
+          <el-dialog v-model="imagePreviewDialog" title="查看图片">
+            <img style="width: 100%; height: 75%;" :src="imagePreviewUrl" alt="" />
           </el-dialog>
         </el-form-item>
       </el-col>
     </el-row>
+
     <el-row :gutter="0">
       <el-col :span="12">
         <el-form-item>
           <el-button :loading="isLoading" @click="back">
             返回
           </el-button>
-          <el-button
-            type="primary"
-            :loading="isLoading"
-            @click="submit"
-          >
+          <el-button type="primary" :loading="isLoading" @click="submit">
             提交
           </el-button>
         </el-form-item>
       </el-col>
     </el-row>
   </el-form>
+
   <el-result
+    v-show="completed"
+    :title="mode === 'new' ? '新增成功' : '更新成功'"
     icon="success"
-    :title="type === 'add' ? '新增成功' : '更新成功'"
-    v-show="status === 'complete'"
   >
     <template #extra>
       <el-button @click="back">
         返回
       </el-button>
-      <el-button
-        type="primary"
-        @click="keep"
-        v-show="type === 'add'"
-      >
+      <el-button type="primary" @click="keep" v-show="mode === 'new'">
         继续新增
       </el-button>
     </template>
@@ -316,22 +291,61 @@
 </template>
 
 <script lang="ts">
-
 import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { plantsHttp, plantsParams } from '@/api/plants';
-import { useRoute, useRouter } from 'vue-router';
-import { illegalVisit } from '@/utils/global';
-import FamilyPagingSelect from '@/components/pages/family/FamilyPagingSelect.vue';
-import GenusPagingSelect from '@/components/pages/genus/GenusPagingSelect.vue';
+import { useRouter, useRoute } from 'vue-router';
+import { validateDamagedParts, validateOverview } from './rules';
+import BasicImageUpload from '@/components/common/BasicImageUpload/index.vue';
+
+const functionOptions = [
+  { value: '耐阴树种' },
+  { value: '抗旱树种' },
+  { value: '耐水湿树种' },
+  { value: '耐盐碱树种' },
+  { value: '抗污染树种' }
+];
+const enjoyOptions = [
+  { value: '观叶植物' },
+  { value: '观花植物' },
+  { value: '观果植物' },
+  { value: '招鸟植物' },
+  { value: '多肉植物' },
+  { value: '水培植物' },
+  { value: '食肉植物' }
+];
+const gardenOptions = [
+  { value: '常绿灌木' },
+  { value: '落叶灌木' },
+  { value: '藤本植物' },
+  { value: '草坪及地被植物' },
+  { value: '竹类植物' },
+  { value: '常绿乔木及小乔木' },
+  { value: '落叶乔木及小乔木' }
+];
+const woodyOptions = [
+  { value: '常绿针叶' },
+  { value: '常绿阔叶' },
+  { value: '落叶阔叶' },
+  { value: '竹类' },
+  { value: '藤木' }
+];
+const herbaceousOptions = [
+  { value: '一二年生花卉' },
+  { value: '宿根花卉' },
+  { value: '球根花卉' },
+  { value: '水生花卉' },
+  { value: '草坪地被' }
+];
 
 export default defineComponent({
-  name: 'add-update',
-  components: { FamilyPagingSelect, GenusPagingSelect },
+  name: 'exclude',
+  components: { BasicImageUpload },
   setup () {
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
-      getParams();
+      state.mode = Number(route.params.id) === 0 ? 'new' : 'edit';
+      getPlantsById(Number(route.params.id));
     });
 
     const state = reactive({
@@ -357,34 +371,11 @@ export default defineComponent({
         cultureMethod: ''
       } as plantsParams,
       formRef: ref(),
-      uploadRef: ref(),
-      uploadImageRef: ref(),
+      imageUploadRef: ref(),
       rules: {
-        name: [{
-          required: true, message: '请输入植物名称', trigger: ['blur', 'change']
-        }],
-        family: [{
-          required: true,
-          validator: (rule: any, value: any, callback: any) => {
-            if (state.form.family === '' || state.form.family === undefined) {
-              callback(new Error('请选择植物科类'));
-            } else {
-              callback();
-            }
-          },
-          trigger: ['blur', 'change']
-        }],
-        genus: [{
-          required: true,
-          validator: (rule: any, value: any, callback: any) => {
-            if (state.form.genus === '' || state.form.genus === undefined) {
-              callback(new Error('请选择植物属类'));
-            } else {
-              callback();
-            }
-          },
-          trigger: ['blur', 'change']
-        }],
+        name: [{ required: true, message: '请输入植物名称', trigger: ['blur', 'change'] }],
+        damagedParts: [{ required: true, validator: validateDamagedParts, trigger: ['blur'] }],
+        overview: [{ required: true, validator: validateOverview, trigger: ['blur'] }],
         picture: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
@@ -397,134 +388,69 @@ export default defineComponent({
           trigger: ['blur', 'change']
         }]
       },
-      // 界面类型：add 新增，update 更新
-      type: '',
+      functionOptions,
+      enjoyOptions,
+      gardenOptions,
+      woodyOptions,
+      herbaceousOptions,
       isLoading: false,
-      // 表单状态：complete 完成，incomplete 未完成
-      status: 'incomplete',
+      mode: '',
+      completed: false,
       fileList: [] as Array<any>,
-      formKey: 0,
-      dialogImageUrl: '',
-      dialogImageVisible: false
+      imagePreviewUrl: '',
+      imagePreviewDialog: false
     });
-    const functionOptions: Array<any> = reactive([
-      { value: '耐阴树种' },
-      { value: '抗旱树种' },
-      { value: '耐水湿树种' },
-      { value: '耐盐碱树种' },
-      { value: '抗污染树种' }
-    ]);
-    const enjoyOptions: Array<any> = reactive([
-      { value: '观叶植物' },
-      { value: '观花植物' },
-      { value: '观果植物' },
-      { value: '招鸟植物' },
-      { value: '多肉植物' },
-      { value: '水培植物' },
-      { value: '食肉植物' }
-    ]);
-    const gardenOptions: Array<any> = reactive([
-      { value: '常绿灌木' },
-      { value: '落叶灌木' },
-      { value: '藤本植物' },
-      { value: '草坪及地被植物' },
-      { value: '竹类植物' },
-      { value: '常绿乔木及小乔木' },
-      { value: '落叶乔木及小乔木' }
-    ]);
-    const woodyOptions: Array<any> = reactive([
-      { value: '常绿针叶' },
-      { value: '常绿阔叶' },
-      { value: '落叶阔叶' },
-      { value: '竹类' },
-      { value: '藤木' }
-    ]);
-    const herbaceousOptions: Array<any> = reactive([
-      { value: '一二年生花卉' },
-      { value: '宿根花卉' },
-      { value: '球根花卉' },
-      { value: '水生花卉' },
-      { value: '草坪地被' }
-    ]);
 
-    // 提取路由中的 params
-    const getParams = () => {
-      if (route.path.split('/').slice(-1)[0] === 'update') {
-        // 若 params 有 id，则是合法访问
-        if (route.params.id !== undefined) {
-          state.type = 'update';
-          const { ...tempParams } = route.params;
-          tempParams.plantsClassify = JSON.parse(tempParams.plantsClassify as string);
-          state.form = tempParams;
-          // console.log(tempParams);
-        } else {
-          // 非法访问更新界面
-          illegalVisit();
-          router.go(-1);
-        }
-      } else {
-        state.type = 'add';
+    const getPlantsById = (id: number) => {
+      if (id < 0) back();
+      else if (id === 0) return 0;
+      else {
+        state.isLoading = true;
+        plantsHttp.getPlantsById(id)
+          .then((response: any) => { state.form = response; })
+          .catch(() => { back(); })
+          .finally(() => { state.isLoading = false; });
       }
     };
+
     const submit = () => {
       state.formRef.validate().then((valid: boolean) => {
         if (valid) {
           state.isLoading = true;
-          if (route.path.split('/').slice(-1)[0] === 'add') {
+          if (state.mode === 'new') {
             plantsHttp.addPlants(state.form, state.fileList)
-              .then(() => {
-                state.status = 'complete';
-              })
-              .finally(() => {
-                state.isLoading = false;
-              });
-          } else if (route.path.split('/').slice(-1)[0] === 'update') {
+              .then(() => { state.completed = true; })
+              .finally(() => { state.isLoading = false; });
+          } else if (state.mode === 'edit') {
             plantsHttp.updatePlants(state.form)
-              .then(() => {
-                state.status = 'complete';
-              })
-              .finally(() => {
-                state.isLoading = false;
-              });
+              .then(() => { state.completed = true; })
+              .finally(() => { state.isLoading = false; });
           }
         }
       });
     };
+
     const back = () => {
       router.push({
-        path: '/admin/gardens/plantsManagement',
-        name: 'plantsManagement',
-        params: {
-          type: 'refresh'
-        }
+        path: '/admin/plants-data',
+        name: 'plants-data',
+        params: { type: 'refresh' }
       });
     };
+
     const keep = () => {
-      state.formKey += 1;
       state.formRef.resetFields();
-      state.uploadImageRef.clearFiles();
-      state.form.plantsClassify = {};
-      state.fileList = [];
-      state.status = 'incomplete';
+      state.imageUploadRef.clear();
+      state.completed = false;
     };
-    const familyChange = (params: any) => {
-      state.form.family = params;
-    };
-    const genusChange = (params: any) => {
-      state.form.genus = params;
-    };
-    const onChange = (file: any, fileList: Array<any>) => {
+
+    const fileListChange = (fileList: Array<any>) => {
       state.fileList = fileList;
     };
-    const handleRemove = (file: any) => {
-      const removeIndex = state.fileList.findIndex((value: any) => value.uid === file.uid);
-      state.fileList.splice(removeIndex, 1);
-    };
-    const handlePictureCardPreview = (file: any) => {
-      if (file.url !== undefined) {
-        state.dialogImageUrl = file.url;
-      }
-      state.dialogImageVisible = true;
+
+    const filePreview = (file: any) => {
+      state.imagePreviewUrl = file?.url;
+      state.imagePreviewDialog = true;
     };
 
     return {
@@ -537,11 +463,8 @@ export default defineComponent({
       gardenOptions,
       woodyOptions,
       herbaceousOptions,
-      familyChange,
-      genusChange,
-      onChange,
-      handleRemove,
-      handlePictureCardPreview
+      fileListChange,
+      filePreview
     };
   }
 });

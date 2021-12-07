@@ -106,7 +106,7 @@ export default defineComponent({
     } as plantsParams);
     const getPlants = () => {
       state.isLoading = true;
-      plantsHttp.searchPlants(plantsParams)
+      plantsHttp.getPlants(plantsParams)
         .then((response: any) => {
           console.log(response);
           state.total = response.totalElements;

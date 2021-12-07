@@ -59,7 +59,7 @@ export interface plantsParams extends searchByInfo {
 
 export class plantsHttp {
   // 新增植物信息与对应数据集
-  static createPlants (params: plantsParams, body: Array<any>) {
+  static addPlants (params: plantsParams, body: Array<any>) {
     const data = new FormData();
     for (const item in body) {
       if (body[item].raw) {
@@ -84,7 +84,7 @@ export class plantsHttp {
   }
 
   // 分页查询植物信息
-  static searchPlants (params: (plantsParams | null)) {
+  static getPlants (params: (plantsParams | null)) {
     return http({
       url: '/api/plantsInfo/search',
       method: 'get',
@@ -93,7 +93,7 @@ export class plantsHttp {
   }
 
   // 通过 ID 查看植物详情
-  static searchPlantsById (id: number) {
+  static getPlantsById (id: number) {
     return http({
       url: `/api/plantsInfo/searchById/${id}`,
       method: 'get'

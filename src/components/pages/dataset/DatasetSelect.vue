@@ -106,7 +106,7 @@ export default defineComponent({
             state.isLoading = false;
           });
       } else if (props.type === 'plants') {
-        plantsHttp.searchPlants(datasetParams)
+        plantsHttp.getPlants(datasetParams)
           .then((response: any) => {
             state.total = response.totalElements;
             state.list = [];
