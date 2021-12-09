@@ -294,7 +294,6 @@
 import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { plantsHttp, plantsParams } from '@/api/plants';
 import { useRouter, useRoute } from 'vue-router';
-import { validateDamagedParts, validateOverview } from './rules';
 import BasicImageUpload from '@/components/common/BasicImageUpload/index.vue';
 
 const functionOptions = [
@@ -374,8 +373,28 @@ export default defineComponent({
       imageUploadRef: ref(),
       rules: {
         name: [{ required: true, message: '请输入植物名称', trigger: ['blur', 'change'] }],
-        damagedParts: [{ required: true, validator: validateDamagedParts, trigger: ['blur'] }],
-        overview: [{ required: true, validator: validateOverview, trigger: ['blur'] }],
+        family: [{
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            if (state.form.family === '' || state.form.family === undefined) {
+              callback(new Error('请选择植物科类'));
+            } else {
+              callback();
+            }
+          },
+          trigger: ['blur', 'change']
+        }],
+        genus: [{
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            if (state.form.genus === '' || state.form.genus === undefined) {
+              callback(new Error('请选择植物属类'));
+            } else {
+              callback();
+            }
+          },
+          trigger: ['blur', 'change']
+        }],
         picture: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
