@@ -45,6 +45,15 @@ export class genusHttp {
     });
   }
 
+  // 分页查询属类信息
+  static getGenus (params: (genusParams | null)) {
+    return http({
+      url: '/api/genusInfo/search',
+      method: 'get',
+      params
+    });
+  }
+
   // 通过 ID 查看属类详情
   static searchGenusById (id: number) {
     return http({

@@ -45,7 +45,7 @@
     <el-row :gutter="20" class="textarea-row-space">
       <el-col :span="12">
         <el-form-item label="植物科类：" prop="family">
-          <FamilyPagingSelect
+          <FamilyPagingSelector
             class="select-common"
             :defaultValue="form.family"
             @selectChange="familyChange"
@@ -54,7 +54,7 @@
       </el-col>
       <el-col :span="12">
         <el-form-item label="植物属类：" prop="genus">
-          <GenusPagingSelect
+          <GenusPagingSelector
             class="select-common"
             :defaultValue="form.genus"
             :family="form.family"
@@ -295,6 +295,8 @@ import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { plantsHttp, plantsParams } from '@/api/plants';
 import { useRouter, useRoute } from 'vue-router';
 import BasicImageUpload from '@/components/common/BasicImageUpload/index.vue';
+import FamilyPagingSelector from '@/components/selector/FamilyPagingSelector.vue';
+import GenusPagingSelector from '@/components/selector/GenusPagingSelector.vue';
 
 const functionOptions = [
   { value: '耐阴树种' },
@@ -338,7 +340,7 @@ const herbaceousOptions = [
 
 export default defineComponent({
   name: 'exclude',
-  components: { BasicImageUpload },
+  components: { BasicImageUpload, FamilyPagingSelector, GenusPagingSelector },
   setup () {
     const route = useRoute();
     const router = useRouter();
@@ -472,6 +474,14 @@ export default defineComponent({
       state.imagePreviewDialog = true;
     };
 
+    const familyChange = (params: any) => {
+      state.form.family = params;
+    };
+
+    const genusChange = (params: any) => {
+      state.form.genus = params;
+    };
+
     return {
       ...toRefs(state),
       submit,
@@ -483,7 +493,9 @@ export default defineComponent({
       woodyOptions,
       herbaceousOptions,
       fileListChange,
-      filePreview
+      filePreview,
+      familyChange,
+      genusChange
     };
   }
 });

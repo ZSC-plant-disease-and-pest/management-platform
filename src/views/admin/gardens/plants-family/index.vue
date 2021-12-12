@@ -1,34 +1,92 @@
 <template>
-  <BasicSearch
-    :searchList="searchList"
-    @topButtonClick="topButtonClick"
-  />
-  <BasicTable
-    :tableDataList="tableDataList"
-    :tableColumnList="tableColumnList"
-    :topButtonList="topButtonList"
-    :tableButtonList="tableButtonList"
-    :isLoading="isLoading"
-    :tableButtonWidth="72"
-    @topButtonClick="topButtonClick"
-    @tableButtonClick="tableButtonClick"
-    @sortChange="sortChange"
-  />
-  <BasicPage
-    :pageList="pageList"
-    @handleChange="handleChange"
-  />
-  <DataPageModel
-    ref="dataPageModelRef"
-    @refreshTable="refreshTable"
-  />
+  <el-row :gutter="20">
+    <el-col :span="12">
+      <el-card>
+        <template #header>
+          <span>
+            科类管理
+          </span>
+        </template>
+        <BasicSearch
+          :searchList="familySearchList"
+          @topButtonClick="familyTopButtonClick"
+        />
+        <BasicTable
+          :tableDataList="familyTableDataList"
+          :tableColumnList="familyTableColumnList"
+          :topButtonList="familyTopButtonList"
+          :tableButtonList="familyTableButtonList"
+          :isLoading="familyIsLoading"
+          :tableButtonWidth="216"
+          :rowId="familyRowId"
+          @topButtonClick="familyTopButtonClick"
+          @tableButtonClick="familyTableButtonClick"
+          @sortChange="familySortChange"
+        />
+        <BasicPage
+          :pageList="familyPageList"
+          :page-sizes="[9, 20, 30, 40, 50, 100]"
+          @handleChange="familyHandleChange"
+        />
+        <DataPageModel
+          ref="familyDataPageModelRef"
+          @refreshTable="familyRefreshTable"
+        />
+      </el-card>
+    </el-col>
+    <el-col :span="12">
+      <el-card>
+        <template #header>
+          <span>
+            属类管理 ( {{ currentFamily }} )
+          </span>
+        </template>
+        <BasicSearch
+          :searchList="genusSearchList"
+          @topButtonClick="genusTopButtonClick"
+        />
+        <BasicTable
+          :tableDataList="genusTableDataList"
+          :tableColumnList="genusTableColumnList"
+          :topButtonList="genusTopButtonList"
+          :tableButtonList="genusTableButtonList"
+          :isLoading="genusIsLoading"
+          @topButtonClick="genusTopButtonClick"
+          @tableButtonClick="genusTableButtonClick"
+          @sortChange="genusSortChange"
+        />
+        <BasicPage
+          :pageList="genusPageList"
+          :page-sizes="[9, 20, 30, 40, 50, 100]"
+          @handleChange="genusHandleChange"
+        />
+        <DataPageModel
+          ref="genusDataPageModelRef"
+          @refreshTable="genusRefreshTable"
+        />
+      </el-card>
+    </el-col>
+  </el-row>
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
-import { newsTypeHttp, newsTypeParams } from '@/api/newsType';
+import { computed, defineComponent, onBeforeMount, onUpdated, reactive, ref, toRefs } from 'vue';
+import { familyHttp, familyParams } from '@/api/family';
+import { genusHttp, genusParams } from '@/api/genus';
+import { useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
+import {
+  familySearchList,
+  genusSearchList,
+  familyTopButtonList,
+  genusTopButtonList,
+  familyTableButtonList,
+  genusTableButtonList,
+  familyTableColumnList,
+  genusTableColumnList,
+  familyPageList,
+  genusPageList
+} from './data';
 import BasicTable from '@/components/common/BasicTable/index.vue';
 import BasicSearch from '@/components/common/BasicSearch/index.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
@@ -37,117 +95,235 @@ import DataPageModel from './components/DataPageModel.vue';
 export default defineComponent({
   components: { BasicTable, BasicSearch, BasicPage, DataPageModel },
   setup () {
+    const route = useRoute();
     onBeforeMount(() => {
-      getNewsType();
+      getFamily();
+      getGenus();
+    });
+    onUpdated(() => {
+      if (route.params.type === 'refresh') {
+        route.params.type = '';
+        getFamily();
+        getGenus();
+      }
     });
 
     // 数据仓库
-    const state = reactive({
-      tableDataList: [] as Array<any>,
-      searchList,
-      topButtonList,
-      tableButtonList,
-      tableColumnList,
-      pageList,
-      isLoading: false,
-      dataPageModelRef: ref()
+    const familyState = reactive({
+      familyTableDataList: [] as Array<any>,
+      familySearchList,
+      familyTopButtonList,
+      familyTableButtonList,
+      familyTableColumnList,
+      familyPageList,
+      familyIsLoading: false,
+      familyDataPageModelRef: ref(),
+      familyRowId: undefined
+    });
+
+    const genusState = reactive({
+      genusTableDataList: [] as Array<any>,
+      genusSearchList,
+      genusTopButtonList,
+      genusTableButtonList,
+      genusTableColumnList,
+      genusPageList,
+      genusIsLoading: false,
+      genusDataPageModelRef: ref()
     });
 
     // 请求表单数据
-    const newsTypeParams = reactive({ page: 0, size: 10 } as newsTypeParams);
-    const getNewsType = () => {
-      state.isLoading = true;
-      newsTypeHttp.getNewsType(newsTypeParams)
+    const familyParams = reactive({ page: 0, size: 9 } as familyParams);
+    const getFamily = () => {
+      familyState.familyIsLoading = true;
+      familyHttp.getFamily(familyParams)
         .then((response: any) => {
-          state.pageList.total = response.totalElements;
-          state.pageList.size = response.size;
-          state.tableDataList = [];
+          familyState.familyPageList.total = response.totalElements;
+          familyState.familyPageList.size = response.size;
+          familyState.familyTableDataList = [];
           for (let i = 0; i < response.content.length; i++) {
-            state.tableDataList.push(response.content[i]);
+            familyState.familyTableDataList.push(response.content[i]);
           }
         })
-        .finally(() => { state.isLoading = false; });
+        .finally(() => { familyState.familyIsLoading = false; });
+    };
+
+    const genusParams = reactive({ page: 0, size: 9 } as genusParams);
+    const getGenus = () => {
+      genusState.genusIsLoading = true;
+      genusHttp.getGenus(genusParams)
+        .then((response: any) => {
+          genusState.genusPageList.total = response.totalElements;
+          genusState.genusPageList.size = response.size;
+          genusState.genusTableDataList = [];
+          for (let i = 0; i < response.content.length; i++) {
+            genusState.genusTableDataList.push(response.content[i]);
+          }
+        })
+        .finally(() => { genusState.genusIsLoading = false; });
     };
 
     // 删除
-    const deleteNewsType = (selectedIds: any) => {
+    const deleteFamily = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
       } else {
-        state.isLoading = true;
-        newsTypeHttp.deleteNewsType(selectedIds.join(','))
+        familyState.familyIsLoading = true;
+        genusHttp.deleteGenus(selectedIds.join(','))
           .then(() => {
             ElMessage.success('删除成功');
-            getNewsType();
+            getFamily();
           })
-          .finally(() => { state.isLoading = false; });
+          .finally(() => { familyState.familyIsLoading = false; });
+      }
+    };
+
+    const deleteGenus = (selectedIds: any) => {
+      if (selectedIds.length === 0) {
+        ElMessage.warning('请选择需要删除的内容');
+      } else {
+        genusState.genusIsLoading = true;
+        genusHttp.deleteGenus(selectedIds.join(','))
+          .then(() => {
+            ElMessage.success('删除成功');
+            getGenus();
+          })
+          .finally(() => { genusState.genusIsLoading = false; });
       }
     };
 
     // 头部按键
-    const topButtonClick = (name: string, data: any) => {
+    const familyTopButtonClick = (name: string, data: any) => {
       if (name === 'search') {
         for (const index in data) {
           if (data[index].name === 'name') {
-            newsTypeParams.name = data[index].value === '' ? undefined : data[index].value;
+            familyParams.name = data[index].value === '' ? undefined : data[index].value;
           }
         }
-        getNewsType();
+        getFamily();
       } else if (name === 'reset') {
-        for (const index in state.searchList) {
-          state.searchList[index].value = '';
-          newsTypeParams.name = undefined;
+        for (const index in familyState.familySearchList) {
+          familyState.familySearchList[index].value = '';
+          familyParams.name = undefined;
         }
-        getNewsType();
+        getFamily();
       } else if (name === 'add') {
-        state.dataPageModelRef.openDialog('new');
+        familyState.familyDataPageModelRef.openDialog('new');
       } else if (name === 'delete') {
-        deleteNewsType(data);
+        deleteFamily(data);
+      }
+    };
+
+    const genusTopButtonClick = (name: string, data: any) => {
+      if (name === 'search') {
+        for (const index in data) {
+          if (data[index].name === 'name') {
+            genusParams.name = data[index].value === '' ? undefined : data[index].value;
+          }
+        }
+        getGenus();
+      } else if (name === 'reset') {
+        for (const index in genusState.genusSearchList) {
+          genusState.genusSearchList[index].value = '';
+          genusParams.name = undefined;
+          genusParams.family = undefined;
+        }
+        familyState.familyRowId = undefined;
+        getGenus();
+      } else if (name === 'add') {
+        genusState.genusDataPageModelRef.openDialog('new');
+      } else if (name === 'delete') {
+        deleteGenus(data);
       }
     };
 
     // 表格按键
-    const tableButtonClick = (name: string, data: any) => {
-      if (name === 'view') {
-        window.open(`http://localhost:8082/newsType/detail/${data.id}`, '_blank');
+    const familyTableButtonClick = (name: string, data: any) => {
+      if (name === 'check') {
+        genusParams.family = data.name;
+        familyState.familyRowId = data.id;
+        getGenus();
+      } else if (name === 'view') {
+        // ..
       } else if (name === 'edit') {
-        state.dataPageModelRef.openDialog('edit', data);
+        familyState.familyDataPageModelRef.openDialog('edit', data);
+      }
+    };
+
+    const genusTableButtonClick = (name: string, data: any) => {
+      if (name === 'view') {
+        // ...
+      } else if (name === 'edit') {
+        genusState.genusDataPageModelRef.openDialog('edit', data);
       }
     };
 
     // 排序改变
-    const sortChange = (params: any) => {
-      newsTypeParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
-      getNewsType();
+    const familySortChange = (params: any) => {
+      familyParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
+      getFamily();
+    };
+
+    const genusSortChange = (params: any) => {
+      genusParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
+      getGenus();
     };
 
     // 分页改变
-    const handleChange = (name: string, data: any) => {
+    const familyHandleChange = (name: string, data: any) => {
       if (name === 'page') {
-        newsTypeParams.page = data - 1;
-        state.pageList.page = data;
+        familyParams.page = data - 1;
+        familyState.familyPageList.page = data;
       } else if (name === 'size') {
-        newsTypeParams.size = data;
-        newsTypeParams.page = 0;
-        state.pageList.size = data;
-        state.pageList.page = 1;
+        familyParams.size = data;
+        familyParams.page = 0;
+        familyState.familyPageList.size = data;
+        familyState.familyPageList.page = 1;
       }
-      getNewsType();
+      getFamily();
+    };
+
+    const genusHandleChange = (name: string, data: any) => {
+      if (name === 'page') {
+        genusParams.page = data - 1;
+        genusState.genusPageList.page = data;
+      } else if (name === 'size') {
+        genusParams.size = data;
+        genusParams.page = 0;
+        genusState.genusPageList.size = data;
+        genusState.genusPageList.page = 1;
+      }
+      getGenus();
     };
 
     // 刷新
-    const refreshTable = () => {
-      getNewsType();
+    const familyRefreshTable = () => {
+      getFamily();
     };
 
+    const genusRefreshTable = () => {
+      getGenus();
+    };
+
+    // 属类所属的科类
+    const currentFamily = computed(() => {
+      return genusParams.family === undefined ? '全部科类' : genusParams.family + '类';
+    });
+
     return {
-      ...toRefs(state),
-      topButtonClick,
-      tableButtonClick,
-      sortChange,
-      deleteNewsType,
-      handleChange,
-      refreshTable
+      ...toRefs(familyState),
+      ...toRefs(genusState),
+      familyTopButtonClick,
+      genusTopButtonClick,
+      familyTableButtonClick,
+      genusTableButtonClick,
+      familySortChange,
+      genusSortChange,
+      familyHandleChange,
+      genusHandleChange,
+      familyRefreshTable,
+      genusRefreshTable,
+      currentFamily
     };
   }
 });

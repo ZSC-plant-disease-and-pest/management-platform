@@ -1,11 +1,11 @@
 <template>
   <el-pagination
+    v-bind="$attrs"
     :total="pageList.total"
     :page-size="pageList.size"
     :current-page="pageList.page"
     :small="small"
     :layout="layout"
-    :page-sizes="pageSizes"
     style="margin-top: 12px"
     @size-change="handleChange('size', $event)"
     @current-change="handleChange('page', $event)"
@@ -25,12 +25,6 @@ export default defineComponent({
           page: 1,
           size: 10
         };
-      }
-    },
-    pageSizes: {
-      type: Array,
-      default: () => {
-        return [10, 20, 50, 100];
       }
     },
     layout: {

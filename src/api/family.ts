@@ -42,6 +42,15 @@ export class familyHttp {
     });
   }
 
+  // 分页查询科类信息
+  static getFamily (params: (familyParams | null)) {
+    return http({
+      url: '/api/familyInfo/search',
+      method: 'get',
+      params
+    });
+  }
+
   // 通过 ID 查看科类详情
   static searchFamilyById (id: number) {
     return http({
