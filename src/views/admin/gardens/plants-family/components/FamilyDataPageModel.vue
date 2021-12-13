@@ -15,15 +15,40 @@
       size="small"
       :rules="rules"
       :model="form"
-      label-width="130px"
+      label-width="100px"
     >
-      <el-row>
-        <el-col :span="23">
-          <el-form-item label="新闻类型名称：" prop="name">
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="科类名称：" prop="name">
             <el-input
               class="input-common"
               v-model="form.name"
-              placeholder="请输入新闻类型名称"
+              placeholder="请输入科类名称"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="拉丁学名：">
+            <el-input
+              class="input-common"
+              v-model="form.scientificName"
+              placeholder="请输入拉丁学名"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="0" class="textarea-row">
+        <el-col :span="24">
+          <el-form-item label="简介：">
+            <el-input
+              class="textarea-common"
+              type="textarea"
+              resize="none"
+              :autosize="{ minRows: 4, maxRows: 4}"
+              placeholder="请输入简介"
+              clearable
+              v-model="form.introduction"
             />
           </el-form-item>
         </el-col>
@@ -43,7 +68,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
-import { newsTypeHttp, newsTypeParams } from '@/api/newsType';
+import { familyHttp, familyParams } from '@/api/family';
 import { ElMessage } from 'element-plus';
 
 export default defineComponent({
@@ -53,11 +78,13 @@ export default defineComponent({
     const state = reactive({
       form: {
         id: undefined,
-        name: ''
-      } as newsTypeParams,
+        name: '',
+        scientificName: '',
+        introduction: ''
+      } as familyParams,
       formRef: ref(),
       rules: {
-        name: [{ required: true, message: '请输入新闻类型名称', trigger: ['blur', 'change'] }]
+        name: [{ required: true, message: '请输入科类名称', trigger: ['blur', 'change'] }]
       },
       isLoading: false,
       mode: '',
@@ -67,7 +94,7 @@ export default defineComponent({
     // 弹出框标题
     const title = computed(() => {
       const word = state.mode === 'new' ? '新增' : '编辑';
-      return `${word}新闻信息`;
+      return `${word}科类信息`;
     });
 
     // 打开
@@ -86,7 +113,7 @@ export default defineComponent({
         if (valid) {
           state.isLoading = true;
           if (state.mode === 'new') {
-            newsTypeHttp.createNewsType(state.form)
+            familyHttp.createFamily(state.form)
               .then(() => {
                 ElMessage.success('添加成功');
                 state.dialogVisible = false;
@@ -94,7 +121,7 @@ export default defineComponent({
               })
               .finally(() => { state.isLoading = false; });
           } else if (state.mode === 'edit') {
-            newsTypeHttp.updateNewsType(state.form)
+            familyHttp.updateFamily(state.form)
               .then(() => {
                 ElMessage.success('更新成功');
                 state.dialogVisible = false;

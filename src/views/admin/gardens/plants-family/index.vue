@@ -28,7 +28,7 @@
           :page-sizes="[9, 20, 30, 40, 50, 100]"
           @handleChange="familyHandleChange"
         />
-        <DataPageModel
+        <FamilyDataPageModel
           ref="familyDataPageModelRef"
           @refreshTable="familyRefreshTable"
         />
@@ -60,7 +60,7 @@
           :page-sizes="[9, 20, 30, 40, 50, 100]"
           @handleChange="genusHandleChange"
         />
-        <DataPageModel
+        <GenusDataPageModel
           ref="genusDataPageModelRef"
           @refreshTable="genusRefreshTable"
         />
@@ -90,10 +90,11 @@ import {
 import BasicTable from '@/components/common/BasicTable/index.vue';
 import BasicSearch from '@/components/common/BasicSearch/index.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
-import DataPageModel from './components/DataPageModel.vue';
+import FamilyDataPageModel from './components/FamilyDataPageModel.vue';
+import GenusDataPageModel from './components/GenusDataPageModel.vue';
 
 export default defineComponent({
-  components: { BasicTable, BasicSearch, BasicPage, DataPageModel },
+  components: { BasicTable, BasicSearch, BasicPage, FamilyDataPageModel, GenusDataPageModel },
   setup () {
     const route = useRoute();
     onBeforeMount(() => {
@@ -169,7 +170,7 @@ export default defineComponent({
         ElMessage.warning('请选择需要删除的内容');
       } else {
         familyState.familyIsLoading = true;
-        genusHttp.deleteGenus(selectedIds.join(','))
+        familyHttp.deleteFamily(selectedIds.join(','))
           .then(() => {
             ElMessage.success('删除成功');
             getFamily();
