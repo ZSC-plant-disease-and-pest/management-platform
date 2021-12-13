@@ -3,9 +3,7 @@
     <el-col :span="12">
       <el-card>
         <template #header>
-          <span>
-            科类管理
-          </span>
+          <span> 科类管理 </span>
         </template>
         <BasicSearch
           :searchList="familySearchList"
@@ -37,9 +35,7 @@
     <el-col :span="12">
       <el-card>
         <template #header>
-          <span>
-            属类管理 ( {{ currentFamily }} )
-          </span>
+          <span> 属类管理 ( {{ currentFamily }} ) </span>
         </template>
         <BasicSearch
           :searchList="genusSearchList"
