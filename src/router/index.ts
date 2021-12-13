@@ -16,6 +16,7 @@ import store from '@/store';
 import disease from './modules/disease';
 import news from './modules/news';
 import gardens from './modules/gardens';
+import ai from './modules/ai';
 
 // 登录
 const login = () => import('@/views/login/index.vue');
@@ -377,7 +378,7 @@ const routes: Array<RouteRecordRaw> = [
 // routes.push(home, news, disease, gardens, ai, system);
 
 // 测试
-routes.push(news, disease, gardens);
+routes.push(news, disease, gardens, ai);
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
