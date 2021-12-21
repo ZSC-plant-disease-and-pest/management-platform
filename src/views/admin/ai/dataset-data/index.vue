@@ -1,152 +1,218 @@
 <template>
-  <BasicSearch
-    :searchList="searchList"
-    @topButtonClick="topButtonClick"
+  <el-row align="middle">
+    <el-col :span="12">
+      <el-button type="primary" @click="add">
+        添加
+      </el-button>
+    </el-col>
+    <el-col :span="12">
+      <div class="describe">
+        <span>
+          名称：
+          <span
+            class="link"
+            @click="checkDetail"
+          >
+            {{ form.name }}
+          </span>
+        </span>
+        <span style="margin-left: 15px">
+          数据集图片数量：{{ form.imgAmount }}
+        </span>
+      </div>
+    </el-col>
+  </el-row>
+  <div class="box-images">
+    <div
+      v-for="item in describeList"
+      :key="item.id"
+      class="describe"
+    >
+      <Describe
+        :id="item.id"
+        :src="item.src"
+        :size="item.size"
+        :resolution="item.resolution"
+        :creator="item.creator"
+        :createTime="item.createTime"
+      />
+    </div>
+  </div>
+  <Pagenum
+    :total="total"
+    :currentPage="page"
+    :pageSize="size"
+    @handleSizeChange="handleSizeChange"
+    @handleCurrentChange="handleCurrentChange"
+    :pageSizes="[12, 50, 100]"
   />
-  <BasicTable
-    :tableDataList="tableDataList"
-    :tableColumnList="tableColumnList"
-    :topButtonList="topButtonList"
-    :tableButtonList="tableButtonList"
-    :isLoading="isLoading"
-    @topButtonClick="topButtonClick"
-    @tableButtonClick="tableButtonClick"
-    @sortChange="sortChange"
-  />
-  <BasicPage
-    :pageList="pageList"
-    @handleChange="handleChange"
+  <Dialog
+    ref="dialogRef"
+    @refreshTable="refreshTable"
+    :key="dialogKey"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
-import { diseaseHttp, diseaseParams } from '@/api/disease';
-import { useRoute, useRouter } from 'vue-router';
-import { ElMessage } from 'element-plus';
-import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
-import BasicTable from '@/components/common/BasicTable/index.vue';
-import BasicSearch from '@/components/common/BasicSearch/index.vue';
-import BasicPage from '@/components/common/BasicPage/index.vue';
+import {
+  toRefs,
+  reactive,
+  onBeforeMount,
+  defineComponent,
+  ref
+} from 'vue';
+import { datasetHttp, datasetParams } from '@/api/dataset';
+import { useRoute } from 'vue-router';
+import Dialog from './components/Dialog.vue';
+import Describe from './components/Describe.vue';
+import Pagenum from '@/components/common/pagenum/Pagenum.vue';
 
 export default defineComponent({
-  components: { BasicTable, BasicSearch, BasicPage },
+  name: 'detail',
+  components: { Dialog, Describe, Pagenum },
   setup () {
     const route = useRoute();
-    const router = useRouter();
     onBeforeMount(() => {
-      getDisease();
-    });
-    onUpdated(() => {
-      if (route.params.type === 'refresh') {
-        route.params.type = '';
-        getDisease();
-      }
+      state.type = String(route.params.type);
+      datasetParams.id = Number(route.params.id);
+      datasetParams.informationId = Number(route.query.informationId);
+      state.form.name = String(route.query.name);
+      getDatasetImage();
     });
 
-    // 数据仓库
     const state = reactive({
-      tableDataList: [] as Array<any>,
-      searchList,
-      topButtonList,
-      tableButtonList,
-      tableColumnList,
-      pageList,
-      isLoading: false
+      type: '',
+      form: {} as datasetParams,
+      describeList: [] as Array<any>,
+      dialogRef: ref(),
+      isLoading: false,
+      total: 0,
+      page: 1,
+      size: 12,
+      dialogKey: 0
     });
 
-    // 请求表单数据
-    const diseaseParams = reactive({ page: 0, size: 10 } as diseaseParams);
-    const getDisease = () => {
+    const datasetParams = reactive({
+      page: 0,
+      size: 12
+    } as datasetParams);
+    const getDatasetImage = () => {
       state.isLoading = true;
-      diseaseHttp.getDisease(diseaseParams)
-        .then((response: any) => {
-          state.pageList.total = response.totalElements;
-          state.pageList.size = response.size;
-          state.tableDataList = [];
-          for (let i = 0; i < response.content.length; i++) {
-            state.tableDataList.push(response.content[i]);
-          }
-        })
-        .finally(() => { state.isLoading = false; });
-    };
-
-    // 删除
-    const deleteDisease = (selectedIds: any) => {
-      if (selectedIds.length === 0) {
-        ElMessage.warning('请选择需要删除的内容');
-      } else {
-        state.isLoading = true;
-        diseaseHttp.deleteDisease(selectedIds.join(','))
-          .then(() => {
-            ElMessage.success('删除成功');
-            getDisease();
+      if (state.type === 'disease') {
+        datasetHttp.searchDiseaseDatasetImage(datasetParams)
+          .then((response: any) => {
+            state.form.imgAmount = response.totalElements;
+            state.total = response.totalElements;
+            state.size = response.size;
+            state.describeList = [];
+            for (let i = 0; i < response.content.length; i++) {
+              state.describeList.push({
+                id: response.content[i].id,
+                src: `http://localhost:8080${response.content[i].path}`,
+                size: response.content[i].size,
+                resolution: response.content[i].resolution,
+                creator: response.content[i].creator,
+                createTime: response.content[i].createTime
+              });
+            }
           })
-          .finally(() => { state.isLoading = false; });
+          .finally(() => {
+            state.isLoading = false;
+          });
+      } else if (state.type === 'pest') {
+        datasetHttp.searchPestDatasetImage(datasetParams)
+          .then((response: any) => {
+            state.form.imgAmount = response.totalElements;
+            state.total = response.totalElements;
+            state.size = response.size;
+            state.describeList = [];
+            for (let i = 0; i < response.content.length; i++) {
+              state.describeList.push({
+                id: response.content[i].id,
+                src: `http://localhost:8080${response.content[i].path}`,
+                size: response.content[i].size
+              });
+            }
+          })
+          .finally(() => {
+            state.isLoading = false;
+          });
+      } else if (state.type === 'plant') {
+        datasetHttp.searchPlantsDatasetImage(datasetParams)
+          .then((response: any) => {
+            state.form.imgAmount = response.totalElements;
+            state.total = response.totalElements;
+            state.size = response.size;
+            state.describeList = [];
+            for (let i = 0; i < response.content.length; i++) {
+              state.describeList.push({
+                id: response.content[i].id,
+                src: `http://localhost:8080${response.content[i].path}`,
+                size: response.content[i].size
+              });
+            }
+          })
+          .finally(() => {
+            state.isLoading = false;
+          });
       }
     };
-
-    // 头部按键
-    const topButtonClick = (name: string, data: any) => {
-      if (name === 'search') {
-        for (const index in data) {
-          if (data[index].name === 'name') {
-            diseaseParams.name = data[index].value === '' ? undefined : data[index].value;
-          }
-        }
-        getDisease();
-      } else if (name === 'reset') {
-        for (const index in state.searchList) {
-          state.searchList[index].value = '';
-          diseaseParams.name = undefined;
-        }
-        getDisease();
-      } else if (name === 'add') {
-        router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: '0' } });
-      } else if (name === 'delete') {
-        deleteDisease(data);
-      }
+    const add = () => {
+      state.dialogRef.openDialog(state.type);
     };
-
-    // 表格按键
-    const tableButtonClick = (name: string, data: any) => {
-      if (name === 'view') {
-        window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
-      } else if (name === 'edit') {
-        router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: data.id } });
-      }
+    const checkDetail = () => {
+      window.open(`http://localhost:8082/${state.type}/detail/${datasetParams.informationId}`, '_blank');
     };
-
-    // 排序改变
-    const sortChange = (params: any) => {
-      diseaseParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
-      getDisease();
+    const refreshTable = () => {
+      getDatasetImage();
+      state.dialogKey += 1;
     };
-
-    // 分页改变
-    const handleChange = (name: string, data: any) => {
-      if (name === 'page') {
-        diseaseParams.page = data - 1;
-        state.pageList.page = data;
-      } else if (name === 'size') {
-        diseaseParams.size = data;
-        diseaseParams.page = 0;
-        state.pageList.size = data;
-        state.pageList.page = 1;
-      }
-      getDisease();
+    const handleSizeChange = (newSize: any) => {
+      datasetParams.size = newSize;
+      datasetParams.page = 0;
+      state.size = newSize;
+      state.page = 1;
+      getDatasetImage();
+    };
+    const handleCurrentChange = (newPage: any) => {
+      datasetParams.page = newPage;
+      state.page = newPage + 1;
+      getDatasetImage();
     };
 
     return {
       ...toRefs(state),
-      topButtonClick,
-      tableButtonClick,
-      sortChange,
-      deleteDisease,
-      handleChange
+      add,
+      checkDetail,
+      refreshTable,
+      handleSizeChange,
+      handleCurrentChange
     };
   }
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.describe {
+  float: right;
+  line-height: 40px;
+
+  .link {
+    cursor: pointer;
+    color: #2d64b3;
+  }
+
+  .link:hover {
+    color: #40aaff;
+  }
+}
+.box-images {
+  display: flex;
+  flex-wrap: wrap;
+
+  .describe {
+    width: 263px;
+    margin: 15px;
+  }
+}
+</style>
