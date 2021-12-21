@@ -132,7 +132,7 @@ export default defineComponent({
       state.form.informationId = undefined;
     };
 
-    // 刷新表格
+    // 刷新
     const refreshTable = () => {
       emit('refreshTable');
     };

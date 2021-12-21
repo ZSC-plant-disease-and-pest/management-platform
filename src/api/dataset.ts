@@ -59,7 +59,7 @@ export class datasetHttp {
   }
 
   // 查询病害数据集所有图片
-  static searchDiseaseDatasetImage (params: datasetParams) {
+  static getDiseaseDatasetImage (params: datasetParams) {
     const { id } = params;
     return http({
       url: `/api/diseaseDs/searchImgById/${id}`,
@@ -69,7 +69,7 @@ export class datasetHttp {
   }
 
   // 上传病害数据集图片
-  static uploadDiseaseImg (id: number, body: Array<any>) {
+  static uploadDiseaseImage (id: number, body: Array<any>) {
     const fileImg = new FormData();
     for (const item in body) {
       if (body[item].raw) {
@@ -118,7 +118,7 @@ export class datasetHttp {
   }
 
   // 查询虫害数据集
-  static searchPestDataset (params: (datasetParams | null)) {
+  static getPestDataset (params: (datasetParams | null)) {
     return http({
       url: '/api/pestDs/search',
       method: 'get',
@@ -127,7 +127,7 @@ export class datasetHttp {
   }
 
   // 查询虫害数据集所有图片
-  static searchPestDatasetImage (params: datasetParams) {
+  static getPestDatasetImage (params: datasetParams) {
     const { id } = params;
     return http({
       url: `/api/pestDs/searchImgById/${id}`,
@@ -137,7 +137,7 @@ export class datasetHttp {
   }
 
   // 上传虫害数据集图片
-  static uploadPestImg (id: number, body: Array<any>) {
+  static uploadPestImage (id: number, body: Array<any>) {
     const fileImg = new FormData();
     for (const item in body) {
       if (body[item].raw) {
@@ -186,7 +186,7 @@ export class datasetHttp {
   }
 
   // 查询植物数据集
-  static searchPlantsDataset (params: (datasetParams | null)) {
+  static getPlantsDataset (params: (datasetParams | null)) {
     return http({
       url: '/api/plantsDs/search',
       method: 'get',
@@ -195,7 +195,7 @@ export class datasetHttp {
   }
 
   // 查询植物数据集所有图片
-  static searchPlantsDatasetImage (params: datasetParams) {
+  static getPlantsDatasetImage (params: datasetParams) {
     const { id } = params;
     return http({
       url: `/api/plantsDs/searchImgById/${id}`,
@@ -205,7 +205,7 @@ export class datasetHttp {
   }
 
   // 上传植物数据集图片
-  static uploadPlantsImg (id: number, body: Array<any>) {
+  static uploadPlantsImage (id: number, body: Array<any>) {
     const fileImg = new FormData();
     for (const item in body) {
       if (body[item].raw) {

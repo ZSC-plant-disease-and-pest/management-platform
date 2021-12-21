@@ -27,6 +27,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { datasetHttp, datasetParams } from '@/api/dataset';
+import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
 import BasicTable from '@/components/common/BasicTable/index.vue';
@@ -37,6 +38,7 @@ import DataPageModel from './components/DataPageModel.vue';
 export default defineComponent({
   components: { BasicTable, BasicSearch, BasicPage, DataPageModel },
   setup () {
+    const router = useRouter();
     onBeforeMount(() => {
       getDiseaseDataset();
     });
@@ -109,9 +111,12 @@ export default defineComponent({
     // 表格按键
     const tableButtonClick = (name: string, data: any) => {
       if (name === 'dataset') {
-        // 打开病害数据集
+        router.push({
+          path: `/admin/dataset-data/disease/${data.id}`,
+          query: { name: data.name, informationId: data.informationId }
+        });
       } else if (name === 'view') {
-        window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
+        window.open(`http://localhost:8082/disease/detail/${data.informationId}`, '_blank');
       }
     };
 

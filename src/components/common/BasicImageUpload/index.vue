@@ -8,6 +8,7 @@
     :on-change="onChange"
     list-type="picture-card"
     accept=".gif,.jpg,.jpeg,.png,.bmp"
+    v-bind="$attrs"
   >
     <template #default>
       <i class="el-icon-plus"></i>

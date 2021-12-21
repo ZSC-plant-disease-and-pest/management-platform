@@ -169,7 +169,7 @@ export default defineComponent({
         if (valid) {
           state.isLoading = true;
           if (state.type === 'disease') {
-            datasetHttp.uploadDiseaseImg(Number(state.form.id), state.fileList)
+            datasetHttp.uploadDiseaseImage(Number(state.form.id), state.fileList)
               .then(() => {
                 ElMessage.success('添加成功');
                 state.dialogVisible = false;
@@ -179,7 +179,7 @@ export default defineComponent({
                 state.isLoading = false;
               });
           } else if (state.type === 'pest') {
-            datasetHttp.uploadPestImg(Number(state.form.id), state.fileList)
+            datasetHttp.uploadPestImage(Number(state.form.id), state.fileList)
               .then(() => {
                 ElMessage.success('添加成功');
                 state.dialogVisible = false;
@@ -189,7 +189,7 @@ export default defineComponent({
                 state.isLoading = false;
               });
           } else if (state.type === 'plant') {
-            datasetHttp.uploadPlantsImg(Number(state.form.id), state.fileList)
+            datasetHttp.uploadPlantsImage(Number(state.form.id), state.fileList)
               .then(() => {
                 ElMessage.success('添加成功');
                 state.dialogVisible = false;

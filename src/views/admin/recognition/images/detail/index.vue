@@ -99,7 +99,7 @@ export default defineComponent({
     const getDatasetImage = () => {
       state.isLoading = true;
       if (state.type === 'disease') {
-        datasetHttp.searchDiseaseDatasetImage(datasetParams)
+        datasetHttp.getDiseaseDatasetImage(datasetParams)
           .then((response: any) => {
             state.form.imgAmount = response.totalElements;
             state.total = response.totalElements;
@@ -120,7 +120,7 @@ export default defineComponent({
             state.isLoading = false;
           });
       } else if (state.type === 'pest') {
-        datasetHttp.searchPestDatasetImage(datasetParams)
+        datasetHttp.getPestDatasetImage(datasetParams)
           .then((response: any) => {
             state.form.imgAmount = response.totalElements;
             state.total = response.totalElements;
@@ -138,7 +138,7 @@ export default defineComponent({
             state.isLoading = false;
           });
       } else if (state.type === 'plant') {
-        datasetHttp.searchPlantsDatasetImage(datasetParams)
+        datasetHttp.getPlantsDatasetImage(datasetParams)
           .then((response: any) => {
             state.form.imgAmount = response.totalElements;
             state.total = response.totalElements;

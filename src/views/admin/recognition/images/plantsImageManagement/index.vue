@@ -104,7 +104,7 @@ export default defineComponent({
     } as datasetParams);
     const searchPlantsDataset = () => {
       state.isLoading = true;
-      datasetHttp.searchPlantsDataset(datasetParams)
+      datasetHttp.getPlantsDataset(datasetParams)
         .then((response: any) => {
           state.total = response.totalElements;
           state.size = response.size;

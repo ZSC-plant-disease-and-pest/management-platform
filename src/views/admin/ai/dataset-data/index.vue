@@ -1,23 +1,18 @@
 <template>
   <el-row align="middle">
     <el-col :span="12">
-      <el-button type="primary" @click="add">
+      <el-button type="primary" @click="topButtonClick('add')">
         添加
       </el-button>
     </el-col>
     <el-col :span="12">
       <div class="describe">
-        <span>
-          名称：
-          <span
-            class="link"
-            @click="checkDetail"
-          >
-            {{ form.name }}
-          </span>
+        名称：
+        <span class="link" @click="topButtonClick('view')" >
+          {{ datasetData.name }}
         </span>
         <span style="margin-left: 15px">
-          数据集图片数量：{{ form.imgAmount }}
+          数据集图片数量：{{ datasetData.imgAmount }}
         </span>
       </div>
     </el-col>
@@ -38,155 +33,122 @@
       />
     </div>
   </div>
-  <Pagenum
-    :total="total"
-    :currentPage="page"
-    :pageSize="size"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-    :pageSizes="[12, 50, 100]"
+  <BasicPage
+    :pageList="pageList"
+    :page-sizes="[12, 20, 30, 40, 50, 100]"
+    @handleChange="handleChange"
   />
-  <Dialog
-    ref="dialogRef"
+  <DataPageModel
+    ref="dataPageModelRef"
     @refreshTable="refreshTable"
-    :key="dialogKey"
   />
 </template>
 
 <script lang="ts">
-import {
-  toRefs,
-  reactive,
-  onBeforeMount,
-  defineComponent,
-  ref
-} from 'vue';
+import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { datasetHttp, datasetParams } from '@/api/dataset';
-import { useRoute } from 'vue-router';
-import Dialog from './components/Dialog.vue';
+import { useRoute, useRouter } from 'vue-router';
+import { pageList } from './data';
+import { ElMessage } from 'element-plus';
 import Describe from './components/Describe.vue';
-import Pagenum from '@/components/common/pagenum/Pagenum.vue';
+import DataPageModel from './components/DataPageModel.vue';
+import BasicPage from '@/components/common/BasicPage/index.vue';
 
 export default defineComponent({
-  name: 'detail',
-  components: { Dialog, Describe, Pagenum },
+  name: 'exclude',
+  components: { Describe, DataPageModel, BasicPage },
   setup () {
     const route = useRoute();
+    const router = useRouter();
+
     onBeforeMount(() => {
-      state.type = String(route.params.type);
+      if (!Number(route.query.informationId)) {
+        router.push(`/admin/${route.params.type === 'plant' ? route.params.type + 's' : route.params.type}-images`);
+        ElMessage.warning('非法访问');
+      }
+      state.datasetData.type = String(route.params.type);
+      state.datasetData.name = String(route.query.name);
       datasetParams.id = Number(route.params.id);
       datasetParams.informationId = Number(route.query.informationId);
-      state.form.name = String(route.query.name);
       getDatasetImage();
     });
 
+    // 数据仓库
     const state = reactive({
-      type: '',
-      form: {} as datasetParams,
+      datasetData: {} as any,
       describeList: [] as Array<any>,
-      dialogRef: ref(),
+      pageList,
       isLoading: false,
-      total: 0,
-      page: 1,
-      size: 12,
-      dialogKey: 0
+      dataPageModelRef: ref()
     });
 
-    const datasetParams = reactive({
-      page: 0,
-      size: 12
-    } as datasetParams);
+    // 请求表单数据
+    const datasetParams = reactive({ page: 0, size: 12 } as datasetParams);
     const getDatasetImage = () => {
       state.isLoading = true;
-      if (state.type === 'disease') {
-        datasetHttp.searchDiseaseDatasetImage(datasetParams)
-          .then((response: any) => {
-            state.form.imgAmount = response.totalElements;
-            state.total = response.totalElements;
-            state.size = response.size;
-            state.describeList = [];
-            for (let i = 0; i < response.content.length; i++) {
-              state.describeList.push({
-                id: response.content[i].id,
-                src: `http://localhost:8080${response.content[i].path}`,
-                size: response.content[i].size,
-                resolution: response.content[i].resolution,
-                creator: response.content[i].creator,
-                createTime: response.content[i].createTime
-              });
-            }
-          })
-          .finally(() => {
-            state.isLoading = false;
-          });
-      } else if (state.type === 'pest') {
-        datasetHttp.searchPestDatasetImage(datasetParams)
-          .then((response: any) => {
-            state.form.imgAmount = response.totalElements;
-            state.total = response.totalElements;
-            state.size = response.size;
-            state.describeList = [];
-            for (let i = 0; i < response.content.length; i++) {
-              state.describeList.push({
-                id: response.content[i].id,
-                src: `http://localhost:8080${response.content[i].path}`,
-                size: response.content[i].size
-              });
-            }
-          })
-          .finally(() => {
-            state.isLoading = false;
-          });
-      } else if (state.type === 'plant') {
-        datasetHttp.searchPlantsDatasetImage(datasetParams)
-          .then((response: any) => {
-            state.form.imgAmount = response.totalElements;
-            state.total = response.totalElements;
-            state.size = response.size;
-            state.describeList = [];
-            for (let i = 0; i < response.content.length; i++) {
-              state.describeList.push({
-                id: response.content[i].id,
-                src: `http://localhost:8080${response.content[i].path}`,
-                size: response.content[i].size
-              });
-            }
-          })
-          .finally(() => {
-            state.isLoading = false;
-          });
+      if (state.datasetData.type === 'disease') {
+        datasetHttp.getDiseaseDatasetImage(datasetParams)
+          .then((response: any) => { getDatasetImageSuccessfully(response); })
+          .finally(() => { state.isLoading = false; });
+      } else if (state.datasetData.type === 'pest') {
+        datasetHttp.getPestDatasetImage(datasetParams)
+          .then((response: any) => { getDatasetImageSuccessfully(response); })
+          .finally(() => { state.isLoading = false; });
+      } else if (state.datasetData.type === 'plant') {
+        datasetHttp.getPlantsDatasetImage(datasetParams)
+          .then((response: any) => { getDatasetImageSuccessfully(response); })
+          .finally(() => { state.isLoading = false; });
       }
     };
-    const add = () => {
-      state.dialogRef.openDialog(state.type);
+
+    // 对请求成功得到的数据集图片数据进行处理
+    const getDatasetImageSuccessfully = (response: any) => {
+      state.datasetData.imgAmount = response.totalElements;
+      state.pageList.total = response.totalElements;
+      state.pageList.size = response.size;
+      state.describeList = [];
+      for (let i = 0; i < response.content.length; i++) {
+        response.content[i].src = `http://localhost:8080${response.content[i].path}`;
+        state.describeList.push(response.content[i]);
+      }
     };
-    const checkDetail = () => {
-      window.open(`http://localhost:8082/${state.type}/detail/${datasetParams.informationId}`, '_blank');
+
+    // 头部按键
+    const topButtonClick = (name: string) => {
+      if (name === 'add') {
+        state.dataPageModelRef.openDialog(
+          state.datasetData.type,
+          { name: state.datasetData.name, id: datasetParams.id }
+        );
+      } else if (name === 'view') {
+        window.open(`http://localhost:8082/${state.datasetData.type}/detail/${datasetParams.informationId}`, '_blank');
+      }
     };
+
+    // 分页改变
+    const handleChange = (name: string, data: any) => {
+      if (name === 'page') {
+        datasetParams.page = data - 1;
+        state.pageList.page = data;
+      } else if (name === 'size') {
+        datasetParams.size = data;
+        datasetParams.page = 0;
+        state.pageList.size = data;
+        state.pageList.page = 1;
+      }
+      getDatasetImage();
+    };
+
+    // 刷新
     const refreshTable = () => {
-      getDatasetImage();
-      state.dialogKey += 1;
-    };
-    const handleSizeChange = (newSize: any) => {
-      datasetParams.size = newSize;
-      datasetParams.page = 0;
-      state.size = newSize;
-      state.page = 1;
-      getDatasetImage();
-    };
-    const handleCurrentChange = (newPage: any) => {
-      datasetParams.page = newPage;
-      state.page = newPage + 1;
       getDatasetImage();
     };
 
     return {
       ...toRefs(state),
-      add,
-      checkDetail,
-      refreshTable,
-      handleSizeChange,
-      handleCurrentChange
+      topButtonClick,
+      handleChange,
+      refreshTable
     };
   }
 });

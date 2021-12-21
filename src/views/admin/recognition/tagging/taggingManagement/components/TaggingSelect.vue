@@ -69,7 +69,7 @@ export default defineComponent({
             state.isLoading = false;
           });
       } else if (state.datasetType === '1') {
-        datasetHttp.searchPestDataset(datasetParams)
+        datasetHttp.getPestDataset(datasetParams)
           .then((response: any) => {
             state.total = response.totalElements;
             state.list = [];
@@ -84,7 +84,7 @@ export default defineComponent({
             state.isLoading = false;
           });
       } else if (state.datasetType === '2') {
-        datasetHttp.searchPlantsDataset(datasetParams)
+        datasetHttp.getPlantsDataset(datasetParams)
           .then((response: any) => {
             state.total = response.totalElements;
             state.list = [];

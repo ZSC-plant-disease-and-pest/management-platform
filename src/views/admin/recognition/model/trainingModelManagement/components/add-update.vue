@@ -661,7 +661,7 @@ export default defineComponent({
             state.isLoading = false;
           });
       } else if (id === 1) {
-        datasetHttp.searchPestDataset({ page: 0, size: 2000 })
+        datasetHttp.getPestDataset({ page: 0, size: 2000 })
           .then((response: any) => {
             const [...tempResponse] = response.content;
             state.pestDataset.total = tempResponse.length;
@@ -675,7 +675,7 @@ export default defineComponent({
             state.isLoading = false;
           });
       } else if (id === 2) {
-        datasetHttp.searchPlantsDataset({ page: 0, size: 2000 })
+        datasetHttp.getPlantsDataset({ page: 0, size: 2000 })
           .then((response: any) => {
             const [...tempResponse] = response.content;
             state.plantsDataset.total = tempResponse.length;
