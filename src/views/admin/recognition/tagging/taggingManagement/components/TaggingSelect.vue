@@ -54,7 +54,7 @@ export default defineComponent({
     const getDataset = () => {
       state.isLoading = true;
       if (state.datasetType === '0') {
-        datasetHttp.searchDiseaseDataset(datasetParams)
+        datasetHttp.getDiseaseDataset(datasetParams)
           .then((response: any) => {
             state.total = response.totalElements;
             state.list = [];

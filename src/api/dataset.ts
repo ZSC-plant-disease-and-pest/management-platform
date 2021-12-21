@@ -34,7 +34,7 @@ export class datasetHttp {
   }
 
   // 删除病害数据集
-  static deleteDisease (ids: number) {
+  static deleteDiseaseDataset (ids: number) {
     return http({
       url: `/api/diseaseDs/deleteByIds/${ids}`,
       method: 'delete'
@@ -50,7 +50,7 @@ export class datasetHttp {
   }
 
   // 查询病害数据集
-  static searchDiseaseDataset (params: (datasetParams | null)) {
+  static getDiseaseDataset (params: (datasetParams | null)) {
     return http({
       url: '/api/diseaseDs/search',
       method: 'get',

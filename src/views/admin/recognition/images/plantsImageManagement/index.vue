@@ -135,7 +135,7 @@ export default defineComponent({
         ElMessage.warning('请选择需要删除的内容');
       } else {
         state.isLoading = true;
-        datasetHttp.deleteDisease(selectedIds.join(','))
+        datasetHttp.deleteDiseaseDataset(selectedIds.join(','))
           .then(() => {
             ElMessage.success('删除成功');
             searchPlantsDataset();

@@ -647,7 +647,7 @@ export default defineComponent({
     // 添加全部数据集到模型中
     const addAll = (id: number) => {
       if (id === 0) {
-        datasetHttp.searchDiseaseDataset({ page: 0, size: 2000 })
+        datasetHttp.getDiseaseDataset({ page: 0, size: 2000 })
           .then((response: any) => {
             const [...tempResponse] = response.content;
             state.diseaseDataset.total = tempResponse.length;

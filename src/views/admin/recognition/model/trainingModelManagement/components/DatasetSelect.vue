@@ -78,7 +78,7 @@ export default defineComponent({
       }
       state.isLoading = true;
       if (props.type === 'disease') {
-        datasetHttp.searchDiseaseDataset(datasetParams)
+        datasetHttp.getDiseaseDataset(datasetParams)
           .then((response: any) => {
             state.total = response.totalElements;
             state.list = [];
