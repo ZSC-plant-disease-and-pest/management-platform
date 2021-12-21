@@ -19,18 +19,11 @@
   </el-row>
   <div class="box-images">
     <div
-      v-for="item in describeList"
+      v-for="item in dataPageDetailList"
       :key="item.id"
       class="describe"
     >
-      <Describe
-        :id="item.id"
-        :src="item.src"
-        :size="item.size"
-        :resolution="item.resolution"
-        :creator="item.creator"
-        :createTime="item.createTime"
-      />
+      <DataPageDetail :dataPageDetailData="item" />
     </div>
   </div>
   <BasicPage
@@ -50,13 +43,13 @@ import { datasetHttp, datasetParams } from '@/api/dataset';
 import { useRoute, useRouter } from 'vue-router';
 import { pageList } from './data';
 import { ElMessage } from 'element-plus';
-import Describe from './components/Describe.vue';
+import DataPageDetail from './components/DataPageDetail.vue';
 import DataPageModel from './components/DataPageModel.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
 
 export default defineComponent({
   name: 'exclude',
-  components: { Describe, DataPageModel, BasicPage },
+  components: { DataPageDetail, DataPageModel, BasicPage },
   setup () {
     const route = useRoute();
     const router = useRouter();
@@ -76,7 +69,7 @@ export default defineComponent({
     // 数据仓库
     const state = reactive({
       datasetData: {} as any,
-      describeList: [] as Array<any>,
+      dataPageDetailList: [] as Array<any>,
       pageList,
       isLoading: false,
       dataPageModelRef: ref()
@@ -106,10 +99,10 @@ export default defineComponent({
       state.datasetData.imgAmount = response.totalElements;
       state.pageList.total = response.totalElements;
       state.pageList.size = response.size;
-      state.describeList = [];
+      state.dataPageDetailList = [];
       for (let i = 0; i < response.content.length; i++) {
         response.content[i].src = `http://localhost:8080${response.content[i].path}`;
-        state.describeList.push(response.content[i]);
+        state.dataPageDetailList.push(response.content[i]);
       }
     };
 
