@@ -59,8 +59,8 @@ export default defineComponent({
 
     const state = reactive({
       loginForm: {
-        username: 'xgj',
-        password: '123456'
+        username: 'root',
+        password: ''
       } as userForm,
       loginFormRef: ref(),
       rules: {
