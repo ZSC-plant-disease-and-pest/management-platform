@@ -100,7 +100,7 @@ export default defineComponent({
         }
         getDiseaseDataset();
       } else if (name === 'add') {
-        state.dataPageModelRef.openDialog('new');
+        state.dataPageModelRef.openDialog('disease');
       } else if (name === 'delete') {
         deleteDiseaseDataset(data);
       }
@@ -108,10 +108,10 @@ export default defineComponent({
 
     // 表格按键
     const tableButtonClick = (name: string, data: any) => {
-      if (name === 'view') {
+      if (name === 'dataset') {
+        // 打开病害数据集
+      } else if (name === 'view') {
         window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
-      } else if (name === 'edit') {
-        state.dataPageModelRef.openDialog('edit', data);
       }
     };
 

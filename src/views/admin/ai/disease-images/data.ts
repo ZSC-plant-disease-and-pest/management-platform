@@ -13,7 +13,7 @@ export const topButtonList: topButtonInterface = [
 ];
 
 export const tableButtonList: tableButtonInterface = [
-  { name: 'edit', icon: 'el-icon-postcard', color: 'rgb(100, 194, 100)', label: '查看数据集' },
+  { name: 'dataset', icon: 'el-icon-postcard', color: 'rgb(100, 194, 100)', label: '查看数据集' },
   { name: 'view', icon: 'el-icon-view', color: 'rgb(63, 186, 246)', label: '病害详情' }
 ];
 
