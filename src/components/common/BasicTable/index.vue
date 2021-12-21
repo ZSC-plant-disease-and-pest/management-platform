@@ -22,7 +22,7 @@
     border
     style="width: 100%; margin-top: 15px"
   >
-    <!-- 选择框 -->
+    <!-- 表格左侧选择框 -->
     <el-table-column type="selection" width="55"/>
 
     <!-- 表格数据 -->
@@ -34,12 +34,13 @@
       :width="item.width"
       sortable="custom"
     >
+      <!-- 对特殊数据进行处理 -->
       <template #default="scope" v-if="item.alias">
         {{ item.getAlias(scope.row[item.prop]) }}
       </template>
     </el-table-column>
 
-    <!-- 操作框 -->
+    <!-- 表格右侧操作框 -->
     <el-table-column label="操作" :width="tableButtonWidth" fixed="right">
       <template #default="scope">
         <!-- 表格内操作栏自定义按钮 -->
@@ -92,12 +93,14 @@ export default defineComponent({
       type: Number,
       default: 137
     },
+    // 头部按钮
     topButtonList: {
       type: Array,
       default: () => {
         return [];
       }
     },
+    // 表格按钮列表
     tableButtonList: {
       type: Array,
       default: () => {
@@ -105,11 +108,7 @@ export default defineComponent({
       }
     }
   },
-  emits: [
-    'topButtonClick',
-    'tableButtonClick',
-    'sortChange'
-  ],
+  emits: ['topButtonClick', 'tableButtonClick', 'sortChange'],
   setup (props, { emit }) {
     // 表格中被选择的 ids
     let selectedIds: Array<number> = [];
@@ -157,11 +156,7 @@ export default defineComponent({
 
     // 被选中行的样式
     const tableRowStyle = (data: any) => {
-      if (data.row.id === props.rowId) {
-        return 'background-color: #fafafa';
-      } else {
-        return '';
-      }
+      return data.row.id === props.rowId ? 'background-color: #fafafa' : '';
     };
 
     return {
