@@ -40,7 +40,7 @@
     </el-table-column>
 
     <!-- 操作框 -->
-    <el-table-column label="操作" :width="tableButtonWidth" >
+    <el-table-column label="操作" :width="tableButtonWidth" fixed="right">
       <template #default="scope">
         <!-- 表格内操作栏自定义按钮 -->
         <el-button
