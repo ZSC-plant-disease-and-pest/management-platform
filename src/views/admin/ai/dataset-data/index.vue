@@ -31,8 +31,8 @@
     :page-sizes="[12, 20, 30, 40, 50, 100]"
     @handleChange="handleChange"
   />
-  <DataPageModel
-    ref="dataPageModelRef"
+  <DataPageDialog
+    ref="dataPageDialogRef"
     @refreshTable="refreshTable"
   />
 </template>
@@ -44,12 +44,12 @@ import { useRoute, useRouter } from 'vue-router';
 import { pageList } from './data';
 import { ElMessage } from 'element-plus';
 import DataPageDetail from './components/DataPageDetail.vue';
-import DataPageModel from './components/DataPageModel.vue';
+import DataPageDialog from './components/DataPageDialog.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
 
 export default defineComponent({
   name: 'exclude',
-  components: { DataPageDetail, DataPageModel, BasicPage },
+  components: { DataPageDetail, DataPageDialog, BasicPage },
   setup () {
     const route = useRoute();
     const router = useRouter();
@@ -72,7 +72,7 @@ export default defineComponent({
       dataPageDetailList: [] as Array<any>,
       pageList,
       isLoading: false,
-      dataPageModelRef: ref()
+      dataPageDialogRef: ref()
     });
 
     // 请求表单数据
@@ -109,7 +109,7 @@ export default defineComponent({
     // 头部按键
     const topButtonClick = (name: string) => {
       if (name === 'add') {
-        state.dataPageModelRef.openDialog(
+        state.dataPageDialogRef.openDialog(
           state.datasetData.type,
           { name: state.datasetData.name, id: datasetParams.id }
         );

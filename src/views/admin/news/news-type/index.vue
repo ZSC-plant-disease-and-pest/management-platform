@@ -18,8 +18,8 @@
     :pageList="pageList"
     @handleChange="handleChange"
   />
-  <DataPageModel
-    ref="dataPageModelRef"
+  <DataPageDialog
+    ref="dataPageDialogRef"
     @refreshTable="refreshTable"
   />
 </template>
@@ -32,10 +32,10 @@ import { searchList, topButtonList, tableButtonList, tableColumnList, pageList }
 import BasicTable from '@/components/common/BasicTable/index.vue';
 import BasicSearch from '@/components/common/BasicSearch/index.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
-import DataPageModel from './components/DataPageModel.vue';
+import DataPageDialog from './components/DataPageDialog.vue';
 
 export default defineComponent({
-  components: { BasicTable, BasicSearch, BasicPage, DataPageModel },
+  components: { BasicTable, BasicSearch, BasicPage, DataPageDialog },
   setup () {
     onBeforeMount(() => {
       getNewsType();
@@ -50,7 +50,7 @@ export default defineComponent({
       tableColumnList,
       pageList,
       isLoading: false,
-      dataPageModelRef: ref()
+      dataPageDialogRef: ref()
     });
 
     // 请求表单数据
@@ -100,7 +100,7 @@ export default defineComponent({
         }
         getNewsType();
       } else if (name === 'add') {
-        state.dataPageModelRef.openDialog('new');
+        state.dataPageDialogRef.openDialog('new');
       } else if (name === 'delete') {
         deleteNewsType(data);
       }
@@ -111,7 +111,7 @@ export default defineComponent({
       if (name === 'view') {
         window.open(`http://localhost:8082/newsType/detail/${data.id}`, '_blank');
       } else if (name === 'edit') {
-        state.dataPageModelRef.openDialog('edit', data);
+        state.dataPageDialogRef.openDialog('edit', data);
       }
     };
 

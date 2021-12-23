@@ -31,8 +31,8 @@
     :page-sizes="[18, 30, 40, 50, 100]"
     @handleChange="handleChange"
   />
-  <ImageTaggingDialog
-    ref="imageTaggingDialogRef"
+  <DataPageDialog
+    ref="dataPageDialogRef"
     :dialogType="dialogType"
     @dialogClose="dialogClose"
     :key="taggingDialogKey"
@@ -44,10 +44,10 @@ import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { taggingHttp, taggingParams } from '@/api/tagging';
 import { pageList } from './data';
 import BasicPage from '@/components/common/BasicPage/index.vue';
-import ImageTaggingDialog from './components/ImageTaggingDialog.vue';
+import DataPageDialog from './components/DataPageDialog.vue';
 
 export default defineComponent({
-  components: { BasicPage, ImageTaggingDialog },
+  components: { BasicPage, DataPageDialog },
   setup () {
     onBeforeMount(() => {
       getTaggingImages();
@@ -60,7 +60,7 @@ export default defineComponent({
       pageList,
       taggingDialogKey: 0,
       waitTaggingTotal: undefined as number | undefined,
-      imageTaggingDialogRef: ref(),
+      dataPageDialogRef: ref(),
       isLoading: false
     });
 
@@ -92,7 +92,7 @@ export default defineComponent({
     };
     const imageClick = (value: any) => {
       dialogType.value = 'edit';
-      state.imageTaggingDialogRef.edit(state.tabsName, value);
+      state.dataPageDialogRef.edit(state.tabsName, value);
     };
     const tabsClick = () => {
       if (Number(state.tabsName) !== taggingParams.datasetType) {

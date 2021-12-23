@@ -26,8 +26,8 @@
           :page-sizes="[9, 20, 30, 40, 50, 100]"
           @handleChange="familyHandleChange"
         />
-        <FamilyDataPageModel
-          ref="familyDataPageModelRef"
+        <FamilyDataPageDialog
+          ref="familyDataPageDialogRef"
           @refreshTable="familyRefreshTable"
         />
       </el-card>
@@ -56,8 +56,8 @@
           :page-sizes="[9, 20, 30, 40, 50, 100]"
           @handleChange="genusHandleChange"
         />
-        <GenusDataPageModel
-          ref="genusDataPageModelRef"
+        <GenusDataPageDialog
+          ref="genusDataPageDialogRef"
           @refreshTable="genusRefreshTable"
         />
       </el-card>
@@ -86,11 +86,11 @@ import {
 import BasicTable from '@/components/common/BasicTable/index.vue';
 import BasicSearch from '@/components/common/BasicSearch/index.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
-import FamilyDataPageModel from './components/FamilyDataPageModel.vue';
-import GenusDataPageModel from './components/GenusDataPageModel.vue';
+import FamilyDataPageDialog from './components/FamilyDataPageDialog.vue';
+import GenusDataPageDialog from './components/GenusDataPageDialog.vue';
 
 export default defineComponent({
-  components: { BasicTable, BasicSearch, BasicPage, FamilyDataPageModel, GenusDataPageModel },
+  components: { BasicTable, BasicSearch, BasicPage, FamilyDataPageDialog, GenusDataPageDialog },
   setup () {
     const route = useRoute();
     onBeforeMount(() => {
@@ -114,7 +114,7 @@ export default defineComponent({
       familyTableColumnList,
       familyPageList,
       familyIsLoading: false,
-      familyDataPageModelRef: ref(),
+      familyDataPageDialogRef: ref(),
       familyRowId: undefined
     });
 
@@ -126,7 +126,7 @@ export default defineComponent({
       genusTableColumnList,
       genusPageList,
       genusIsLoading: false,
-      genusDataPageModelRef: ref()
+      genusDataPageDialogRef: ref()
     });
 
     // 请求表单数据
@@ -205,7 +205,7 @@ export default defineComponent({
         }
         getFamily();
       } else if (name === 'add') {
-        familyState.familyDataPageModelRef.openDialog('new');
+        familyState.familyDataPageDialogRef.openDialog('new');
       } else if (name === 'delete') {
         deleteFamily(data);
       }
@@ -228,7 +228,7 @@ export default defineComponent({
         familyState.familyRowId = undefined;
         getGenus();
       } else if (name === 'add') {
-        genusState.genusDataPageModelRef.openDialog('new');
+        genusState.genusDataPageDialogRef.openDialog('new');
       } else if (name === 'delete') {
         deleteGenus(data);
       }
@@ -243,7 +243,7 @@ export default defineComponent({
       } else if (name === 'view') {
         // ..
       } else if (name === 'edit') {
-        familyState.familyDataPageModelRef.openDialog('edit', data);
+        familyState.familyDataPageDialogRef.openDialog('edit', data);
       }
     };
 
@@ -251,7 +251,7 @@ export default defineComponent({
       if (name === 'view') {
         // ...
       } else if (name === 'edit') {
-        genusState.genusDataPageModelRef.openDialog('edit', data);
+        genusState.genusDataPageDialogRef.openDialog('edit', data);
       }
     };
 
