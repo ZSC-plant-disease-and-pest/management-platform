@@ -1,152 +1,151 @@
 <template>
-  <BasicSearch
-    :searchList="searchList"
-    @topButtonClick="topButtonClick"
-  />
-  <BasicTable
-    :tableDataList="tableDataList"
-    :tableColumnList="tableColumnList"
-    :topButtonList="topButtonList"
-    :tableButtonList="tableButtonList"
-    :isLoading="isLoading"
-    @topButtonClick="topButtonClick"
-    @tableButtonClick="tableButtonClick"
-    @sortChange="sortChange"
-  />
+  <div class="header">
+    <span>
+      <span style="color: #FF6347">待标注图片：{{ waitTaggingTotal }}张</span>
+      （说明：左键单击弹出标注对话框）
+    </span>
+    <el-button class="button" type="primary" @click="upload">
+      上传标注图片
+    </el-button>
+  </div>
+  <el-tabs
+    v-model="tabsName"
+    @tab-click="tabsClick"
+    style="width: 248px;"
+  >
+    <el-tab-pane label="病害图片" name="0"></el-tab-pane>
+    <el-tab-pane label="虫害图片" name="1"></el-tab-pane>
+    <el-tab-pane label="植物图片" name="2"></el-tab-pane>
+  </el-tabs>
+  <div class="box-images">
+    <img
+      class="image"
+      v-for="item in imageList"
+      :src="'http://localhost:8080' + item.path"
+      :key="item.id"
+      @click="imageClick(item)"
+    />
+  </div>
   <BasicPage
     :pageList="pageList"
+    :page-sizes="[18, 30, 40, 50, 100]"
     @handleChange="handleChange"
+  />
+  <ImageTaggingDialog
+    ref="imageTaggingDialogRef"
+    :dialogType="dialogType"
+    @dialogClose="dialogClose"
+    :key="taggingDialogKey"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
-import { diseaseHttp, diseaseParams } from '@/api/disease';
-import { useRoute, useRouter } from 'vue-router';
-import { ElMessage } from 'element-plus';
-import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
-import BasicTable from '@/components/common/BasicTable/index.vue';
-import BasicSearch from '@/components/common/BasicSearch/index.vue';
+import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
+import { taggingHttp, taggingParams } from '@/api/tagging';
+import { pageList } from './data';
 import BasicPage from '@/components/common/BasicPage/index.vue';
+import ImageTaggingDialog from './components/ImageTaggingDialog.vue';
 
 export default defineComponent({
-  components: { BasicTable, BasicSearch, BasicPage },
+  components: { BasicPage, ImageTaggingDialog },
   setup () {
-    const route = useRoute();
-    const router = useRouter();
     onBeforeMount(() => {
-      getDisease();
-    });
-    onUpdated(() => {
-      if (route.params.type === 'refresh') {
-        route.params.type = '';
-        getDisease();
-      }
+      getTaggingImages();
     });
 
     // 数据仓库
     const state = reactive({
-      tableDataList: [] as Array<any>,
-      searchList,
-      topButtonList,
-      tableButtonList,
-      tableColumnList,
+      imageList: [] as Array<any>,
+      tabsName: '0',
       pageList,
+      taggingDialogKey: 0,
+      waitTaggingTotal: undefined as number | undefined,
+      imageTaggingDialogRef: ref(),
       isLoading: false
     });
 
     // 请求表单数据
-    const diseaseParams = reactive({ page: 0, size: 10 } as diseaseParams);
-    const getDisease = () => {
+    const taggingParams = reactive({ datasetType: 0, page: 0, size: 18 } as taggingParams);
+    const getTaggingImages = () => {
       state.isLoading = true;
-      diseaseHttp.getDisease(diseaseParams)
+      taggingHttp.getTaggingImages(taggingParams)
         .then((response: any) => {
           state.pageList.total = response.totalElements;
           state.pageList.size = response.size;
-          state.tableDataList = [];
+          state.waitTaggingTotal = response.numberOfElements;
+          state.imageList = [];
           for (let i = 0; i < response.content.length; i++) {
-            state.tableDataList.push(response.content[i]);
+            state.imageList.push(response.content[i]);
           }
         })
         .finally(() => { state.isLoading = false; });
     };
 
-    // 删除
-    const deleteDisease = (selectedIds: any) => {
-      if (selectedIds.length === 0) {
-        ElMessage.warning('请选择需要删除的内容');
-      } else {
-        state.isLoading = true;
-        diseaseHttp.deleteDisease(selectedIds.join(','))
-          .then(() => {
-            ElMessage.success('删除成功');
-            getDisease();
-          })
-          .finally(() => { state.isLoading = false; });
-      }
+    const dialogType = ref('close');
+    const dialogClose = () => {
+      dialogType.value = 'close';
+      state.taggingDialogKey += 1;
+      getTaggingImages();
     };
-
-    // 头部按键
-    const topButtonClick = (name: string, data: any) => {
-      if (name === 'search') {
-        for (const index in data) {
-          if (data[index].name === 'name') {
-            diseaseParams.name = data[index].value === '' ? undefined : data[index].value;
-          }
-        }
-        getDisease();
-      } else if (name === 'reset') {
-        for (const index in state.searchList) {
-          state.searchList[index].value = '';
-          diseaseParams.name = undefined;
-        }
-        getDisease();
-      } else if (name === 'add') {
-        router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: '0' } });
-      } else if (name === 'delete') {
-        deleteDisease(data);
-      }
+    const upload = () => {
+      dialogType.value = 'upload';
     };
-
-    // 表格按键
-    const tableButtonClick = (name: string, data: any) => {
-      if (name === 'view') {
-        window.open(`http://localhost:8082/disease/detail/${data.id}`, '_blank');
-      } else if (name === 'edit') {
-        router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: data.id } });
-      }
+    const imageClick = (value: any) => {
+      dialogType.value = 'edit';
+      state.imageTaggingDialogRef.edit(state.tabsName, value);
     };
-
-    // 排序改变
-    const sortChange = (params: any) => {
-      diseaseParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
-      getDisease();
+    const tabsClick = () => {
+      if (Number(state.tabsName) !== taggingParams.datasetType) {
+        taggingParams.datasetType = Number(state.tabsName);
+        getTaggingImages();
+      }
     };
 
     // 分页改变
     const handleChange = (name: string, data: any) => {
       if (name === 'page') {
-        diseaseParams.page = data - 1;
+        taggingParams.page = data - 1;
         state.pageList.page = data;
       } else if (name === 'size') {
-        diseaseParams.size = data;
-        diseaseParams.page = 0;
+        taggingParams.size = data;
+        taggingParams.page = 0;
         state.pageList.size = data;
         state.pageList.page = 1;
       }
-      getDisease();
+      getTaggingImages();
     };
 
     return {
       ...toRefs(state),
-      topButtonClick,
-      tableButtonClick,
-      sortChange,
-      deleteDisease,
+      dialogType,
+      dialogClose,
+      upload,
+      imageClick,
+      tabsClick,
       handleChange
     };
   }
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.header {
+  display: flex;
+  justify-content: space-between;
+
+  .button {
+    margin-right: 15px;
+  }
+}
+.box-images {
+  display: flex;
+  flex-wrap: wrap;
+
+  .image {
+    width: 263px;
+    height: 197px;
+    margin: 15px;
+    cursor: pointer;
+  }
+}
+</style>

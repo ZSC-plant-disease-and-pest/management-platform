@@ -75,7 +75,7 @@ export default defineComponent({
     } as taggingParams);
     const searchTaggingImages = () => {
       state.isLoading = true;
-      taggingHttp.searchTaggingImages(taggingParams)
+      taggingHttp.getTaggingImages(taggingParams)
         .then((response: any) => {
           state.total = response.totalElements;
           state.size = response.size;

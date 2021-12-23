@@ -26,7 +26,7 @@ export class taggingHttp {
   }
 
   // 根据数据集类型查询待标注图片
-  static searchTaggingImages (params: taggingParams) {
+  static getTaggingImages (params: taggingParams) {
     const { datasetType } = params;
     return http({
       url: `/api/mark/searchByType/${datasetType}`,
