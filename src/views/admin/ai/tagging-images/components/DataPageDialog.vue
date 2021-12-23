@@ -2,9 +2,11 @@
   <el-dialog
     title="基本信息"
     v-model="dialogOpen"
+    :width="700"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :show-close="false"
+    destroy-on-close
   >
     <el-row :gutter="15" v-if="dialogType === 'edit'">
       <el-col :span="8">
@@ -31,7 +33,7 @@
       </el-col>
       <el-col :span="16">
         <span>
-          图片上传时间：{{ getStandardTime(imageInfo.createTime, 'dateTime') }}
+          图片上传时间：{{ Monent(imageInfo.createTime).format('YYYY-MM-DD  hh:mm:ss') }}
         </span>
       </el-col>
     </el-row>
@@ -39,7 +41,7 @@
       ref="formRef"
       size="small"
       :model="form"
-      label-width="110px"
+      label-width="100px"
       :rules="rules"
     >
       <el-row :gutter="0">
@@ -49,50 +51,22 @@
             prop="image"
             v-if="dialogType === 'upload'"
           >
-            <el-upload
-              ref="uploadImageRef"
-              :class="{ uploadImage: havingUploadImage }"
-              action="#"
-              list-type="picture-card"
-              :auto-upload="false"
-              :on-change="onChange"
+            <BasicImageUpload
+              ref="imageUploadRef"
               :limit="1"
-              :multiple="false"
-              accept=".gif,.jpg,.jpeg,.png,.bmp"
-            >
-              <template #default>
-                <i class="el-icon-plus"></i>
-              </template>
-              <template #file="{ file }">
-                <div>
-                  <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-                  <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file)"
-                    >
-                      <i class="el-icon-zoom-in"></i>
-                    </span>
-                    <span
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove"
-                    >
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </span>
-                </div>
-              </template>
-            </el-upload>
+              @onChange="fileListChange"
+              @preview="filePreview"
+            />
           </el-form-item>
           <el-form-item label="待标注图片：" v-if="dialogType === 'edit'">
             <img
               class="edit-image"
-              :src="dialogImageUrl"
+              :src="imagePreviewUrl"
               @click="handlePictureCardPreview(null)"
             />
           </el-form-item>
-          <el-dialog v-model="dialogImageVisible" title="查看图片">
-            <img style="width: 100%; height: 75%;" :src="dialogImageUrl" alt="" />
+          <el-dialog v-model="imagePreviewDialog" title="查看图片">
+            <img style="width: 100%; height: 75%;" :src="imagePreviewUrl" alt="" />
           </el-dialog>
         </el-col>
         <el-col :span="12">
@@ -128,11 +102,11 @@
       </el-row>
     </el-form>
     <template #footer>
-      <div class="footer">
-        <el-button @click="close">
+      <div style="textAlign: center">
+        <el-button @click="dialogVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="submit">
+        <el-button type="primary" :loading="isLoading" @click="submit">
           确认
         </el-button>
       </div>
@@ -141,21 +115,22 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, onUpdated, reactive, ref, toRefs, watch } from 'vue';
 import { taggingHttp, taggingParams } from '@/api/tagging';
 import { ElMessage } from 'element-plus';
-import { defineComponent, onUpdated, reactive, ref, toRefs, watch } from 'vue';
-import TaggingSelect from './TaggingSelect.vue';
-import { getStandardTime } from '@/utils/time';
+import Moment from 'moment';
+import TaggingSelect from '@/components/selector/TaggingSelector.vue';
+import BasicImageUpload from '@/components/common/BasicImageUpload/index.vue';
 
 export default defineComponent({
-  components: { TaggingSelect },
+  components: { TaggingSelect, BasicImageUpload },
   props: {
     dialogType: {
       type: String,
       default: 'close'
     }
   },
-  emits: ['dialogClose'],
+  emits: ['refreshTable'],
   setup (props, { emit }) {
     onUpdated(() => {
       if (props.dialogType === 'edit') {
@@ -199,23 +174,21 @@ export default defineComponent({
           trigger: ['blur', 'change']
         }]
       },
+      Moment,
       imageInfo: {} as any,
       dialogOpen: false,
       formRef: ref(),
       taggingSelectRef: ref(),
       uploadImageRef: ref(),
       havingUploadImage: false,
-      dialogImageUrl: '',
-      dialogImageVisible: false,
+      imagePreviewUrl: '',
+      imagePreviewDialog: false,
       fileList: [] as Array<any>,
-      isLoading: false,
-      getStandardTime
+      isLoading: false
     });
 
-    const taggingParams = reactive({
-      datasetType: undefined,
-      datasetId: undefined
-    } as taggingParams);
+    // 请求数据
+    const taggingParams = reactive({ datasetType: undefined, datasetId: undefined } as taggingParams);
     const uploadImage = () => {
       taggingParams.datasetType = Number(state.form.datasetType);
       if (state.form.datasetId) {
@@ -224,11 +197,9 @@ export default defineComponent({
       taggingHttp.uploadImage(taggingParams, state.fileList)
         .then(() => {
           ElMessage.success('添加图片成功');
-          emit('dialogClose', 'close');
+          emit('refreshTable');
         })
-        .finally(() => {
-          state.isLoading = false;
-        });
+        .finally(() => { state.isLoading = false; });
     };
     const taggingImage = () => {
       taggingParams.datasetType = Number(state.form.datasetType);
@@ -238,21 +209,16 @@ export default defineComponent({
       taggingHttp.taggingImage(taggingParams)
         .then(() => {
           ElMessage.success('标注图片成功');
-          emit('dialogClose', 'close');
+          emit('refreshTable');
         })
-        .finally(() => {
-          state.isLoading = false;
-        });
+        .finally(() => { state.isLoading = false; });
     };
     const edit = (datasetType: number, data: any) => {
       state.form.datasetType = String(datasetType);
       taggingParams.imgId = data.id;
-      state.dialogImageUrl = 'http://localhost:8080' + data.path;
+      state.imagePreviewUrl = 'http://localhost:8080' + data.path;
       state.imageInfo = data;
       console.log(data);
-    };
-    const close = () => {
-      emit('dialogClose', 'close');
     };
     const submit = () => {
       state.formRef.validate().then((valid: boolean) => {
@@ -273,34 +239,26 @@ export default defineComponent({
     const TaggingSelectChange = (data: number) => {
       state.form.datasetId = data;
     };
-    const onChange = (file: any, fileList: Array<any>) => {
-      state.havingUploadImage = true;
+
+    // 图片改变时
+    const fileListChange = (fileList: Array<any>) => {
       state.fileList = fileList;
     };
-    const handleRemove = () => {
-      state.uploadImageRef.clearFiles();
-      state.fileList = [];
-      setTimeout(() => {
-        state.havingUploadImage = false;
-      }, 1);
-    };
-    const handlePictureCardPreview = (file: any) => {
-      if (file.url !== undefined) {
-        state.dialogImageUrl = file.url;
-      }
-      state.dialogImageVisible = true;
+
+    // 图片预览
+    const filePreview = (file: any) => {
+      state.imagePreviewUrl = file?.url;
+      state.imagePreviewDialog = true;
     };
 
     return {
       ...toRefs(state),
       edit,
-      close,
       submit,
       datasetTypeChange,
       TaggingSelectChange,
-      onChange,
-      handleRemove,
-      handlePictureCardPreview
+      fileListChange,
+      filePreview
     };
   }
 });
@@ -339,6 +297,9 @@ export default defineComponent({
 }
 ::v-deep .el-upload-list__item {
   transition: none !important;
+}
+::v-deep .el-dialog__body {
+  padding: 30px 20px 0px;
 }
 .uploadImage ::v-deep .el-upload.el-upload--picture-card {
   display: none;

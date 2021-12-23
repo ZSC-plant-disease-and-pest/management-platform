@@ -1,22 +1,22 @@
 <template>
-  <div class="header">
-    <span>
-      <span style="color: #FF6347">待标注图片：{{ waitTaggingTotal }}张</span>
-      （说明：左键单击弹出标注对话框）
-    </span>
-    <el-button class="button" type="primary" @click="upload">
-      上传标注图片
-    </el-button>
-  </div>
-  <el-tabs
-    v-model="tabsName"
-    @tab-click="tabsClick"
-    style="width: 248px;"
-  >
+  <el-row justify="space-between">
+    <el-col :span="12">
+      <span style="color: #FF6347">待标注图片: {{ waitTaggingTotal }} 张</span>
+      (说明: 左键单击弹出标注对话框)
+    </el-col>
+    <el-col :span="12">
+      <el-button type="primary" @click="upload" style="float: right; marginRight: 10px">
+        上传标注图片
+      </el-button>
+    </el-col>
+  </el-row>
+
+  <el-tabs v-model="tabsName" @tab-click="tabsClick" style="width: 248px;">
     <el-tab-pane label="病害图片" name="0"></el-tab-pane>
     <el-tab-pane label="虫害图片" name="1"></el-tab-pane>
     <el-tab-pane label="植物图片" name="2"></el-tab-pane>
   </el-tabs>
+
   <div class="box-images">
     <img
       class="image"
@@ -26,11 +26,13 @@
       @click="imageClick(item)"
     />
   </div>
+
   <BasicPage
     :pageList="pageList"
     :page-sizes="[18, 30, 40, 50, 100]"
     @handleChange="handleChange"
   />
+
   <DataPageDialog
     ref="dataPageDialogRef"
     :dialogType="dialogType"
@@ -55,13 +57,14 @@ export default defineComponent({
 
     // 数据仓库
     const state = reactive({
-      imageList: [] as Array<any>,
       tabsName: '0',
+      waitTaggingTotal: undefined as number | undefined,
+      imageList: [] as Array<any>,
+      imageDialogState: 'close',
       pageList,
       taggingDialogKey: 0,
-      waitTaggingTotal: undefined as number | undefined,
-      dataPageDialogRef: ref(),
-      isLoading: false
+      isLoading: false,
+      dataPageDialogRef: ref()
     });
 
     // 请求表单数据
@@ -115,6 +118,11 @@ export default defineComponent({
       getTaggingImages();
     };
 
+    // 刷新
+    const refreshTable = () => {
+      getTaggingImages();
+    };
+
     return {
       ...toRefs(state),
       dialogType,
@@ -122,21 +130,14 @@ export default defineComponent({
       upload,
       imageClick,
       tabsClick,
-      handleChange
+      handleChange,
+      refreshTable
     };
   }
 });
 </script>
 
 <style lang="scss" scoped>
-.header {
-  display: flex;
-  justify-content: space-between;
-
-  .button {
-    margin-right: 15px;
-  }
-}
 .box-images {
   display: flex;
   flex-wrap: wrap;
