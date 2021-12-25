@@ -61,15 +61,12 @@ export class modelHttp {
   }
 
   // 分页查询训练模型
-  static searchModel (params: modelParams) {
+  static getModel (params: modelParams) {
     const { algorithm, name, status } = params;
     return http({
       url: '/api/model/search',
       method: 'get',
-      params: {
-        page: 0,
-        size: 10
-      },
+      params: { page: 0, size: 10 },
       data: {
         algorithm,
         name,

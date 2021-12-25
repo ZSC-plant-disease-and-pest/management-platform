@@ -110,7 +110,7 @@ export default defineComponent({
     } as modelParams);
     const getModel = () => {
       state.isLoading = true;
-      modelHttp.searchModel(modelParams)
+      modelHttp.getModel(modelParams)
         .then((response: any) => {
           state.total = response.totalElements;
           state.size = response.size;
