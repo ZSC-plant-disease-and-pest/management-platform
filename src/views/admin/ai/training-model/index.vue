@@ -105,13 +105,17 @@ export default defineComponent({
         router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: '0' } });
       } else if (name === 'delete') {
         deleteModel(data);
+      } else if (name === 'deploy') {
+        // 一键部署模型
+      } else if (name === 'train') {
+        // 开始训练模型
       }
     };
 
     // 表格按键
     const tableButtonClick = (name: string, data: any) => {
       if (name === 'view') {
-        window.open(`http://localhost:8082/model/detail/${data.id}`, '_blank');
+        // 查看模型详情
       } else if (name === 'edit') {
         router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: data.id } });
       }
