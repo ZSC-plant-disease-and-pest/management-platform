@@ -22,6 +22,8 @@ import ai from './modules/ai';
 const login = () => import('@/views/login/index.vue');
 // 后台管理布局
 const layout = () => import('@/layout/index.vue');
+// 测试
+const test = () => import('@/views/test/index.vue');
 
 // 后台管理
 // admin/
@@ -93,6 +95,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'login',
     component: login
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: test
   },
   {
     path: '/admin',
