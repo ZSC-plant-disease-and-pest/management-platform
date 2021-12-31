@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRefs } from 'vue';
+import { defineComponent, onBeforeMount, onUnmounted, reactive, ref, toRefs } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -51,12 +51,21 @@ interface userForm {
 }
 
 export default defineComponent({
-  prop: {},
-  components: {},
   setup () {
     const router = useRouter();
     const store = useStore();
 
+    // 添加监听事件
+    onBeforeMount(() => {
+      window.addEventListener('keydown', handleKeyDown, true);
+    });
+
+    // 销毁监听事件
+    onUnmounted(() => {
+      window.removeEventListener('keydown', handleKeyDown, true);
+    });
+
+    // 数据仓库
     const state = reactive({
       loginForm: {
         username: 'root',
@@ -76,10 +85,18 @@ export default defineComponent({
       isLoading: false
     });
 
+    // 全局监听按键按下
+    const handleKeyDown = (event: any) => {
+      // 回车键按下
+      if (event.keyCode === 13) {
+        submitForm();
+      }
+    };
+
+    // 登录
     const submitForm = () => {
       state.loginFormRef.validate().then((valid: boolean) => {
         if (valid) {
-          // 登陆
           state.isLoading = true;
           store.dispatch('user/login', state.loginForm)
             .then((response: any) => {
@@ -88,12 +105,11 @@ export default defineComponent({
                 ElMessage.success('登录成功');
               }
             })
-            .finally(() => {
-              state.isLoading = false;
-            });
+            .finally(() => { state.isLoading = false; });
         }
       });
     };
+
     return {
       ...toRefs(state),
       submitForm
