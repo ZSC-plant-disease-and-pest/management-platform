@@ -16,23 +16,15 @@ const system: RouteRecordRaw = {
       meta: {
         title: '角色信息管理'
       }
-    },
-    {
-      name: 'role-data-page',
-      path: 'role-data-page/:id',
-      component: () => import('@/views/admin/system/role-data/components/data-page.vue'),
-      meta: {
-        title: '角色信息详情'
-      }
-    },
-    {
-      name: 'user-data',
-      path: 'user-data/:id',
-      component: () => import('@/views/admin/system/user-data/index.vue'),
-      meta: {
-        title: '用户信息管理'
-      }
     }
+    // {
+    //   name: 'user-data',
+    //   path: 'user-data/:id',
+    //   component: () => import('@/views/admin/system/user-data/index.vue'),
+    //   meta: {
+    //     title: '用户信息管理'
+    //   }
+    // }
   ]
 };
 

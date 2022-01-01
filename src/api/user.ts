@@ -37,7 +37,7 @@ export class userHttp {
   }
 
   // 分页查询用户信息
-  static searchUser (params: (userParams | null)) {
+  static getUser (params: (userParams | null)) {
     return http({
       url: '/api/user/search',
       method: 'get',
@@ -46,7 +46,7 @@ export class userHttp {
   }
 
   // 通过ID查询用户详情
-  static searchUserById (id: number) {
+  static getUserById (id: number) {
     return http({
       url: `/api/user/search/${id}`,
       method: 'get'

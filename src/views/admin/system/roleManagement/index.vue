@@ -105,7 +105,7 @@ export default defineComponent({
     } as userParams);
     const searchUser = () => {
       state.isLoading = true;
-      userHttp.searchUser(userParams)
+      userHttp.getUser(userParams)
         .then((response: any) => {
           state.total = response.totalElements;
           state.size = response.size;
