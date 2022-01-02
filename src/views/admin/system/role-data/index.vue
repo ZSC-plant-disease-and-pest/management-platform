@@ -100,7 +100,7 @@ export default defineComponent({
         }
         getUser();
       } else if (name === 'add') {
-        state.dataPageDialogRef.openDialog();
+        state.dataPageDialogRef.openDialog('add');
       } else if (name === 'delete') {
         deleteUser(data);
       }
@@ -110,9 +110,9 @@ export default defineComponent({
     const tableButtonClick = (name: string, data: any) => {
       console.log(data);
       if (name === 'edit') {
-        // 打开编辑框
+        state.dataPageDialogRef.openDialog('edit', data);
       } else if (name === 'change') {
-        // 打开修改密码框
+        state.dataPageDialogRef.openDialog('change', data);
       }
     };
 
