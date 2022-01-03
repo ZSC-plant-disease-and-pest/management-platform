@@ -46,6 +46,7 @@ export default defineComponent({
   },
   setup (props) {
     const router = useRouter();
+
     const defaultActive = computed(() => {
       switch (props.path) {
         case 'news':
@@ -62,9 +63,12 @@ export default defineComponent({
           return '';
       }
     });
+
+    // 跳转路由
     const changeRouter = (params: string) => {
       router.push(`/admin/${props.path}/${params}`);
     };
+
     return {
       defaultActive,
       changeRouter
