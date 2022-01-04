@@ -64,18 +64,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onBeforeMount, ref, onUpdated } from 'vue';
+import { defineComponent, computed, onBeforeMount, ref, onUpdated, reactive } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 export default defineComponent({
-  // 子传父事件定义
   emits: ['menuSelect'],
   setup (props, { emit }) {
     const store = useStore();
     const route = useRoute();
     const router = useRouter();
+
     onBeforeMount(() => {
       // 头部菜单路径
       const path = route.path.split('/')[2];
@@ -86,12 +86,23 @@ export default defineComponent({
       }
     });
     onUpdated(() => {
+      console.log('current name: ' + store.getters['user/getName']);
       name.value = store.getters['user/getName'];
     });
 
+    const state = reactive({
+      name: '',
+      asideList: [] as Array<any>,
+      defaultActive: '',
+      isLoading: false
+    });
+
+    // 侧边导航栏列表
+    let asideList: any[] = [];
     const defaultActive = ref('');
     const name = ref('');
     const isLoading = ref(false);
+
     // 退出登录
     const logout = () => {
       isLoading.value = true;
@@ -102,17 +113,15 @@ export default defineComponent({
             ElMessage.success('退出成功');
           }
         })
-        .finally(() => {
-          isLoading.value = false;
-        });
+        .finally(() => { isLoading.value = false; });
     };
+
     // 静态头部名称(后面改成登录名称)
     const avatarColor = computed(() => {
       const colorArr = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
       return colorArr[Math.floor(Math.random() * 4)];
     });
-    // 侧边导航栏列表
-    let asideList: any[] = [];
+
     // 头部菜单被选择
     const menuSelect = (params: any) => {
       let path = '';
@@ -231,6 +240,7 @@ export default defineComponent({
       // 点击后默认跳到头部菜单路径的第一个子页面
       router.push(path);
     };
+
     return {
       defaultActive,
       name,
