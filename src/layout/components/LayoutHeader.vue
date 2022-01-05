@@ -13,29 +13,9 @@
         :default-active="defaultActive"
         @select="menuSelect"
       >
-        <el-menu-item index="home">
-          <i class="el-icon-s-home"></i>
-          首页
-        </el-menu-item>
-        <el-menu-item index="news">
-          <i class="el-icon-news"></i>
-          新闻公告
-        </el-menu-item>
-        <el-menu-item index="disease">
-          <i class="el-icon-s-data"></i>
-          病虫害数据库
-        </el-menu-item>
-        <el-menu-item index="gardens">
-          <i class="el-icon-sunny"></i>
-          园林花卉
-        </el-menu-item>
-        <el-menu-item index="recognition">
-          <i class="el-icon-search"></i>
-          AI 智能识别
-        </el-menu-item>
-        <el-menu-item index="system">
-          <i class="el-icon-set-up"></i>
-          系统管理
+        <el-menu-item v-for="item in headerMenuList" :key="item.index" :index="item.index">
+          <i :class="item.icon"></i>
+          {{ item.title }}
         </el-menu-item>
       </el-menu>
     </div>
@@ -64,10 +44,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onBeforeMount, ref, onUpdated, reactive } from 'vue';
+import { defineComponent, computed, onBeforeMount, ref, onUpdated, reactive, toRefs } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { headerMenuList } from './data';
 
 export default defineComponent({
   emits: ['menuSelect'],
@@ -94,6 +75,7 @@ export default defineComponent({
       name: '',
       asideList: [] as Array<any>,
       defaultActive: '',
+      headerMenuList,
       isLoading: false
     });
 
@@ -242,6 +224,7 @@ export default defineComponent({
     };
 
     return {
+      ...toRefs(state),
       defaultActive,
       name,
       logout,
