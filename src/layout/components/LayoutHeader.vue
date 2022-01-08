@@ -44,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onBeforeMount, ref, onUpdated, reactive, toRefs } from 'vue';
+import { defineComponent, computed, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -62,13 +62,13 @@ export default defineComponent({
       const path = route.path.split('/')[2];
       if (path) {
         menuSelect(path);
-        defaultActive.value = path;
-        name.value = store.getters['user/getName'];
+        state.defaultActive = path;
+        state.name = store.getters['user/getName'];
       }
     });
     onUpdated(() => {
       console.log('current name: ' + store.getters['user/getName']);
-      name.value = store.getters['user/getName'];
+      state.name = store.getters['user/getName'];
     });
 
     const state = reactive({
@@ -81,13 +81,10 @@ export default defineComponent({
 
     // 侧边导航栏列表
     let asideList: any[] = [];
-    const defaultActive = ref('');
-    const name = ref('');
-    const isLoading = ref(false);
 
     // 退出登录
     const logout = () => {
-      isLoading.value = true;
+      state.isLoading = true;
       store.dispatch('user/logout')
         .then((response: any) => {
           if (response === 'OK') {
@@ -95,7 +92,7 @@ export default defineComponent({
             ElMessage.success('退出成功');
           }
         })
-        .finally(() => { isLoading.value = false; });
+        .finally(() => { state.isLoading = true; });
     };
 
     // 静态头部名称(后面改成登录名称)
@@ -225,10 +222,7 @@ export default defineComponent({
 
     return {
       ...toRefs(state),
-      defaultActive,
-      name,
       logout,
-      isLoading,
       avatarColor,
       menuSelect
     };
