@@ -79,9 +79,6 @@ export default defineComponent({
       isLoading: false
     });
 
-    // 侧边导航栏列表
-    let asideList: any[] = [];
-
     // 退出登录
     const logout = () => {
       state.isLoading = true;
@@ -109,7 +106,7 @@ export default defineComponent({
         path = '/admin/home';
       } else if (params === 'news') {
         // 侧边导航栏列表
-        asideList = [
+        state.asideList = [
           {
             name: 'news',
             icon: 'el-icon-postcard',
@@ -123,7 +120,7 @@ export default defineComponent({
         // 根据头部菜单路径(param = 'new'),跳转到他的第一个子页面
         path = '/admin/news/newsManagement';
       } else if (params === 'disease') {
-        asideList = [
+        state.asideList = [
           {
             name: 'disease',
             icon: 'el-icon-first-aid-kit',
@@ -143,7 +140,7 @@ export default defineComponent({
         ];
         path = '/admin/disease/diseaseManagement';
       } else if (params === 'gardens') {
-        asideList = [
+        state.asideList = [
           {
             name: 'plants',
             icon: 'el-icon-cherry',
@@ -164,7 +161,7 @@ export default defineComponent({
         ];
         path = '/admin/gardens/plantsManagement';
       } else if (params === 'recognition') {
-        asideList = [
+        state.asideList = [
           {
             name: 'images',
             icon: 'el-icon-picture',
@@ -202,7 +199,7 @@ export default defineComponent({
         ];
         path = '/admin/recognition/diseaseImageManagement';
       } else if (params === 'system') {
-        asideList = [
+        state.asideList = [
           {
             name: 'system',
             icon: 'el-icon-setting',
@@ -215,7 +212,7 @@ export default defineComponent({
         path = '/admin/system/roleManagement';
       }
       // params 是头部菜单路径
-      emit('menuSelect', params, asideList);
+      emit('menuSelect', params, state.asideList);
       // 点击后默认跳到头部菜单路径的第一个子页面
       router.push(path);
     };
