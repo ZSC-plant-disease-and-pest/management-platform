@@ -33,18 +33,17 @@ export default defineComponent({
   },
   setup () {
     const route = useRoute();
-    // 生成响应式对象
+
     const state = reactive({
       path: route.path.split('/')[2],
       asideList: [] as Array<any>
     });
-    // 头部菜单被点击
+
     const menuSelect = (path: string, asideList: Array<any>) => {
-      // 被选中头部菜单的路径
       state.path = path;
-      // 侧边导航栏列表
       state.asideList = asideList;
     };
+
     return {
       ...toRefs(state),
       menuSelect
