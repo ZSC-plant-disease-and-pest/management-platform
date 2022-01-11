@@ -50,23 +50,22 @@ export default defineComponent({
     const defaultActive = computed(() => {
       switch (props.path) {
         case 'news':
-          return 'newsManagement';
+          return 'news-articles';
         case 'disease':
-          return 'diseaseManagement';
+          return 'disease-data';
         case 'gardens':
-          return 'plantsManagement';
-        case 'recognition':
-          return 'diseaseImageManagement';
+          return 'plants-data';
+        case 'ai':
+          return 'disease-images';
         case 'system':
-          return 'roleManagement';
+          return 'role-data';
         default:
           return '';
       }
     });
 
-    // 跳转路由
     const changeRouter = (params: string) => {
-      router.push(`/admin/${props.path}/${params}`);
+      router.push(`/admin/${params}`);
     };
 
     return {
