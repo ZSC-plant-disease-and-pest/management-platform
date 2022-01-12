@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import Breadcrumb from '@/components/common/breadcrumb/Breadcrumb.vue';
+import Breadcrumb from '@/components/common/BasicBreadcrumb/index.vue';
 
 export default defineComponent({
   components: { Breadcrumb },
@@ -31,6 +31,7 @@ export default defineComponent({
         return '100vh - 165px';
       }
     });
+
     return {
       minHeight
     };
