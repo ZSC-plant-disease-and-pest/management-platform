@@ -147,11 +147,11 @@
 
     <el-row :gutter="20" class="textarea-row">
       <el-col :span="24">
-        <el-form-item label="治理建议：" prop="suggestion">
+        <el-form-item label="治理建议：" prop="suggestion" style="marginBottom: 60px">
           <el-input
             class="textarea-common"
             v-model="form.suggestion"
-            :autosize="{ minRows: 4, maxRows: 4}"
+            :autosize="{ minRows: 6, maxRows: 6}"
             type="textarea"
             resize="none"
             placeholder="请输入治理建议"

@@ -4,8 +4,8 @@
     v-loading="loading"
     :data="tableDataList"
     :row-style="tableRowStyle"
-    :header-row-style="{'color': '#666666'}"
-    :header-cell-style="{'backgroundColor': '#8ccee8', 'textAlign': 'center'}"
+    :header-row-style="{'color': '#000000'}"
+    :header-cell-style="{'backgroundColor': '#87E8DE', 'textAlign': 'center'}"
     @row-click="rowClick"
     border
     height="798px"
@@ -56,7 +56,7 @@ export default defineComponent({
     // 被选中行的样式
     const tableRowStyle = (data: any) => {
       if (data.row.id === state.selectedId) {
-        return 'background-color: #f0f0f0; font-weight: 700; color: black';
+        return 'background-color: #F5F5F5; font-weight: 700; color: black';
       } else {
         return '';
       }
