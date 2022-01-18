@@ -51,7 +51,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
+import { defineComponent, computed, onBeforeMount, reactive, toRefs } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -76,15 +76,10 @@ export default defineComponent({
           state.defaultActive = String(searchMenuByPath(path));
           menuSelect(state.defaultActive);
         }
-        state.name = store.getters['user/getName'];
       }
-    });
-    onUpdated(() => {
-      state.name = store.getters['user/getName'];
     });
 
     const state = reactive({
-      name: '',
       asideList: [] as Array<any>,
       defaultActive: '',
       headerMenuList,
@@ -92,20 +87,10 @@ export default defineComponent({
       isLoading: false
     });
 
-    // 退出登录
-    const logout = () => {
-      state.isLoading = true;
-      store.dispatch('user/logout')
-        .then((response: any) => {
-          if (response === 'OK') {
-            router.push('/login');
-            ElMessage.success('退出成功');
-          }
-        })
-        .finally(() => { state.isLoading = true; });
-    };
+    const name = computed(() => {
+      return store.getters['user/getName'][0];
+    });
 
-    // 头像名称随机背景色
     const avatarColor = computed(() => {
       const colorArr = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
       return colorArr[Math.floor(Math.random() * 4)];
@@ -132,11 +117,25 @@ export default defineComponent({
       router.push(state.headerMenuItemList[params].path);
     };
 
+    // 退出登录
+    const logout = () => {
+      state.isLoading = true;
+      store.dispatch('user/logout')
+        .then((response: any) => {
+          if (response === 'OK') {
+            router.push('/login');
+            ElMessage.success('退出成功');
+          }
+        })
+        .finally(() => { state.isLoading = true; });
+    };
+
     return {
       ...toRefs(state),
-      logout,
+      name,
       avatarColor,
-      menuSelect
+      menuSelect,
+      logout
     };
   }
 });
