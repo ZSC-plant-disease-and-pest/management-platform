@@ -33,21 +33,6 @@ const test = () => import('@/views/test/index.vue');
 // home
 const home = () => import('@/views/admin/home/index.vue');
 
-// 2 新闻公告
-// news/newsManagement 新闻管理
-const newsManagement = () => import('@/views/admin/news/news/newsManagement/index.vue');
-const newsManagementAddUpdate = () => import('@/views/admin/news/news/newsManagement/components/add-update.vue');
-// news/typeManagement 新闻类别管理
-const typeManagement = () => import('@/views/admin/news/news/typeManagement/index.vue');
-
-// 3 病虫害数据库
-// disease/diseaseManagement 植物病害管理
-const diseaseManagement = () => import('@/views/admin/disease/disease/diseaseManagement/index.vue');
-const diseaseManagementAddUpdate = () => import('@/views/admin/disease/disease/diseaseManagement/components/add-update.vue');
-// disease/pestManagement 植物虫害管理
-const pestManagement = () => import('@/views/admin/disease/pest/pestManagement/index.vue');
-const pestManagementAddUpdate = () => import('@/views/admin/disease/pest/pestManagement/components/add-update.vue');
-
 // 4 园林花卉
 // gardens/plantsManagement 植物管理
 const plantsManagement = () => import('@/views/admin/gardens/plants/plantsManagement/index.vue');
@@ -220,56 +205,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'home',
         name: 'home',
         component: home
-      },
-      {
-        path: 'news/newsManagement',
-        name: 'newsManagement',
-        component: newsManagement
-      },
-      {
-        path: 'news/newsManagement/add',
-        name: 'newsManagementAdd',
-        component: newsManagementAddUpdate
-      },
-      {
-        path: 'news/newsManagement/update',
-        name: 'newsManagementUpdate',
-        component: newsManagementAddUpdate
-      },
-      {
-        path: 'news/typeManagement',
-        name: 'typeManagement',
-        component: typeManagement
-      },
-      {
-        path: 'disease/diseaseManagement',
-        name: 'diseaseManagement',
-        component: diseaseManagement
-      },
-      {
-        path: 'disease/diseaseManagement/add',
-        name: 'diseaseManagementAdd',
-        component: diseaseManagementAddUpdate
-      },
-      {
-        path: 'disease/diseaseManagement/update',
-        name: 'diseaseManagementUpdate',
-        component: diseaseManagementAddUpdate
-      },
-      {
-        path: 'disease/pestManagement',
-        name: 'pestManagement',
-        component: pestManagement
-      },
-      {
-        path: 'disease/pestManagement/add',
-        name: 'pestManagementAdd',
-        component: pestManagementAddUpdate
-      },
-      {
-        path: 'disease/pestManagement/update',
-        name: 'pestManagementUpdate',
-        component: pestManagementAddUpdate
       },
       {
         path: 'gardens/plantsManagement',
