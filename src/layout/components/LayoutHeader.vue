@@ -88,7 +88,11 @@ export default defineComponent({
     });
 
     const name = computed(() => {
-      return store.getters['user/getName'][0];
+      if (store.getters['user/getName']) {
+        return store.getters['user/getName'][0];
+      } else {
+        return '';
+      }
     });
 
     const avatarColor = computed(() => {
