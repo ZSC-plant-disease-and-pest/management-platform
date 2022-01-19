@@ -2,19 +2,10 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { getToken } from '@/utils/cookie';
 import store from '@/store';
-/**
- * 重构后路由
- */
-// import home from './modules/home';
-// import news from './modules/news';
-// import disease from './modules/disease';
-// import gardens from './modules/gardens';
-// import ai from './modules/ai';
-// import system from './modules/system';
 
-// 测试
-import disease from './modules/disease';
+import home from './modules/home';
 import news from './modules/news';
+import disease from './modules/disease';
 import gardens from './modules/gardens';
 import ai from './modules/ai';
 import system from './modules/system';
@@ -25,26 +16,6 @@ const login = () => import('@/views/login/index.vue');
 const layout = () => import('@/layout/index.vue');
 // 测试
 const test = () => import('@/views/test/index.vue');
-
-// 后台管理
-// admin/
-
-// 1 首页
-// home
-const home = () => import('@/views/admin/home/index.vue');
-
-// 4 园林花卉
-// gardens/plantsManagement 植物管理
-const plantsManagement = () => import('@/views/admin/gardens/plants/plantsManagement/index.vue');
-const plantsManagementAddUpdate = () => import('@/views/admin/gardens/plants/plantsManagement/components/add-update.vue');
-// gardens/familyManagement 科属管理
-const familyManagement = () => import('@/views/admin/gardens/plants/familyManagement/index.vue');
-const familyManagementFamilyAddUpdate = () => import('@/views/admin/gardens/plants/familyManagement/components/family/add-update.vue');
-const familyManagementGenusAddUpdate = () => import('@/views/admin/gardens/plants/familyManagement/components/genus/add-update.vue');
-
-// gardens/videoManagement 盆景养护视频
-const videoManagement = () => import('@/views/admin/gardens/gardens/videoManagement/index.vue');
-const videoManagementAddUpdate = () => import('@/views/admin/gardens/gardens/videoManagement/components/add-update.vue');
 
 // 5 AI 智能识别
 // recognition/diseaseImageManagement 病害图像数据集管理
@@ -68,10 +39,6 @@ const trainingModelManagementAddUpdate = () => import('@/views/admin/recognition
 // recognition/trainingParamManagement AI系统配置
 const trainingParamManagement = () => import('@/views/admin/recognition/config/trainingParamManagement/index.vue');
 
-// 6 系统管理
-// system/roleManagement
-const roleManagement = () => import('@/views/admin/system/roleManagement/index.vue');
-
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -92,175 +59,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'admin',
     redirect: '/admin/home',
     component: layout,
-    meta: {
-      breadcrumb: [
-        {
-          name: '新闻公告/新闻管理',
-          path: '/admin/news/newsManagement'
-        },
-        {
-          name: '新闻公告/新闻管理/新增',
-          path: '/admin/news/newsManagement/add'
-        },
-        {
-          name: '新闻公告/新闻管理/编辑',
-          path: '/admin/news/newsManagement/update'
-        },
-        {
-          name: '新闻公告/类型管理',
-          path: '/admin/news/typeManagement'
-        },
-        {
-          name: '病虫害数据库/植物病害管理',
-          path: '/admin/disease/diseaseManagement'
-        },
-        {
-          name: '病虫害数据库/植物病害管理/新增',
-          path: '/admin/disease/diseaseManagement/add'
-        },
-        {
-          name: '病虫害数据库/植物病害管理/编辑',
-          path: '/admin/disease/diseaseManagement/update'
-        },
-        {
-          name: '病虫害数据库/植物虫害管理',
-          path: '/admin/disease/pestManagement'
-        },
-        {
-          name: '病虫害数据库/植物虫害管理/新增',
-          path: '/admin/disease/pestManagement/add'
-        },
-        {
-          name: '病虫害数据库/植物虫害管理/编辑',
-          path: '/admin/disease/pestManagement/update'
-        },
-        {
-          name: '园林花卉/植物管理',
-          path: '/admin/gardens/plantsManagement'
-        },
-        {
-          name: '园林花卉/植物管理/新增',
-          path: '/admin/gardens/plantsManagement/add'
-        },
-        {
-          name: '园林花卉/植物管理/编辑',
-          path: '/admin/gardens/plantsManagement/update'
-        },
-        {
-          name: '园林花卉/科属管理',
-          path: '/admin/gardens/familyManagement'
-        },
-        {
-          name: '园林花卉/科属管理/科类新增',
-          path: '/admin/gardens/familyManagement/family/add'
-        },
-        {
-          name: '园林花卉/科属管理/科类编辑',
-          path: '/admin/gardens/familyManagement/family/update'
-        },
-        {
-          name: '园林花卉/科属管理/属类新增',
-          path: '/admin/gardens/familyManagement/genus/add'
-        },
-        {
-          name: '园林花卉/科属管理/属类编辑',
-          path: '/admin/gardens/familyManagement/genus/update'
-        },
-        {
-          name: '园林花卉/盆景养护视频',
-          path: '/admin/gardens/videoManagement'
-        },
-        {
-          name: 'AI 智能识别/病害图像数据集管理',
-          path: '/admin/recognition/diseaseImageManagement'
-        },
-        {
-          name: 'AI 智能识别/虫害图像数据集管理',
-          path: '/admin/recognition/pestImageManagement'
-        },
-        {
-          name: 'AI 智能识别/植物图像数据集管理',
-          path: '/admin/recognition/plantsImageManagement'
-        },
-        {
-          name: 'AI 智能识别/图片标注管理',
-          path: '/admin/recognition/imagesTaggingManagement'
-        },
-        {
-          name: 'AI 智能识别/训练模型管理',
-          path: '/admin/recognition/trainingModelManagement'
-        },
-        {
-          name: 'AI 智能识别/训练参数配置',
-          path: '/admin/recognition/trainingParamManagement'
-        },
-        {
-          name: '系统管理/权限管理',
-          path: '/admin/systemManagement/roleManagement'
-        }
-      ]
-    },
     children: [
-      {
-        path: 'home',
-        name: 'home',
-        component: home
-      },
-      {
-        path: 'gardens/plantsManagement',
-        name: 'plantsManagement',
-        component: plantsManagement
-      },
-      {
-        path: 'gardens/plantsManagement/add',
-        name: 'plantsManagementAdd',
-        component: plantsManagementAddUpdate
-      },
-      {
-        path: 'gardens/plantsManagement/update',
-        name: 'plantsManagementUpdate',
-        component: plantsManagementAddUpdate
-      },
-      {
-        path: 'gardens/familyManagement',
-        name: 'familyManagement',
-        component: familyManagement
-      },
-      {
-        path: 'gardens/familyManagement/family/add',
-        name: 'familyManagementFamilyAdd',
-        component: familyManagementFamilyAddUpdate
-      },
-      {
-        path: 'gardens/familyManagement/family/update',
-        name: 'familyManagementFamilyUpdate',
-        component: familyManagementFamilyAddUpdate
-      },
-      {
-        path: 'gardens/familyManagement/genus/add',
-        name: 'familyManagementGenusAdd',
-        component: familyManagementGenusAddUpdate
-      },
-      {
-        path: 'gardens/familyManagement/genus/update',
-        name: 'familyManagementGenusUpdate',
-        component: familyManagementGenusAddUpdate
-      },
-      {
-        path: 'gardens/videoManagement',
-        name: 'videoManagement',
-        component: videoManagement
-      },
-      {
-        path: 'gardens/videoManagement/add',
-        name: 'videoManagementAdd',
-        component: videoManagementAddUpdate
-      },
-      {
-        path: 'gardens/videoManagement/update',
-        name: 'videoManagementUpdate',
-        component: videoManagementAddUpdate
-      },
       {
         path: 'recognition/diseaseImageManagement',
         name: 'diseaseImageManagement',
@@ -305,23 +104,12 @@ const routes: Array<RouteRecordRaw> = [
         path: 'recognition/trainingParamManagement',
         name: 'trainingParamManagement',
         component: trainingParamManagement
-      },
-      {
-        path: 'system/roleManagement',
-        name: 'roleManagement',
-        component: roleManagement
       }
     ]
   }
 ];
 
-/**
- * 重构后路由配置
- */
-// routes.push(home, news, disease, gardens, ai, system);
-
-// 测试
-routes.push(news, disease, gardens, ai, system);
+routes.push(home, news, disease, gardens, ai, system);
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
