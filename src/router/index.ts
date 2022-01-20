@@ -36,9 +36,6 @@ const trainingModelManagement = () => import('@/views/admin/recognition/model/tr
 // recognition/trainingModelManagement 训练模型详情
 const trainingModelManagementAddUpdate = () => import('@/views/admin/recognition/model/trainingModelManagement/components/add-update.vue');
 
-// recognition/trainingParamManagement AI系统配置
-const trainingParamManagement = () => import('@/views/admin/recognition/config/trainingParamManagement/index.vue');
-
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -99,11 +96,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'recognition/trainingModelManagement/update',
         name: 'trainingModelManagementUpdate',
         component: trainingModelManagementAddUpdate
-      },
-      {
-        path: 'recognition/trainingParamManagement',
-        name: 'trainingParamManagement',
-        component: trainingParamManagement
       }
     ]
   }
