@@ -61,6 +61,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { ElMessageBox } from 'element-plus';
 
 export default defineComponent({
   props: {
@@ -134,7 +135,14 @@ export default defineComponent({
     // 表格头部按键
     const topButtonClick = (name: string) => {
       if (name === 'delete') {
-        emit('topButtonClick', name, selectedIds);
+        if (selectedIds.length === 0) {
+          emit('topButtonClick', name, selectedIds);
+        } else {
+          ElMessageBox.confirm('确认删除选中的数据吗?')
+            .then(() => {
+              emit('topButtonClick', name, selectedIds);
+            });
+        }
       } else {
         emit('topButtonClick', name);
       }
