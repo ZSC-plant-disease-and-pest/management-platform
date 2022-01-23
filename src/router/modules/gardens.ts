@@ -32,23 +32,23 @@ const gardens: RouteRecordRaw = {
       meta: {
         title: '科属管理'
       }
+    },
+    {
+      name: 'bonsai-video',
+      path: 'bonsai-video',
+      component: () => import('@/views/admin/gardens/bonsai-video/index.vue'),
+      meta: {
+        title: '盆景养护视频'
+      }
+    },
+    {
+      name: 'bonsai-video-page',
+      path: 'bonsai-video-page/:id',
+      component: () => import('@/views/admin/gardens/bonsai-video/components/data-page.vue'),
+      meta: {
+        title: '盆景养护视频详情'
+      }
     }
-    // {
-    //   name: 'bonsai-video',
-    //   path: 'bonsai-video',
-    //   component: () => import('@/views/admin/gardens/bonsai-video/index.vue'),
-    //   meta: {
-    //     title: '盆景养护视频'
-    //   }
-    // },
-    // {
-    //   name: 'bonsai-video-page',
-    //   path: 'bonsai-video-page/:id',
-    //   component: () => import('@/views/admin/gardens/bonsai-video/components/data-page.vue'),
-    //   meta: {
-    //     title: '盆景养护视频详情'
-    //   }
-    // }
   ]
 };
 
