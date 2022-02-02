@@ -1,9 +1,10 @@
 import { searchInterface } from '@/components/common/BasicSearch/search';
 import { topButtonInterface, tableButtonInterface, tableColumnInterface } from '@/components/common/BasicTable/table';
 import { pageInterface } from '@/components/common/BasicPage/page';
+import Monent from 'moment';
 
 export const searchList: searchInterface = [
-  { name: 'name', placeholder: '新闻类型', value: '' }
+  { name: 'name', placeholder: '虫害名称', value: '' }
 ];
 
 export const topButtonList: topButtonInterface = [
@@ -12,13 +13,24 @@ export const topButtonList: topButtonInterface = [
 ];
 
 export const tableButtonList: tableButtonInterface = [
-  { name: 'edit', icon: 'el-icon-delete', color: 'rgb(65, 209, 204)', label: '编辑' }
+  { name: 'dataset', icon: 'el-icon-postcard', color: 'rgb(100, 194, 100)', label: '查看数据集' },
+  { name: 'view', icon: 'el-icon-view', color: 'rgb(63, 186, 246)', label: '虫害详情' }
 ];
 
 export const tableColumnList: tableColumnInterface = [
   { prop: 'id', label: '序号', width: '75px' },
-  { prop: 'name', label: '新闻类型', width: 'auto' },
-  { prop: 'articleCounts', label: '新闻数量', width: 'auto' }
+  { prop: 'name', label: '虫害名称', width: 'auto' },
+  { prop: 'imgAmount', label: '图片数量', width: 'auto' },
+  { prop: 'creator', label: '创建人', width: 'auto' },
+  {
+    prop: 'createTime',
+    label: '创建时间',
+    width: 'auto',
+    alias: true,
+    getAlias (createTime: any) {
+      return Monent(createTime).format('YYYY-MM-DD  hh:mm:ss');
+    }
+  }
 ];
 
 export const pageList: pageInterface = { total: 0, page: 1, size: 10 };

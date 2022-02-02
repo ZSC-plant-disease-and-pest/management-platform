@@ -9,7 +9,7 @@
     :topButtonList="topButtonList"
     :tableButtonList="tableButtonList"
     :isLoading="isLoading"
-    :tableButtonWidth="72"
+    :tableButtonWidth="199"
     @topButtonClick="topButtonClick"
     @tableButtonClick="tableButtonClick"
     @sortChange="sortChange"
@@ -18,27 +18,29 @@
     :pageList="pageList"
     @handleChange="handleChange"
   />
-  <DataPageModel
-    ref="dataPageModelRef"
+  <DataPageDialog
+    ref="dataPageDialogRef"
     @refreshTable="refreshTable"
   />
 </template>
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
-import { newsTypeHttp, newsTypeParams } from '@/api/newsType';
+import { datasetHttp, datasetParams } from '@/api/dataset';
+import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
 import BasicTable from '@/components/common/BasicTable/index.vue';
 import BasicSearch from '@/components/common/BasicSearch/index.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
-import DataPageModel from './components/DataPageModel.vue';
+import DataPageDialog from '../common/ImagesDatasetDialog.vue';
 
 export default defineComponent({
-  components: { BasicTable, BasicSearch, BasicPage, DataPageModel },
+  components: { BasicTable, BasicSearch, BasicPage, DataPageDialog },
   setup () {
+    const router = useRouter();
     onBeforeMount(() => {
-      getNewsType();
+      getPlantsDataset();
     });
 
     // 数据仓库
@@ -50,14 +52,14 @@ export default defineComponent({
       tableColumnList,
       pageList,
       isLoading: false,
-      dataPageModelRef: ref()
+      dataPageDialogRef: ref()
     });
 
     // 请求表单数据
-    const newsTypeParams = reactive({ page: 0, size: 10 } as newsTypeParams);
-    const getNewsType = () => {
+    const datasetParams = reactive({ page: 0, size: 10 } as datasetParams);
+    const getPlantsDataset = () => {
       state.isLoading = true;
-      newsTypeHttp.getNewsType(newsTypeParams)
+      datasetHttp.getPlantsDataset(datasetParams)
         .then((response: any) => {
           state.pageList.total = response.totalElements;
           state.pageList.size = response.size;
@@ -70,15 +72,15 @@ export default defineComponent({
     };
 
     // 删除
-    const deleteNewsType = (selectedIds: any) => {
+    const deleteDiseaseDataset = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
       } else {
         state.isLoading = true;
-        newsTypeHttp.deleteNewsType(selectedIds.join(','))
+        datasetHttp.deleteDiseaseDataset(selectedIds.join(','))
           .then(() => {
             ElMessage.success('删除成功');
-            getNewsType();
+            getPlantsDataset();
           })
           .finally(() => { state.isLoading = false; });
       }
@@ -89,55 +91,58 @@ export default defineComponent({
       if (name === 'search') {
         for (const index in data) {
           if (data[index].name === 'name') {
-            newsTypeParams.name = data[index].value === '' ? undefined : data[index].value;
+            datasetParams.name = data[index].value === '' ? undefined : data[index].value;
           }
         }
-        getNewsType();
+        getPlantsDataset();
       } else if (name === 'reset') {
         for (const index in state.searchList) {
           state.searchList[index].value = '';
-          newsTypeParams.name = undefined;
+          datasetParams.name = undefined;
         }
-        getNewsType();
+        getPlantsDataset();
       } else if (name === 'add') {
-        state.dataPageModelRef.openDialog('new');
+        state.dataPageDialogRef.openDialog('plants');
       } else if (name === 'delete') {
-        deleteNewsType(data);
+        deleteDiseaseDataset(data);
       }
     };
 
     // 表格按键
     const tableButtonClick = (name: string, data: any) => {
-      if (name === 'view') {
-        window.open(`http://localhost:8082/newsType/detail/${data.id}`, '_blank');
-      } else if (name === 'edit') {
-        state.dataPageModelRef.openDialog('edit', data);
+      if (name === 'dataset') {
+        router.push({
+          path: `/admin/dataset-data/plant/${data.id}`,
+          query: { name: data.name, informationId: data.informationId }
+        });
+      } else if (name === 'view') {
+        window.open(`http://localhost:8082/plant/detail/${data.informationId}`, '_blank');
       }
     };
 
     // 排序改变
     const sortChange = (params: any) => {
-      newsTypeParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
-      getNewsType();
+      datasetParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
+      getPlantsDataset();
     };
 
     // 分页改变
     const handleChange = (name: string, data: any) => {
       if (name === 'page') {
-        newsTypeParams.page = data - 1;
+        datasetParams.page = data - 1;
         state.pageList.page = data;
       } else if (name === 'size') {
-        newsTypeParams.size = data;
-        newsTypeParams.page = 0;
+        datasetParams.size = data;
+        datasetParams.page = 0;
         state.pageList.size = data;
         state.pageList.page = 1;
       }
-      getNewsType();
+      getPlantsDataset();
     };
 
     // 刷新
     const refreshTable = () => {
-      getNewsType();
+      getPlantsDataset();
     };
 
     return {
@@ -145,7 +150,7 @@ export default defineComponent({
       topButtonClick,
       tableButtonClick,
       sortChange,
-      deleteNewsType,
+      deleteDiseaseDataset,
       handleChange,
       refreshTable
     };

@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    :title="title"
+    :title="'新增' + title"
     :width="600"
     :show-close="false"
     :close-on-click-modal="false"
@@ -19,11 +19,11 @@
     >
       <el-row>
         <el-col :span="23">
-          <el-form-item label="新闻类型名称：" prop="name">
-            <el-input
-              class="input-common"
-              v-model="form.name"
-              placeholder="请输入新闻类型名称"
+          <el-form-item :label="title + '：'" prop="name">
+            <DatasetSelector
+              ref="datasetSelectRef"
+              :type="type"
+              @selectChange="datasetSelect"
             />
           </el-form-item>
         </el-col>
@@ -34,8 +34,7 @@
         关闭
       </el-button>
       <el-button type="primary" size="small" :loading="isLoading" @click="submit">
-        <span v-if="mode === 'new'"> 新增 </span>
-        <span v-else> 编辑 </span>
+        新增
       </el-button>
     </template>
   </el-dialog>
@@ -43,41 +42,63 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
-import { newsTypeHttp, newsTypeParams } from '@/api/newsType';
+import { datasetHttp, datasetParams } from '@/api/dataset';
 import { ElMessage } from 'element-plus';
+import DatasetSelector from '@/components/selector/DatasetSelector.vue';
 
 export default defineComponent({
+  components: { DatasetSelector },
   emits: ['refreshTable'],
   setup (prop, { emit }) {
     // 数据仓库
     const state = reactive({
       form: {
         id: undefined,
-        name: ''
-      } as newsTypeParams,
+        name: '',
+        informationId: undefined
+      } as datasetParams,
       formRef: ref(),
       rules: {
-        name: [{ required: true, message: '请输入新闻类型名称', trigger: ['blur', 'change'] }]
+        name: [{
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            if (state.form.informationId) {
+              callback();
+            } else {
+              callback(new Error('请选择需要创建的数据集'));
+            }
+          },
+          trigger: ['blur', 'change']
+        }]
       },
       isLoading: false,
-      mode: '',
+      type: '',
       dialogVisible: false
     });
 
     // 弹出框标题
     const title = computed(() => {
-      const word = state.mode === 'new' ? '新增' : '编辑';
-      return `${word}新闻信息`;
+      let word = '';
+      switch (state.type) {
+        case 'disease':
+          word = '病害';
+          break;
+        case 'pest':
+          word = '虫害';
+          break;
+        case 'plants':
+          word = '植物';
+          break;
+        default:
+          break;
+      }
+      return `${word}数据集`;
     });
 
     // 打开
-    const openDialog = (mode: string, data: any) => {
-      state.mode = mode;
+    const openDialog = (type: string) => {
+      state.type = type;
       state.dialogVisible = true;
-      if (mode === 'edit') {
-        const { ...tempForm } = data;
-        state.form = tempForm;
-      }
     };
 
     // 提交
@@ -85,18 +106,26 @@ export default defineComponent({
       state.formRef.validate().then((valid: boolean) => {
         if (valid) {
           state.isLoading = true;
-          if (state.mode === 'new') {
-            newsTypeHttp.createNewsType(state.form)
+          if (state.type === 'disease') {
+            datasetHttp.createDiseaseDateset(state.form)
               .then(() => {
                 ElMessage.success('添加成功');
                 state.dialogVisible = false;
                 refreshTable();
               })
               .finally(() => { state.isLoading = false; });
-          } else if (state.mode === 'edit') {
-            newsTypeHttp.updateNewsType(state.form)
+          } else if (state.type === 'pest') {
+            datasetHttp.createPestDateset(state.form)
               .then(() => {
-                ElMessage.success('更新成功');
+                ElMessage.success('添加成功');
+                state.dialogVisible = false;
+                refreshTable();
+              })
+              .finally(() => { state.isLoading = false; });
+          } else if (state.type === 'plants') {
+            datasetHttp.createPlantsDateset(state.form)
+              .then(() => {
+                ElMessage.success('添加成功');
                 state.dialogVisible = false;
                 refreshTable();
               })
@@ -110,11 +139,17 @@ export default defineComponent({
     const closed = () => {
       state.dialogVisible = false;
       state.form.name = '';
+      state.form.informationId = undefined;
     };
 
-    // 刷新表格
+    // 刷新
     const refreshTable = () => {
       emit('refreshTable');
+    };
+
+    // 数据集被选择
+    const datasetSelect = (id: number) => {
+      state.form.informationId = id;
     };
 
     return {
@@ -122,7 +157,8 @@ export default defineComponent({
       title,
       openDialog,
       closed,
-      submit
+      submit,
+      datasetSelect
     };
   }
 });

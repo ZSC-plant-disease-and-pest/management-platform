@@ -18,7 +18,7 @@ export const tableButtonList: tableButtonInterface = [
 
 export const tableColumnList: tableColumnInterface = [
   { prop: 'id', label: '序号', width: '75px' },
-  { prop: 'name', label: '植物名称', width: 'auto' },
+  { prop: 'name', label: '视频名称', width: 'auto' },
   { prop: 'scientificName', label: '植物学名', width: 'auto' },
   { prop: 'nickname', label: '植物别名', width: 'auto' },
   { prop: 'family', label: '植物科类', width: 'auto' },

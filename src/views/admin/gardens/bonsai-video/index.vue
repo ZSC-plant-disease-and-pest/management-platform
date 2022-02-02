@@ -111,7 +111,8 @@ export default defineComponent({
     // 表格按键
     const tableButtonClick = (name: string, data: any) => {
       if (name === 'view') {
-        window.open(`http://localhost:8082/plant/detail/${data.id}`, '_blank');
+        // 跳转到视频观看界面
+        // window.open(`http://localhost:8082/plant/detail/${data.id}`, '_blank');
       } else if (name === 'edit') {
         router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: data.id } });
       }

@@ -33,7 +33,7 @@ import { searchList, topButtonList, tableButtonList, tableColumnList, pageList }
 import BasicTable from '@/components/common/BasicTable/index.vue';
 import BasicSearch from '@/components/common/BasicSearch/index.vue';
 import BasicPage from '@/components/common/BasicPage/index.vue';
-import DataPageDialog from './components/DataPageDialog.vue';
+import DataPageDialog from '../common/ImagesDatasetDialog.vue';
 
 export default defineComponent({
   components: { BasicTable, BasicSearch, BasicPage, DataPageDialog },
