@@ -1,10 +1,12 @@
 <template>
   <el-row align="middle">
+
     <el-col :span="12">
       <el-button type="primary" @click="topButtonClick('add')">
         添加
       </el-button>
     </el-col>
+
     <el-col :span="12">
       <div class="describe">
         名称：
@@ -16,21 +18,27 @@
         </span>
       </div>
     </el-col>
+
   </el-row>
-  <div class="box-images">
-    <div
-      v-for="item in dataPageDetailList"
-      :key="item.id"
-      class="describe"
-    >
-      <DataPageDetail :dataPageDetailData="item" />
+
+  <div v-loading="isLoading">
+    <div class="box-images">
+      <div
+        v-for="item in dataPageDetailList"
+        :key="item.id"
+        class="describe"
+      >
+        <DataPageDetail :dataPageDetailData="item" />
+      </div>
     </div>
   </div>
+
   <BasicPage
     :pageList="pageList"
     :page-sizes="[12, 20, 30, 40, 50, 100]"
     @handleChange="handleChange"
   />
+
   <DataPageDialog
     ref="dataPageDialogRef"
     @refreshTable="refreshTable"
