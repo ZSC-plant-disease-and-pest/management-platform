@@ -5,7 +5,7 @@
       (说明: 左键单击弹出标注对话框)
     </el-col>
     <el-col :span="12">
-      <el-button type="primary" @click="upload" style="float: right; marginRight: 10px">
+      <el-button type="primary" @click="buttonClick('upload')" style="float: right; marginRight: 10px">
         上传标注图片
       </el-button>
     </el-col>
@@ -17,14 +17,16 @@
     <el-tab-pane label="植物图片" name="2"></el-tab-pane>
   </el-tabs>
 
-  <div class="box-images">
-    <img
-      class="image"
-      v-for="item in imageList"
-      :src="'http://localhost:8080' + item.path"
-      :key="item.id"
-      @click="imageClick(item)"
-    />
+  <div v-loading="isLoading">
+    <div class="box-images">
+      <img
+        class="image"
+        v-for="item in imageList"
+        :src="'http://localhost:8080' + item.path"
+        :key="item.id"
+        @click="buttonClick('edit', item)"
+      />
+    </div>
   </div>
 
   <BasicPage
@@ -35,8 +37,7 @@
 
   <DataPageDialog
     ref="dataPageDialogRef"
-    :dialogType="dialogType"
-    @dialogClose="dialogClose"
+    @refreshTable="refreshTable"
     :key="taggingDialogKey"
   />
 </template>
@@ -57,6 +58,7 @@ export default defineComponent({
 
     // 数据仓库
     const state = reactive({
+      dialogType: 'close',
       tabsName: '0',
       waitTaggingTotal: undefined as number | undefined,
       imageList: [] as Array<any>,
@@ -84,19 +86,20 @@ export default defineComponent({
         .finally(() => { state.isLoading = false; });
     };
 
-    const dialogType = ref('close');
+    const buttonClick = (type: string, data: any) => {
+      if (type === 'upload') {
+        state.dataPageDialogRef.upload();
+      } else if (type === 'edit') {
+        state.dataPageDialogRef.edit(state.tabsName, data);
+      }
+    };
+
     const dialogClose = () => {
-      dialogType.value = 'close';
+      state.dialogType = 'close';
       state.taggingDialogKey += 1;
       getTaggingImages();
     };
-    const upload = () => {
-      dialogType.value = 'upload';
-    };
-    const imageClick = (value: any) => {
-      dialogType.value = 'edit';
-      state.dataPageDialogRef.edit(state.tabsName, value);
-    };
+
     const tabsClick = () => {
       if (Number(state.tabsName) !== taggingParams.datasetType) {
         taggingParams.datasetType = Number(state.tabsName);
@@ -125,10 +128,8 @@ export default defineComponent({
 
     return {
       ...toRefs(state),
-      dialogType,
+      buttonClick,
       dialogClose,
-      upload,
-      imageClick,
       tabsClick,
       handleChange,
       refreshTable

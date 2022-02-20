@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     title="基本信息"
-    v-model="dialogOpen"
+    v-model="dialogVisible"
     :width="700"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
@@ -33,10 +33,11 @@
       </el-col>
       <el-col :span="16">
         <span>
-          图片上传时间：{{ Monent(imageInfo.createTime).format('YYYY-MM-DD  hh:mm:ss') }}
+          图片上传时间：{{ Moment(imageInfo.createTime).format('YYYY-MM-DD  hh:mm:ss') }}
         </span>
       </el-col>
     </el-row>
+
     <el-form
       ref="formRef"
       size="small"
@@ -45,6 +46,7 @@
       :rules="rules"
     >
       <el-row :gutter="0">
+
         <el-col :span="12">
           <el-form-item
             label="上传图片："
@@ -62,13 +64,14 @@
             <img
               class="edit-image"
               :src="imagePreviewUrl"
-              @click="handlePictureCardPreview(null)"
+              @click="filePreview"
             />
           </el-form-item>
           <el-dialog v-model="imagePreviewDialog" title="查看图片">
             <img style="width: 100%; height: 75%;" :src="imagePreviewUrl" alt="" />
           </el-dialog>
         </el-col>
+
         <el-col :span="12">
           <el-row>
             <el-col :span="24">
@@ -99,11 +102,13 @@
             </el-col>
           </el-row>
         </el-col>
+
       </el-row>
     </el-form>
+
     <template #footer>
       <div style="textAlign: center">
-        <el-button @click="dialogVisible = false">
+        <el-button @click="close">
           取消
         </el-button>
         <el-button type="primary" :loading="isLoading" @click="submit">
@@ -115,7 +120,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUpdated, reactive, ref, toRefs, watch } from 'vue';
+import { defineComponent, onUpdated, reactive, ref, toRefs } from 'vue';
 import { taggingHttp, taggingParams } from '@/api/tagging';
 import { ElMessage } from 'element-plus';
 import Moment from 'moment';
@@ -124,24 +129,11 @@ import BasicImageUpload from '@/components/common/BasicImageUpload/index.vue';
 
 export default defineComponent({
   components: { TaggingSelect, BasicImageUpload },
-  props: {
-    dialogType: {
-      type: String,
-      default: 'close'
-    }
-  },
   emits: ['refreshTable'],
   setup (props, { emit }) {
     onUpdated(() => {
-      if (props.dialogType === 'edit') {
+      if (state.dialogType === 'edit') {
         datasetTypeChange();
-      }
-    });
-    watch(() => props.dialogType, (newProps) => {
-      if (newProps !== 'close') {
-        state.dialogOpen = true;
-      } else {
-        state.dialogOpen = false;
       }
     });
 
@@ -176,7 +168,7 @@ export default defineComponent({
       },
       Moment,
       imageInfo: {} as any,
-      dialogOpen: false,
+      dialogVisible: false,
       formRef: ref(),
       taggingSelectRef: ref(),
       uploadImageRef: ref(),
@@ -184,47 +176,60 @@ export default defineComponent({
       imagePreviewUrl: '',
       imagePreviewDialog: false,
       fileList: [] as Array<any>,
+      dialogType: 'close',
       isLoading: false
     });
 
     // 请求数据
     const taggingParams = reactive({ datasetType: undefined, datasetId: undefined } as taggingParams);
+
+    // 上传图片
     const uploadImage = () => {
       taggingParams.datasetType = Number(state.form.datasetType);
-      if (state.form.datasetId) {
-        taggingParams.datasetId = state.form.datasetId;
-      }
+      if (state.form.datasetId) { taggingParams.datasetId = state.form.datasetId; }
       taggingHttp.uploadImage(taggingParams, state.fileList)
         .then(() => {
           ElMessage.success('添加图片成功');
-          emit('refreshTable');
+          close();
         })
         .finally(() => { state.isLoading = false; });
     };
+
+    // 标注图片
     const taggingImage = () => {
       taggingParams.datasetType = Number(state.form.datasetType);
-      if (state.form.datasetId) {
-        taggingParams.datasetId = state.form.datasetId;
-      }
+      if (state.form.datasetId) { taggingParams.datasetId = state.form.datasetId; }
       taggingHttp.taggingImage(taggingParams)
         .then(() => {
           ElMessage.success('标注图片成功');
-          emit('refreshTable');
+          close();
         })
         .finally(() => { state.isLoading = false; });
     };
+
+    // 打开对话框上传待标注图片
+    const upload = () => {
+      state.dialogType = 'upload';
+      state.dialogVisible = true;
+    };
+
+    // 打开对话框对待标注图片进行编辑
     const edit = (datasetType: number, data: any) => {
+      state.dialogType = 'edit';
       state.form.datasetType = String(datasetType);
       taggingParams.imgId = data.id;
       state.imagePreviewUrl = 'http://localhost:8080' + data.path;
       state.imageInfo = data;
+      state.dialogVisible = true;
       console.log(data);
     };
+
+    // 提交对话框
     const submit = () => {
       state.formRef.validate().then((valid: boolean) => {
         if (valid) {
           state.isLoading = true;
-          if (props.dialogType === 'upload') {
+          if (state.dialogType === 'upload') {
             uploadImage();
           } else {
             taggingImage();
@@ -232,29 +237,44 @@ export default defineComponent({
         }
       });
     };
+
+    // 关闭对话框
+    const close = () => {
+      state.dialogVisible = false;
+      emit('refreshTable');
+      // 清除数据
+      state.form.datasetType = '';
+      state.fileList = [];
+      state.form.datasetId = undefined;
+    };
+
+    // 数据集类型修改时需要加载图片标注选择框
     const datasetTypeChange = () => {
       state.form.datasetId = undefined;
       state.taggingSelectRef.loadingSelect(state.form.datasetType);
     };
+
+    // 图片标注选择框被选择时
     const TaggingSelectChange = (data: number) => {
       state.form.datasetId = data;
     };
 
-    // 图片改变时
+    // 上传图片改变时
     const fileListChange = (fileList: Array<any>) => {
       state.fileList = fileList;
     };
 
-    // 图片预览
-    const filePreview = (file: any) => {
-      state.imagePreviewUrl = file?.url;
+    // 打开图片进行预览
+    const filePreview = () => {
       state.imagePreviewDialog = true;
     };
 
     return {
       ...toRefs(state),
+      upload,
       edit,
       submit,
+      close,
       datasetTypeChange,
       TaggingSelectChange,
       fileListChange,
