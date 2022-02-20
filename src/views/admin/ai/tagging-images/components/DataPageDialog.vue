@@ -53,7 +53,7 @@
             prop="image"
             v-if="dialogType === 'upload'"
           >
-            <BasicImageUpload
+            <SingleImageUpload
               ref="imageUploadRef"
               :limit="1"
               @onChange="fileListChange"
@@ -125,10 +125,10 @@ import { taggingHttp, taggingParams } from '@/api/tagging';
 import { ElMessage } from 'element-plus';
 import Moment from 'moment';
 import TaggingSelect from '@/components/selector/TaggingSelector.vue';
-import BasicImageUpload from '@/components/common/BasicImageUpload/index.vue';
+import SingleImageUpload from '@/components/common/SingleImageUpload/index.vue';
 
 export default defineComponent({
-  components: { TaggingSelect, BasicImageUpload },
+  components: { TaggingSelect, SingleImageUpload },
   emits: ['refreshTable'],
   setup (props, { emit }) {
     onUpdated(() => {
