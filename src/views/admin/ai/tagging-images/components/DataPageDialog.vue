@@ -243,9 +243,11 @@ export default defineComponent({
       state.dialogVisible = false;
       emit('refreshTable');
       // 清除数据
-      state.form.datasetType = '';
-      state.fileList = [];
-      state.form.datasetId = undefined;
+      setTimeout(() => {
+        state.form.datasetType = '';
+        state.fileList = [];
+        state.form.datasetId = undefined;
+      }, 100);
     };
 
     // 数据集类型修改时需要加载图片标注选择框
