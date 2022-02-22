@@ -540,10 +540,12 @@ export default defineComponent({
       // 表单状态：complete 完成，incomplete 未完成
       status: 'incomplete'
     });
+
     // 分页参数
     const diseaseDatasetParams = reactive({ page: 0, size: 21 });
     const pestDatasetParams = reactive({ page: 0, size: 21 });
     const plantsDatasetParams = reactive({ page: 0, size: 21 });
+
     // 多选框：需要显示的数据集类型
     const datasetTypeChange = (data: Array<any>) => {
       if (data.findIndex((value: any) => value === '0') === -1) {
@@ -583,6 +585,7 @@ export default defineComponent({
         state.displayPlantsDataset = true;
       }
     };
+
     // 删除添加到模型中的数据集
     const deleteDataset = (id: number, datasetId: number) => {
       if (id === 0) {
@@ -602,6 +605,7 @@ export default defineComponent({
         addDatasetPagenumList(2);
       }
     };
+
     // 数据集选择框选择时
     const datasetSelected = (id: number, data: any) => {
       if (id === 0) {
@@ -612,6 +616,7 @@ export default defineComponent({
         state.plantsDatasetSelect = data;
       }
     };
+
     // 添加数据集到模型中
     const add = (id: number) => {
       let addIndex;
@@ -644,6 +649,7 @@ export default defineComponent({
         }
       }
     };
+
     // 添加全部数据集到模型中
     const addAll = (id: number) => {
       if (id === 0) {
@@ -690,6 +696,7 @@ export default defineComponent({
           });
       }
     };
+
     // 将添加到模型的数据集列表生成分页列表
     const addDatasetPagenumList = (id: number) => {
       let count = 0;
@@ -722,6 +729,7 @@ export default defineComponent({
         }
       }
     };
+
     // 判断是新增数据还是更新数据
     const getParams = () => {
       if (route.path.split('/').slice(-1)[0] === 'update') {
@@ -739,6 +747,7 @@ export default defineComponent({
         state.type = 'add';
       }
     };
+
     // 创建训练模型
     const createModel = () => {
       state.isLoading = true;
@@ -754,15 +763,14 @@ export default defineComponent({
           state.isLoading = false;
         });
     };
+
     // 上一步
     const back = () => {
       if (state.step === 1) {
         router.push({
-          path: '/admin/recognition/trainingModelManagement',
-          name: 'trainingModelManagement',
-          params: {
-            type: 'refresh'
-          }
+          path: '/admin/training-model',
+          name: 'training-model',
+          params: { type: 'refresh' }
         });
       } else if (state.step === 2) {
         state.step -= 1;
@@ -772,21 +780,18 @@ export default defineComponent({
         state.step -= 1;
       } else if (state.step === 5) {
         router.push({
-          path: '/admin/recognition/trainingModelManagement',
-          name: 'trainingModelManagement',
-          params: {
-            type: 'refresh'
-          }
+          path: '/admin/training-model',
+          name: 'training-model',
+          params: { type: 'refresh' }
         });
       }
     };
+
     // 下一步
     const next = () => {
       if (state.step === 1) {
         state.step1FormRef.validate().then((valid: boolean) => {
-          if (valid) {
-            state.step += 1;
-          }
+          if (valid) { state.step += 1; }
         });
       } else if (state.step === 2) {
         const recognizeTypeArr = [];
@@ -835,10 +840,13 @@ export default defineComponent({
         state.step = 1;
       }
     };
+
     const keep = () => {
       // 直接用Key强制渲染
       state.status = 'incomplete';
     };
+
+    // 分页每页大小改变
     const handleSizeChange = (newSize: any, type: any) => {
       if (type === 0) {
         state.diseaseDataset.size = newSize;
@@ -860,6 +868,8 @@ export default defineComponent({
         addDatasetPagenumList(2);
       }
     };
+
+    // 分页改变
     const handleCurrentChange = (newPage: any, type: any) => {
       if (type === 0) {
         state.diseaseDataset.page = newPage + 1;
