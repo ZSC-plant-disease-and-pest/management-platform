@@ -74,12 +74,12 @@ export default defineComponent({
       loginFormRef: ref(),
       rules: {
         username: [
-          { required: true, message: '请输入账号', trigger: 'change' },
-          { min: 3, max: 16, message: '账号长度为 3-16 位', trigger: 'change' }
+          { required: true, message: '请输入账号', trigger: 'blur' },
+          { min: 3, max: 16, message: '账号长度为 3-16 位', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'change' },
-          { min: 4, max: 16, message: '密码长度为 4-16 位', trigger: 'change' }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 4, max: 16, message: '密码长度为 4-16 位', trigger: 'blur' }
         ]
       },
       isLoading: false

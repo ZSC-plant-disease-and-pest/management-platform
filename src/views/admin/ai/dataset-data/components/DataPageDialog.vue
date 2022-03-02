@@ -74,7 +74,6 @@ export default defineComponent({
       formRef: ref(),
       imageUploadRef: ref(),
       rules: {
-        datasetId: [{ required: true }],
         picture: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
