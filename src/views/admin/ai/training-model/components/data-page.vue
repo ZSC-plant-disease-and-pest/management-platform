@@ -101,7 +101,7 @@
     </el-row>
 
     <!-- 病害数据集的选择 -->
-    <div style="padding: 10px;" v-show="displayDiseaseDataset">
+    <div style="padding: 10px;" v-show="displayDiseaseDataset" v-loading="diseaseDatasetIsLoading">
       <!-- 分割线 -->
       <el-divider style="backgroundColor: #1587e8;"></el-divider>
 
@@ -174,7 +174,7 @@
     </div>
 
     <!-- 虫害数据集的选择 -->
-    <div style="padding: 10px;" v-show="displayPestDataset">
+    <div style="padding: 10px;" v-show="displayPestDataset" v-loading="pestDatasetIsLoading">
       <!-- 分割线 -->
       <el-divider style="backgroundColor: #1587e8;"></el-divider>
 
@@ -247,7 +247,7 @@
     </div>
 
     <!-- 植物数据集的选择 -->
-    <div style="padding: 10px;" v-show="displayPlantsDataset">
+    <div style="padding: 10px;" v-show="displayPlantsDataset"  v-loading="plantsDatasetIsLoading">
       <!-- 分割线 -->
       <el-divider style="backgroundColor: #1587e8;"></el-divider>
 
@@ -532,6 +532,10 @@ export default defineComponent({
       plantsDatasetPagenum: [] as Array<any>,
       // 数据集类型多选框
       datasetType: ['0', '1', '2'] as Array<any>,
+      // 请求数据集加载中
+      diseaseDatasetIsLoading: false,
+      pestDatasetIsLoading: false,
+      plantsDatasetIsLoading: false,
       isLoading: false,
       // 当前步骤
       step: 1,
@@ -653,6 +657,7 @@ export default defineComponent({
     // 添加全部数据集到模型中
     const addAll = (id: number) => {
       if (id === 0) {
+        state.diseaseDatasetIsLoading = true;
         datasetHttp.getDiseaseDataset({ page: 0, size: 2000 })
           .then((response: any) => {
             const [...tempResponse] = response.content;
@@ -663,10 +668,9 @@ export default defineComponent({
             }
             addDatasetPagenumList(0);
           })
-          .finally(() => {
-            state.isLoading = false;
-          });
+          .finally(() => { state.diseaseDatasetIsLoading = false; });
       } else if (id === 1) {
+        state.pestDatasetIsLoading = true;
         datasetHttp.getPestDataset({ page: 0, size: 2000 })
           .then((response: any) => {
             const [...tempResponse] = response.content;
@@ -677,10 +681,9 @@ export default defineComponent({
             }
             addDatasetPagenumList(1);
           })
-          .finally(() => {
-            state.isLoading = false;
-          });
+          .finally(() => { state.pestDatasetIsLoading = false; });
       } else if (id === 2) {
+        state.plantsDatasetIsLoading = true;
         datasetHttp.getPlantsDataset({ page: 0, size: 2000 })
           .then((response: any) => {
             const [...tempResponse] = response.content;
@@ -691,9 +694,7 @@ export default defineComponent({
             }
             addDatasetPagenumList(2);
           })
-          .finally(() => {
-            state.isLoading = false;
-          });
+          .finally(() => { state.plantsDatasetIsLoading = false; });
       }
     };
 

@@ -4,7 +4,7 @@ import { ElMessage } from 'element-plus';
 import { getToken, removeToken } from '@/utils/cookie';
 
 const service = axios.create({
-  timeout: 10000
+  timeout: 15000
 });
 
 service.interceptors.request.use(
