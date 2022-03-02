@@ -104,7 +104,7 @@ export default defineComponent({
         case 'pest':
           word = '虫害';
           break;
-        case 'plants':
+        case 'plant':
           word = '植物';
           break;
         default:
@@ -134,7 +134,7 @@ export default defineComponent({
             datasetHttp.uploadPestImage(Number(state.form.id), state.fileList)
               .then(() => { uploadImageSuccessfully(); })
               .finally(() => { state.isLoading = false; });
-          } else if (state.type === 'plants') {
+          } else if (state.type === 'plant') {
             datasetHttp.uploadPlantsImage(Number(state.form.id), state.fileList)
               .then(() => { uploadImageSuccessfully(); })
               .finally(() => { state.isLoading = false; });
