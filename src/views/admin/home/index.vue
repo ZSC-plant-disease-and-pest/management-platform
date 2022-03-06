@@ -15,18 +15,34 @@
     </el-col>
   </el-row>
 
-  <el-row :gutter="80">
+  <el-row :gutter="30">
     <el-col :span="8">
-      <el-card style="margin: 15px 0px; width: 85%; height: 320px">
-        <span> 系统消息 </span>
+      <el-card style="margin: 15px 0px; width: 100%; height: 320px">
+        <template #header>
+          <span> 系统消息 </span>
+        </template>
       </el-card>
     </el-col>
     <el-col :span="8">
+      <el-card style="margin: 15px 0px; width: 100%; height: 320px">
+        <template #header>
+          <span> 操作日志 </span>
+        </template>
+      </el-card>
+    </el-col>
+    <el-col :span="8">
+      <el-card style="margin: 15px 0px; width: 100%; height: 320px">
+        <template #header>
+          <span> 模型管理 </span>
+        </template>
+      </el-card>
+    </el-col>
+    <!-- <el-col :span="8">
       <div id="disease-echarts" class="echartsDiv"></div>
     </el-col>
     <el-col :span="8">
       <div id="pest-echarts" class="echartsDiv"></div>
-    </el-col>
+    </el-col> -->
   </el-row>
 
   <el-row :gutter="20">
