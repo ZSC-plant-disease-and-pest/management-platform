@@ -189,6 +189,7 @@ export default defineComponent({
       state.formRef.resetFields();
       state.newsTypeSelectorRef.setNewsType(undefined);
       state.basicWangEditorKey += 1;
+      state.form.publishedOrNot = false;
       state.completed = false;
     };
 
