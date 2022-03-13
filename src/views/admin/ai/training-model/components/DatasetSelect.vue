@@ -8,6 +8,7 @@
     v-model="defaultValue"
     filterable
     remote
+    multiple
     :remote-method="remoteMethod"
     :disabled="SelectDisabled"
   >
@@ -56,11 +57,11 @@ export default defineComponent({
     });
 
     const state = reactive({
-      defaultValue: undefined as number | undefined,
+      defaultValue: undefined as any,
       isLoading: false,
       total: 0,
       currentPage: 1,
-      pageSize: 5,
+      pageSize: 10,
       list: [] as Array<any>,
       SelectDisabled: false
     });
@@ -68,7 +69,7 @@ export default defineComponent({
     const datasetParams = reactive({
       name: '',
       page: 0,
-      size: 5
+      size: 10
     } as any);
     const getDatasetId = () => {
       if (props.defaultId !== 0) {
@@ -115,21 +116,33 @@ export default defineComponent({
           });
       }
     };
+
     const remoteMethod = (data: any) => {
       datasetParams.name = data;
       getDatasetId();
     };
+
     const handleCurrentChange = (params: any) => {
       state.currentPage = params;
       datasetParams.page = params - 1;
+      state.defaultValue = undefined;
       getDatasetId();
     };
-    const selectChange = (id: number) => {
-      emit('selectChange', state.list[state.list.findIndex((value: any) => value.id === id)]);
+
+    const selectChange = (data: any) => {
+      const selectArray = [];
+      for (let index = 0; index < data.length; index++) {
+        selectArray.push(state.list[state.list.findIndex((value: any) => value.id === data[index])]);
+      }
+      // console.log(selectArray);
+      emit('selectChange', selectArray);
+      // emit('selectChange', state.list[state.list.findIndex((value: any) => value.id === id)]);
     };
+
     const reset = () => {
-      emit('selectChange');
+      emit('selectChange', []);
     };
+
     return {
       ...toRefs(state),
       remoteMethod,

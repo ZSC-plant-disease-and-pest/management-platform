@@ -169,7 +169,7 @@
         :pageSize="diseaseDataset.size"
         @handleSizeChange="handleSizeChange($event, 0)"
         @handleCurrentChange="handleCurrentChange($event, 0)"
-        :pageSizes="[21, 50, 100]"
+        :pageSizes="[30, 50, 100]"
       />
     </div>
 
@@ -242,7 +242,7 @@
         :pageSize="pestDataset.size"
         @handleSizeChange="handleSizeChange($event, 1)"
         @handleCurrentChange="handleCurrentChange($event, 1)"
-        :pageSizes="[21, 50, 100]"
+        :pageSizes="[30, 50, 100]"
       />
     </div>
 
@@ -315,7 +315,7 @@
         :pageSize="plantsDataset.size"
         @handleSizeChange="handleSizeChange($event, 2)"
         @handleCurrentChange="handleCurrentChange($event, 2)"
-        :pageSizes="[21, 50, 100]"
+        :pageSizes="[30, 50, 100]"
       />
     </div>
   </div>
@@ -503,9 +503,9 @@ export default defineComponent({
         }]
       },
       // 数据集分页信息
-      diseaseDataset: { total: 0, page: 1, size: 21 },
-      pestDataset: { total: 0, page: 1, size: 21 },
-      plantsDataset: { total: 0, page: 1, size: 21 },
+      diseaseDataset: { total: 0, page: 1, size: 30 },
+      pestDataset: { total: 0, page: 1, size: 30 },
+      plantsDataset: { total: 0, page: 1, size: 30 },
       // 数据集选择框
       diseaseDatasetSelect: undefined as any,
       pestDatasetSelect: undefined as any,
@@ -546,9 +546,9 @@ export default defineComponent({
     });
 
     // 分页参数
-    const diseaseDatasetParams = reactive({ page: 0, size: 21 });
-    const pestDatasetParams = reactive({ page: 0, size: 21 });
-    const plantsDatasetParams = reactive({ page: 0, size: 21 });
+    const diseaseDatasetParams = reactive({ page: 0, size: 30 });
+    const pestDatasetParams = reactive({ page: 0, size: 30 });
+    const plantsDatasetParams = reactive({ page: 0, size: 30 });
 
     // 多选框：需要显示的数据集类型
     const datasetTypeChange = (data: Array<any>) => {
@@ -556,10 +556,10 @@ export default defineComponent({
         state.displayDiseaseDataset = false;
         state.diseaseDatasetList = [];
         state.diseaseDatasetPagenum = [];
-        state.diseaseDataset = { total: 0, page: 0, size: 21 };
+        state.diseaseDataset = { total: 0, page: 0, size: 30 };
         state.diseaseDatasetSelect = undefined;
         diseaseDatasetParams.page = 0;
-        diseaseDatasetParams.size = 21;
+        diseaseDatasetParams.size = 30;
       } else {
         state.diseaseDatasetSelectKey += 1;
         state.displayDiseaseDataset = true;
@@ -568,10 +568,10 @@ export default defineComponent({
         state.displayPestDataset = false;
         state.pestDatasetList = [];
         state.pestDatasetPagenum = [];
-        state.pestDataset = { total: 0, page: 0, size: 21 };
+        state.pestDataset = { total: 0, page: 0, size: 30 };
         state.pestDatasetSelect = undefined;
         pestDatasetParams.page = 0;
-        pestDatasetParams.size = 21;
+        pestDatasetParams.size = 30;
       } else {
         state.pestDatasetSelectKey += 1;
         state.displayPestDataset = true;
@@ -580,10 +580,10 @@ export default defineComponent({
         state.displayPlantsDataset = false;
         state.plantsDatasetList = [];
         state.plantsDatasetPagenum = [];
-        state.plantsDataset = { total: 0, page: 0, size: 21 };
+        state.plantsDataset = { total: 0, page: 0, size: 30 };
         state.plantsDatasetSelect = undefined;
         plantsDatasetParams.page = 0;
-        plantsDatasetParams.size = 21;
+        plantsDatasetParams.size = 30;
       } else {
         state.plantsDatasetSelectKey += 1;
         state.displayPlantsDataset = true;
@@ -625,32 +625,37 @@ export default defineComponent({
     const add = (id: number) => {
       let addIndex;
       if (id === 0 && state.diseaseDatasetSelect) {
-        addIndex = state.diseaseDatasetList.findIndex((value: any) => value.id === state.diseaseDatasetSelect.id);
-        if (addIndex === -1) {
-          state.diseaseDataset.total += 1;
-          state.diseaseDatasetList.push(state.diseaseDatasetSelect);
-          addDatasetPagenumList(0);
-        } else {
-          ElMessage.warning('请不要重复添加');
+        // 遍历是否有重复的元素
+        for (let index = 0; index < state.diseaseDatasetSelect.length; index++) {
+          addIndex = state.diseaseDatasetList.findIndex((value: any) => value.id === state.diseaseDatasetSelect[index].id);
+          // 如果未重复，则添加到数据集中
+          if (addIndex === -1) {
+            state.diseaseDataset.total += 1;
+            state.diseaseDatasetList.push(state.diseaseDatasetSelect[index]);
+          }
         }
+        addDatasetPagenumList(0);
+        ElMessage.success('添加成功');
       } else if (id === 1 && state.pestDatasetSelect) {
-        addIndex = state.pestDatasetList.findIndex((value: any) => value.id === state.pestDatasetSelect.id);
-        if (addIndex === -1) {
-          state.pestDataset.total += 1;
-          state.pestDatasetList.push(state.pestDatasetSelect);
-          addDatasetPagenumList(1);
-        } else {
-          ElMessage.warning('请不要重复添加');
+        for (let index = 0; index < state.pestDatasetSelect.length; index++) {
+          addIndex = state.pestDatasetList.findIndex((value: any) => value.id === state.pestDatasetSelect[index].id);
+          if (addIndex === -1) {
+            state.pestDataset.total += 1;
+            state.pestDatasetList.push(state.pestDatasetSelect[index]);
+          }
         }
+        addDatasetPagenumList(1);
+        ElMessage.success('添加成功');
       } else if (id === 2 && state.plantsDatasetSelect) {
-        addIndex = state.plantsDatasetList.findIndex((value: any) => value.id === state.plantsDatasetSelect.id);
-        if (addIndex === -1) {
-          state.plantsDataset.total += 1;
-          state.plantsDatasetList.push(state.plantsDatasetSelect);
-          addDatasetPagenumList(2);
-        } else {
-          ElMessage.warning('请不要重复添加');
+        for (let index = 0; index < state.plantsDatasetSelect.length; index++) {
+          addIndex = state.plantsDatasetList.findIndex((value: any) => value.id === state.plantsDatasetSelect[index].id);
+          if (addIndex === -1) {
+            state.plantsDataset.total += 1;
+            state.plantsDatasetList.push(state.plantsDatasetSelect[index]);
+          }
         }
+        addDatasetPagenumList(2);
+        ElMessage.success('添加成功');
       }
     };
 
@@ -813,7 +818,7 @@ export default defineComponent({
         }
         if (state.displayPlantsDataset && state.plantsDatasetList.length !== 0) {
           for (let i = 0; i < state.plantsDatasetList.length; i++) {
-            state.diseaseDatasetList[i].type = 2;
+            state.plantsDatasetList[i].type = 2;
             state.form.datasetList.push(state.plantsDatasetList[i]);
           }
           recognizeTypeArr.push('植物');
@@ -929,7 +934,7 @@ export default defineComponent({
   flex-wrap: wrap;
 
   .card {
-    width: 228px;
+    width: 154px;
     margin: 10px;
   }
 }
