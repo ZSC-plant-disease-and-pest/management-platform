@@ -32,7 +32,7 @@
 
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label="新闻类型：" prop="newTypeId">
+        <el-form-item label="新闻类型：" prop="newsTypeId">
           <NewsTypeSelector
             ref="newsTypeSelectorRef"
             @selectChange="newsTypeSelectChange"
@@ -63,7 +63,7 @@
           <el-button type="primary" :loading="isLoading" @click="submit(0)">
             保存
           </el-button>
-          <el-button v-if="!form.status" type="success" :loading="isLoading" @click="submit(1)">
+          <el-button v-if="!form.publishedOrNot" type="success" :loading="isLoading" @click="submit(1)">
             <span v-if="mode === 'edit'"> 发布 </span>
             <span v-if="mode === 'new'"> 保存并发布 </span>
           </el-button>
@@ -118,10 +118,10 @@ export default defineComponent({
         id: undefined,
         author: '',
         title: '',
-        newTypeId: undefined,
+        newsTypeId: undefined,
         description: '',
         content: '',
-        status: false
+        publishedOrNot: false
       } as newsParams,
       formRef: ref(),
       newsTypeSelectorRef: ref(),
@@ -129,7 +129,7 @@ export default defineComponent({
       rules: {
         author: [{ required: true, message: '请输入新闻作者', trigger: ['blur', 'change'] }],
         title: [{ required: true, message: '请输入新闻标题', trigger: ['blur', 'change'] }],
-        newTypeId: [{ required: true, validator: validateNewTypeId, trigger: ['blur', 'change'] }],
+        newsTypeId: [{ required: true, validator: validateNewTypeId, trigger: ['blur', 'change'] }],
         content: [{ required: true, validator: validateContent, trigger: ['blur', 'change'] }]
       },
       isLoading: false,
@@ -146,7 +146,7 @@ export default defineComponent({
         newsHttp.getNewsById(id)
           .then((response: any) => {
             state.form = response;
-            state.newsTypeSelectorRef.setNewsType(state.form.newTypeId);
+            state.newsTypeSelectorRef.setNewsType(state.form.newsTypeId);
             state.basicWangEditorRef.edit(state.form.content);
             state.basicWangEditorKey += 1;
           })
@@ -159,9 +159,9 @@ export default defineComponent({
       state.formRef.validate().then((valid: boolean) => {
         if (valid) {
           if (type === 1) {
-            state.form.status = true;
+            state.form.publishedOrNot = true;
           } else if (type === 2) {
-            state.form.status = false;
+            state.form.publishedOrNot = false;
           }
           state.isLoading = true;
           if (state.mode === 'new') {
@@ -193,7 +193,7 @@ export default defineComponent({
     };
 
     const newsTypeSelectChange = (id: number) => {
-      state.form.newTypeId = id;
+      state.form.newsTypeId = id;
     };
 
     const editorContentChange = (data: any) => {

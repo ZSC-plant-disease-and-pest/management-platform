@@ -21,7 +21,7 @@ export const tableColumnList: tableColumnInterface = [
   { prop: 'id', label: '序号', width: '75px' },
   { prop: 'title', label: '新闻标题', width: 'auto' },
   { prop: 'author', label: '新闻作者', width: 'auto' },
-  { prop: 'newTypeName', label: '新闻类型', width: 'auto' }
+  { prop: 'newsType', label: '新闻类型', width: 'auto' }
 ];
 
 export const pageList: pageInterface = { total: 0, page: 1, size: 10 };

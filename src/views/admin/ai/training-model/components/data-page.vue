@@ -658,7 +658,7 @@ export default defineComponent({
     const addAll = (id: number) => {
       if (id === 0) {
         state.diseaseDatasetIsLoading = true;
-        datasetHttp.getDiseaseDataset({ page: 0, size: 2000 })
+        datasetHttp.getDiseaseDataset({ page: 0, size: 20000 })
           .then((response: any) => {
             const [...tempResponse] = response.content;
             state.diseaseDataset.total = tempResponse.length;
@@ -671,7 +671,7 @@ export default defineComponent({
           .finally(() => { state.diseaseDatasetIsLoading = false; });
       } else if (id === 1) {
         state.pestDatasetIsLoading = true;
-        datasetHttp.getPestDataset({ page: 0, size: 2000 })
+        datasetHttp.getPestDataset({ page: 0, size: 20000 })
           .then((response: any) => {
             const [...tempResponse] = response.content;
             state.pestDataset.total = tempResponse.length;
@@ -684,7 +684,7 @@ export default defineComponent({
           .finally(() => { state.pestDatasetIsLoading = false; });
       } else if (id === 2) {
         state.plantsDatasetIsLoading = true;
-        datasetHttp.getPlantsDataset({ page: 0, size: 2000 })
+        datasetHttp.getPlantsDataset({ page: 0, size: 20000 })
           .then((response: any) => {
             const [...tempResponse] = response.content;
             state.plantsDataset.total = tempResponse.length;

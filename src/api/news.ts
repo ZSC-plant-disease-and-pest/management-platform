@@ -12,7 +12,7 @@ export interface newsParams extends searchByInfo {
   title?: string
 
   // 新闻类型ID
-  newTypeId?: number
+  newsTypeId?: number
 
   // 新闻类型名称
   newTypeName?: string
@@ -24,16 +24,10 @@ export interface newsParams extends searchByInfo {
   content?: string
 
   // 新闻是否为发布状态
-  status?: boolean
+  publishedOrNot?: boolean
 
   // 新闻图片名称
   imgName?: string
-
-  // 查询新闻图片的年(为空则全部图片)
-  year?: number
-
-  // 查询新闻图片的月(为空则全年)
-  month?: number
 }
 
 export class newsHttp {
@@ -62,7 +56,7 @@ export class newsHttp {
   }
 
   // 查询新闻图片 url
-  static searchImage (params: (newsParams | null)) {
+  static getImage (params: (newsParams | null)) {
     return http({
       url: '/api/news/findAllPicture',
       method: 'get',
@@ -73,7 +67,7 @@ export class newsHttp {
   // 创建新闻
   static addNews (params: newsParams) {
     return http({
-      url: '/api/news/addArticle',
+      url: '/api/news/create',
       method: 'post',
       data: params
     });
@@ -97,7 +91,7 @@ export class newsHttp {
   }
 
   // 通过 ID 查询新闻
-  static searchNewsById (id: number) {
+  static getNewsById (id: number) {
     return http({
       url: `/api/news/search/${id}`,
       method: 'get'
@@ -111,17 +105,6 @@ export class newsHttp {
       url: `/api/news/update/${id}`,
       method: 'put',
       data: params
-    });
-  }
-
-  /**
-   * 重构代码
-   */
-  // 通过 ID 查看新闻详情
-  static getNewsById (id: number) {
-    return http({
-      url: `/api/news/search/${id}`,
-      method: 'get'
     });
   }
 }

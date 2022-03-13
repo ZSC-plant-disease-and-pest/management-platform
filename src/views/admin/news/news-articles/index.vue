@@ -173,7 +173,7 @@ export default defineComponent({
 
     // 新闻类型选择
     const newsTypeRowSelect = (newsTypeId: number) => {
-      newsParams.newTypeId = newsTypeId === 0 ? undefined : newsTypeId;
+      newsParams.newsTypeId = newsTypeId === 0 ? undefined : newsTypeId;
       getNews();
     };
 
