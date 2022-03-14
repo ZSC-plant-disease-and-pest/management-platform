@@ -21,7 +21,16 @@ export const tableColumnList: tableColumnInterface = [
   { prop: 'id', label: '序号', width: '75px' },
   { prop: 'title', label: '新闻标题', width: 'auto' },
   { prop: 'author', label: '新闻作者', width: 'auto' },
-  { prop: 'newsType', label: '新闻类型', width: 'auto' }
+  { prop: 'newsType', label: '新闻类型', width: 'auto' },
+  {
+    prop: 'publishedOrNot',
+    label: '新闻状态',
+    width: 'auto',
+    alias: true,
+    getAlias (publishedOrNot: any) {
+      return publishedOrNot ? '发布中' : '未发布';
+    }
+  }
 ];
 
 export const pageList: pageInterface = { total: 0, page: 1, size: 10 };
