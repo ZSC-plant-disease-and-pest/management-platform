@@ -18,7 +18,7 @@ export const tableButtonList: tableButtonInterface = [
 export const tableColumnList: tableColumnInterface = [
   { prop: 'id', label: '序号', width: '75px' },
   { prop: 'name', label: '新闻类型', width: 'auto' },
-  { prop: 'articleCounts', label: '新闻数量', width: 'auto' }
+  { prop: 'newsAmount', label: '新闻数量', width: 'auto' }
 ];
 
 export const pageList: pageInterface = { total: 0, page: 1, size: 10 };
