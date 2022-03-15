@@ -5,11 +5,20 @@ export interface videoParams extends searchByInfo {
   // id
   id?: number
 
-  // 视频标题
-  videoInfo?: string
+  // 视频
+  video?: any
+
+  // 视频名称
+  name?: string
 
   // 视频类型
-  type?: string
+  label?: string
+
+  // 视频中植物名称
+  plants?: string
+
+  // 视频信息
+  videoInfo?: any
 }
 
 export class videoHttp {
@@ -22,7 +31,7 @@ export class videoHttp {
   }
 
   // 查询视频
-  static searchVideo (params: (videoParams | null)) {
+  static getVideo (params: (videoParams | null)) {
     return http({
       url: '/api/video/manage',
       method: 'get',
@@ -31,7 +40,7 @@ export class videoHttp {
   }
 
   // 根据视频类型查询视频
-  static searchVideoByType (params: videoParams) {
+  static getVideoByType (params: videoParams) {
     return http({
       url: '/api/video/search-type',
       method: 'get',
@@ -40,7 +49,7 @@ export class videoHttp {
   }
 
   // 根据 ID 查询视频
-  static searchVideoById (id: number) {
+  static getVideoById (id: number) {
     return http({
       url: `/api/video/search/${id}`,
       method: 'get'
