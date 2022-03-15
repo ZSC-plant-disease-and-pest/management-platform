@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, onUpdated, reactive, toRefs } from 'vue';
-import { plantsHttp, plantsParams } from '@/api/plants';
+import { videoHttp, videoParams } from '@/api/video';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { searchList, topButtonList, tableButtonList, tableColumnList, pageList } from './data';
@@ -35,12 +35,12 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
-      getPlants();
+      getVideo();
     });
     onUpdated(() => {
       if (route.params.type === 'refresh') {
         route.params.type = '';
-        getPlants();
+        getVideo();
       }
     });
 
@@ -56,10 +56,10 @@ export default defineComponent({
     });
 
     // 请求表单数据
-    const plantsParams = reactive({ page: 0, size: 10 } as plantsParams);
-    const getPlants = () => {
+    const videoParams = reactive({ page: 0, size: 10 } as videoParams);
+    const getVideo = () => {
       state.isLoading = true;
-      plantsHttp.getPlants(plantsParams)
+      videoHttp.getVideo(videoParams)
         .then((response: any) => {
           state.pageList.total = response.totalElements;
           state.pageList.size = response.size;
@@ -72,15 +72,15 @@ export default defineComponent({
     };
 
     // 删除
-    const deletePlants = (selectedIds: any) => {
+    const deleteVideo = (selectedIds: any) => {
       if (selectedIds.length === 0) {
         ElMessage.warning('请选择需要删除的内容');
       } else {
         state.isLoading = true;
-        plantsHttp.deletePlants(selectedIds.join(','))
+        videoHttp.deleteVideo(selectedIds.join(','))
           .then(() => {
             ElMessage.success('删除成功');
-            getPlants();
+            getVideo();
           })
           .finally(() => { state.isLoading = false; });
       }
@@ -91,20 +91,20 @@ export default defineComponent({
       if (name === 'search') {
         for (const index in data) {
           if (data[index].name === 'name') {
-            plantsParams.name = data[index].value === '' ? undefined : data[index].value;
+            videoParams.name = data[index].value === '' ? undefined : data[index].value;
           }
         }
-        getPlants();
+        getVideo();
       } else if (name === 'reset') {
         for (const index in state.searchList) {
           state.searchList[index].value = '';
-          plantsParams.name = undefined;
+          videoParams.name = undefined;
         }
-        getPlants();
+        getVideo();
       } else if (name === 'add') {
         router.push({ path: route.path + '-page', name: route.name as string + '-page', params: { id: '0' } });
       } else if (name === 'delete') {
-        deletePlants(data);
+        deleteVideo(data);
       }
     };
 
@@ -120,22 +120,22 @@ export default defineComponent({
 
     // 排序改变
     const sortChange = (params: any) => {
-      plantsParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
-      getPlants();
+      videoParams.sort = params.prop === null ? '' : params.prop + ',' + (params.order === 'descending' ? 'desc' : 'asc');
+      getVideo();
     };
 
     // 分页改变
     const handleChange = (name: string, data: any) => {
       if (name === 'page') {
-        plantsParams.page = data - 1;
+        videoParams.page = data - 1;
         state.pageList.page = data;
       } else if (name === 'size') {
-        plantsParams.size = data;
-        plantsParams.page = 0;
+        videoParams.size = data;
+        videoParams.page = 0;
         state.pageList.size = data;
         state.pageList.page = 1;
       }
-      getPlants();
+      getVideo();
     };
 
     return {
@@ -143,7 +143,7 @@ export default defineComponent({
       topButtonClick,
       tableButtonClick,
       sortChange,
-      deletePlants,
+      deleteVideo,
       handleChange
     };
   }
