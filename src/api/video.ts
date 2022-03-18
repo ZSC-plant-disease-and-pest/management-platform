@@ -25,7 +25,7 @@ export class videoHttp {
   // 删除视频
   static deleteVideo (ids: number) {
     return http({
-      url: `/api/video/delete/${ids}`,
+      url: `/api/video/deleteByIds/${ids}`,
       method: 'delete'
     });
   }
@@ -33,25 +33,24 @@ export class videoHttp {
   // 查询视频
   static getVideo (params: (videoParams | null)) {
     return http({
-      url: '/api/video/manage',
+      url: '/api/video/search',
       method: 'get',
       params
     });
   }
 
   // 根据视频类型查询视频
-  static getVideoByType (params: videoParams) {
+  static getVideoByType (label: string) {
     return http({
-      url: '/api/video/search-type',
-      method: 'get',
-      params
+      url: `/api/video/searchByLabel/${label}`,
+      method: 'get'
     });
   }
 
   // 根据 ID 查询视频
   static getVideoById (id: number) {
     return http({
-      url: `/api/video/search/${id}`,
+      url: `/api/video/searchById/${id}`,
       method: 'get'
     });
   }
