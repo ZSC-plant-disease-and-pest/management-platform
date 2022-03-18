@@ -11,11 +11,11 @@
   >
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label="植物名称：" prop="name">
+        <el-form-item label="视频名称：" prop="name">
           <el-input
             class="input-common"
             v-model="form.name"
-            placeholder="请输入植物名称"
+            placeholder="请输入视频名称"
           />
         </el-form-item>
       </el-col>
@@ -23,75 +23,24 @@
 
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label="植物学名：" prop="scientificName">
+        <el-form-item label="视频植物：" prop="plants">
           <el-input
             class="input-common"
-            v-model="form.scientificName"
-            placeholder="请输入植物学名"
+            v-model="form.plants"
+            placeholder="请输入视频植物"
           />
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="植物别名：" prop="nickname">
-          <el-input
-            class="input-common"
-            v-model="form.nickname"
-            placeholder="请输入植物别名"
-          />
-        </el-form-item>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="20" class="textarea-row-space">
-      <el-col :span="12">
-        <el-form-item label="植物科类：" prop="family">
-          <FamilyPagingSelector
-            class="select-common"
-            :defaultValue="form.family"
-            @selectChange="familyChange"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="植物属类：" prop="genus">
-          <GenusPagingSelector
-            class="select-common"
-            :defaultValue="form.genus"
-            :family="form.family"
-            @selectChange="genusChange"
-          />
-        </el-form-item>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <el-form-item label="植物功能性状：" prop="function">
+        <el-form-item label="视频标签：" prop="label">
           <el-select
             class="select-common"
             clearable
-            v-model="form.plantsClassify.function"
+            v-model="form.label"
             placeholder="请选择"
           >
             <el-option
-              v-for="item in functionOptions"
-              :key="item.value"
-              :label="item.value"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="植物观赏特性：" prop="enjoy">
-          <el-select
-            class="select-common"
-            clearable
-            v-model="form.plantsClassify.enjoy"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in enjoyOptions"
+              v-for="item in videoLabelOptions"
               :key="item.value"
               :label="item.value"
               :value="item.value">
@@ -103,158 +52,35 @@
 
     <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label="园林植物分类：" prop="garden">
-          <el-select
-            class="select-common"
-            clearable
-            v-model="form.plantsClassify.garden"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in gardenOptions"
-              :key="item.value"
-              :label="item.value"
-              :value="item.value">
-            </el-option>
-          </el-select>
+        <el-form-item label="视频标题：">
+          {{ video.title }}
         </el-form-item>
       </el-col>
       <el-col :span="12">
-        <el-form-item label="木本植物性状：" prop="woody">
-          <el-select
-            class="select-common"
-            clearable
-            v-model="form.plantsClassify.woody"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in woodyOptions"
-              :key="item.value"
-              :label="item.value"
-              :value="item.value">
-            </el-option>
-          </el-select>
+        <el-form-item label="视频类别：">
+          {{ video.type }}
         </el-form-item>
       </el-col>
     </el-row>
 
-    <el-row :gutter="20" class="textarea-row-space">
+    <el-row :gutter="20">
       <el-col :span="12">
-        <el-form-item label="草本植物性状：" prop="herbaceous">
-          <el-select
-            class="select-common"
-            clearable
-            v-model="form.plantsClassify.herbaceous"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in herbaceousOptions"
-              :key="item.value"
-              :label="item.value"
-              :value="item.value">
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="0" class="textarea-row">
-      <el-col :span="12">
-        <el-form-item label="外貌形态：" prop="appearance">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入外貌形态"
-            clearable
-            v-model="form.appearance"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="植物习性：" prop="behaviour">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入植物习性"
-            clearable
-            v-model="form.behaviour"
-          />
-        </el-form-item>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="0" class="textarea-row">
-      <el-col :span="12">
-        <el-form-item label="植物用途：" prop="usages">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入植物用途"
-            clearable
-            v-model="form.usages"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="地域分布：" prop="regions">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入地域分布"
-            clearable
-            v-model="form.regions"
-          />
-        </el-form-item>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="0" class="textarea-row">
-      <el-col :span="12">
-        <el-form-item label="繁殖方式：" prop="reproduceMethod">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入繁殖方式"
-            clearable
-            v-model="form.reproduceMethod"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="栽培方式：" prop="cultureMethod">
-          <el-input
-            class="textarea-common"
-            type="textarea"
-            resize="none"
-            :autosize="{ minRows: 4, maxRows: 4}"
-            placeholder="请输入栽培方式"
-            clearable
-            v-model="form.cultureMethod"
-          />
+        <el-form-item label="视频大小：">
+          {{ video.size }}
         </el-form-item>
       </el-col>
     </el-row>
 
     <el-row :gutter="0" v-if="mode === 'new'">
       <el-col :span="24">
-        <el-form-item label="上传图片：" prop="picture" >
-          <BasicImageUpload
-            ref="imageUploadRef"
+        <el-form-item label="上传视频：" prop="video" >
+          <BasicVideoUpload
+            ref="videoUploadRef"
             @onChange="fileListChange"
             @preview="filePreview"
           />
-          <el-dialog v-model="imagePreviewDialog" title="查看图片">
-            <img style="width: 100%; height: 75%;" :src="imagePreviewUrl" alt="" />
+          <el-dialog v-model="videoPreviewDialog" title="查看视频" :width="840">
+            <vue3VideoPlay v-bind="options" />
           </el-dialog>
         </el-form-item>
       </el-col>
@@ -292,116 +118,55 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
-import { plantsHttp, plantsParams } from '@/api/plants';
+import { videoHttp, videoParams } from '@/api/video';
 import { useRouter, useRoute } from 'vue-router';
-import BasicImageUpload from '@/components/common/BasicImageUpload/index.vue';
-import FamilyPagingSelector from '@/components/selector/FamilyPagingSelector.vue';
-import GenusPagingSelector from '@/components/selector/GenusPagingSelector.vue';
+import BasicVideoUpload from '@/components/common/BasicVideoUpload/index.vue';
 
-const functionOptions = [
-  { value: '耐阴树种' },
-  { value: '抗旱树种' },
-  { value: '耐水湿树种' },
-  { value: '耐盐碱树种' },
-  { value: '抗污染树种' }
-];
-const enjoyOptions = [
-  { value: '观叶植物' },
-  { value: '观花植物' },
-  { value: '观果植物' },
-  { value: '招鸟植物' },
-  { value: '多肉植物' },
-  { value: '水培植物' },
-  { value: '食肉植物' }
-];
-const gardenOptions = [
-  { value: '常绿灌木' },
-  { value: '落叶灌木' },
-  { value: '藤本植物' },
-  { value: '草坪及地被植物' },
-  { value: '竹类植物' },
-  { value: '常绿乔木及小乔木' },
-  { value: '落叶乔木及小乔木' }
-];
-const woodyOptions = [
-  { value: '常绿针叶' },
-  { value: '常绿阔叶' },
-  { value: '落叶阔叶' },
-  { value: '竹类' },
-  { value: '藤木' }
-];
-const herbaceousOptions = [
-  { value: '一二年生花卉' },
-  { value: '宿根花卉' },
-  { value: '球根花卉' },
-  { value: '水生花卉' },
-  { value: '草坪地被' }
+const videoLabelOptions = [
+  { value: '园林栽培' },
+  { value: '居家园艺' },
+  { value: '盆景艺术' }
 ];
 
 export default defineComponent({
   name: 'exclude',
-  components: { BasicImageUpload, FamilyPagingSelector, GenusPagingSelector },
+  components: { BasicVideoUpload },
   setup () {
     const route = useRoute();
     const router = useRouter();
     onBeforeMount(() => {
       state.mode = Number(route.params.id) === 0 ? 'new' : 'edit';
-      getPlantsById(Number(route.params.id));
+      getVideoById(Number(route.params.id));
     });
 
     const state = reactive({
       form: {
         id: undefined,
         name: '',
-        scientificName: '',
-        nickname: '',
-        family: undefined,
-        genus: undefined,
-        plantsClassify: {
-          function: '',
-          enjoy: '',
-          garden: '',
-          woody: '',
-          herbaceous: ''
-        },
-        appearance: '',
-        behaviour: '',
-        usages: '',
-        regions: '',
-        reproduceMethod: '',
-        cultureMethod: ''
-      } as plantsParams,
+        label: '',
+        video: ''
+      } as videoParams,
       formRef: ref(),
-      imageUploadRef: ref(),
+      videoUploadRef: ref(),
       rules: {
-        name: [{ required: true, message: '请输入植物名称', trigger: ['blur', 'change'] }],
-        family: [{
+        name: [{ required: true, message: '请输入视频名称', trigger: ['blur', 'change'] }],
+        plants: [{ required: true, message: '请输入视频植物', trigger: ['blur', 'change'] }],
+        label: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
-            if (state.form.family === '' || state.form.family === undefined) {
-              callback(new Error('请选择植物科类'));
+            if (state.form.label === '' || state.form.label === undefined) {
+              callback(new Error('请选择视频标签'));
             } else {
               callback();
             }
           },
           trigger: ['blur', 'change']
         }],
-        genus: [{
-          required: true,
-          validator: (rule: any, value: any, callback: any) => {
-            if (state.form.genus === '' || state.form.genus === undefined) {
-              callback(new Error('请选择植物属类'));
-            } else {
-              callback();
-            }
-          },
-          trigger: ['blur', 'change']
-        }],
-        picture: [{
+        video: [{
           required: true,
           validator: (rule: any, value: any, callback: any) => {
             if (state.fileList.length === 0) {
-              callback(new Error('请上传至少一张植物图片'));
+              callback(new Error('请上传盆景养护视频'));
             } else {
               callback();
             }
@@ -409,25 +174,51 @@ export default defineComponent({
           trigger: ['blur', 'change']
         }]
       },
-      functionOptions,
-      enjoyOptions,
-      gardenOptions,
-      woodyOptions,
-      herbaceousOptions,
+      video: {
+        title: '无视频数据',
+        size: '无视频数据',
+        type: '无视频数据'
+      },
+      options: {
+        width: '800px',
+        height: '450px',
+        color: '#409eff',
+        title: '',
+        src: '',
+        muted: false,
+        webFullScreen: false,
+        speedRate: ['0.75', '1.0', '1.25', '1.5', '2.0'],
+        autoPlay: false,
+        loop: false,
+        mirror: false,
+        ligthOff: false,
+        volume: 0.3,
+        control: true,
+        controlBtns: [
+          'audioTrack',
+          'quality',
+          'speedRate',
+          'volume',
+          'setting',
+          'pip',
+          'pageFullScreen',
+          'fullScreen'
+        ]
+      },
       isLoading: false,
       mode: '',
       completed: false,
       fileList: [] as Array<any>,
-      imagePreviewUrl: '',
-      imagePreviewDialog: false
+      videoPreviewDialog: false,
+      videoLabelOptions
     });
 
-    const getPlantsById = (id: number) => {
+    const getVideoById = (id: number) => {
       if (id < 0) back();
       else if (id === 0) return 0;
       else {
         state.isLoading = true;
-        plantsHttp.getPlantsById(id)
+        videoHttp.getVideoById(id)
           .then((response: any) => { state.form = response; })
           .catch(() => { back(); })
           .finally(() => { state.isLoading = false; });
@@ -439,13 +230,13 @@ export default defineComponent({
         if (valid) {
           state.isLoading = true;
           if (state.mode === 'new') {
-            plantsHttp.addPlants(state.form, state.fileList)
+            videoHttp.uploadVideo(state.form, state.fileList)
               .then(() => { state.completed = true; })
               .finally(() => { state.isLoading = false; });
           } else if (state.mode === 'edit') {
-            plantsHttp.updatePlants(state.form)
-              .then(() => { state.completed = true; })
-              .finally(() => { state.isLoading = false; });
+            // videoHttp.updateVideo(state.form)
+            //   .then(() => { state.completed = true; })
+            //   .finally(() => { state.isLoading = false; });
           }
         }
       });
@@ -453,33 +244,35 @@ export default defineComponent({
 
     const back = () => {
       router.push({
-        path: '/admin/plants-data',
-        name: 'plants-data',
+        path: '/admin/bonsai-video',
+        name: 'bonsai-video',
         params: { type: 'refresh' }
       });
     };
 
     const keep = () => {
       state.formRef.resetFields();
-      state.imageUploadRef.clear();
+      state.videoUploadRef.clear();
       state.completed = false;
     };
 
     const fileListChange = (fileList: Array<any>) => {
+      console.log(fileList);
       state.fileList = fileList;
+      if (fileList.length === 0 || !fileList) {
+        state.video.title = '无视频数据';
+        state.video.size = '无视频数据';
+        state.video.type = '无视频数据';
+      } else {
+        state.video.title = fileList[0].name;
+        state.video.size = (fileList[0].size / 1024 / 1024).toFixed(2) + 'MB';
+        state.video.type = fileList[0].raw.type;
+      }
     };
 
     const filePreview = (file: any) => {
-      state.imagePreviewUrl = file?.url;
-      state.imagePreviewDialog = true;
-    };
-
-    const familyChange = (params: any) => {
-      state.form.family = params;
-    };
-
-    const genusChange = (params: any) => {
-      state.form.genus = params;
+      state.options.src = file?.url;
+      state.videoPreviewDialog = true;
     };
 
     return {
@@ -487,15 +280,9 @@ export default defineComponent({
       submit,
       back,
       keep,
-      functionOptions,
-      enjoyOptions,
-      gardenOptions,
-      woodyOptions,
-      herbaceousOptions,
       fileListChange,
       filePreview,
-      familyChange,
-      genusChange
+      videoLabelOptions
     };
   }
 });
