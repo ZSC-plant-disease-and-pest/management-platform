@@ -71,14 +71,20 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="0" v-if="mode === 'new'">
+    <el-row :gutter="0">
       <el-col :span="24">
-        <el-form-item label="上传视频：" prop="video" >
+        <el-form-item label="上传视频：" prop="video" v-if="mode === 'new'">
           <BasicVideoUpload
             ref="videoUploadRef"
             @onChange="fileListChange"
             @preview="filePreview"
           />
+          <el-dialog v-model="videoPreviewDialog" title="查看视频" :width="840">
+            <vue3VideoPlay v-bind="options" />
+          </el-dialog>
+        </el-form-item>
+        <el-form-item label="上传视频：" v-if="mode === 'edit'">
+          <img style="width: 400px; height: 300px; cursor: pointer;" :src="'http://localhost:8080' + form.imgPath" alt="" @click="checkVideo" />
           <el-dialog v-model="videoPreviewDialog" title="查看视频" :width="840">
             <vue3VideoPlay v-bind="options" />
           </el-dialog>
@@ -144,7 +150,8 @@ export default defineComponent({
         id: undefined,
         name: '',
         label: '',
-        video: ''
+        video: '',
+        videoPath: ''
       } as videoParams,
       formRef: ref(),
       videoUploadRef: ref(),
@@ -234,9 +241,9 @@ export default defineComponent({
               .then(() => { state.completed = true; })
               .finally(() => { state.isLoading = false; });
           } else if (state.mode === 'edit') {
-            // videoHttp.updateVideo(state.form)
-            //   .then(() => { state.completed = true; })
-            //   .finally(() => { state.isLoading = false; });
+            videoHttp.updateVideo(state.form)
+              .then(() => { state.completed = true; })
+              .finally(() => { state.isLoading = false; });
           }
         }
       });
@@ -257,7 +264,6 @@ export default defineComponent({
     };
 
     const fileListChange = (fileList: Array<any>) => {
-      console.log(fileList);
       state.fileList = fileList;
       if (fileList.length === 0 || !fileList) {
         state.video.title = '无视频数据';
@@ -275,6 +281,13 @@ export default defineComponent({
       state.videoPreviewDialog = true;
     };
 
+    const checkVideo = () => {
+      if (state.form.videoPath) {
+        state.options.src = `http://localhost:8080${state.form.videoPath}`;
+        state.videoPreviewDialog = true;
+      }
+    };
+
     return {
       ...toRefs(state),
       submit,
@@ -282,6 +295,7 @@ export default defineComponent({
       keep,
       fileListChange,
       filePreview,
+      checkVideo,
       videoLabelOptions
     };
   }
