@@ -71,4 +71,14 @@ export class videoHttp {
       data
     });
   }
+
+  // 修改视频信息 只允许修改 name plants label
+  static updateVideo (params: videoParams) {
+    const { id } = params;
+    return http({
+      url: `/api/video/updateById/${id}`,
+      method: 'put',
+      data: params
+    });
+  }
 }
