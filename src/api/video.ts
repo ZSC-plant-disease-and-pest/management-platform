@@ -17,6 +17,12 @@ export interface videoParams extends searchByInfo {
   // 视频中植物名称
   plants?: string
 
+  // 视频路径
+  videoPath?: string
+
+  // 视频封面
+  imgPath?: string
+
   // 视频信息
   videoInfo?: any
 }
