@@ -1,5 +1,8 @@
 # plant-disease-and-pest-management-system
 
+## 项目声明：
+本项目仅用于个人学习，项目中使用到的技术和资源均来源于网络，严禁私自转载。
+
 ## Project setup
 ```
 yarn install
