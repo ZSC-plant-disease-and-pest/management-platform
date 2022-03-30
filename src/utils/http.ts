@@ -3,10 +3,12 @@ import { ElMessage } from 'element-plus';
 // import router from '@/router';
 import { getToken, removeToken } from '@/utils/cookie';
 
+// 创建 axios 对象
 const service = axios.create({
   timeout: 15000
 });
 
+// 请求拦截
 service.interceptors.request.use(
   (config: AxiosRequestConfig) => {
     return config;
@@ -16,6 +18,7 @@ service.interceptors.request.use(
   }
 );
 
+// 响应拦截：200为正常响应，其他为异常响应
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     if (response.data.code === 200) {
@@ -28,6 +31,7 @@ service.interceptors.response.use(
   }
 );
 
+// 全局处理响应
 export default function request (reqData: any): any {
   return new Promise((resolve, reject) => {
     const { ...tempData } = reqData;

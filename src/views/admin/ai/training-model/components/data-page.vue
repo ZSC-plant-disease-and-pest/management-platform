@@ -448,7 +448,6 @@ import { defineComponent, onBeforeMount, reactive, ref, toRefs } from 'vue';
 import { modelHttp, modelParams } from '@/api/model';
 import { datasetHttp } from '@/api/dataset';
 import { useRouter, useRoute } from 'vue-router';
-import { illegalVisit } from '@/utils/global';
 import { ElMessage } from 'element-plus';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
 import DatasetSelect from './DatasetSelect.vue';
@@ -746,7 +745,7 @@ export default defineComponent({
           state.form = tempParams;
         } else {
           // 非法访问更新界面
-          illegalVisit();
+          ElMessage.warning('非法访问');
           router.go(-1);
         }
       } else {
