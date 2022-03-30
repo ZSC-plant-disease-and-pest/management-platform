@@ -3,6 +3,7 @@ import { ElMessage } from 'element-plus';
 import { getToken } from '@/utils/cookie';
 import store from '@/store';
 
+// 模块化导入路由
 import home from './modules/home';
 import news from './modules/news';
 import disease from './modules/disease';
@@ -41,14 +42,16 @@ const routes: Array<RouteRecordRaw> = [
   }
 ];
 
+// 导入各个路由模块
 routes.push(home, news, disease, gardens, ai, system);
 
+// 创建路由对象
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 });
 
-// 全局路由守卫
+// 全局路由守卫：判断权限
 router.beforeEach((to, from, next) => {
   if (to.path === '/login') {
     next();
