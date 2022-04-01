@@ -1,5 +1,5 @@
 <template>
-  <!-- <Breadcrumb class="breadcrumb" v-show="path !== 'home'" /> -->
+  <!-- <BasicBreadcrumb class="breadcrumb" v-show="path !== 'home'" /> -->
   <div class="main" :style="{ 'minHeight': `calc(${minHeight})` }">
     <router-view v-slot="{ Component }">
       <keep-alive :exclude="['add-update', 'detail', 'exclude']">
@@ -11,10 +11,10 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import Breadcrumb from '@/components/common/BasicBreadcrumb/index.vue';
+import BasicBreadcrumb from '@/components/common/BasicBreadcrumb/index.vue';
 
 export default defineComponent({
-  components: { Breadcrumb },
+  components: { BasicBreadcrumb },
   props: {
     path: {
       type: String,
