@@ -93,7 +93,7 @@ export class newsHttp {
   // 通过 ID 查询新闻
   static getNewsById (id: number) {
     return http({
-      url: `/api/news/search/${id}`,
+      url: `/api/news/searchById/${id}`,
       method: 'get'
     });
   }
@@ -102,7 +102,7 @@ export class newsHttp {
   static updateNews (params: newsParams) {
     const { id } = params;
     return http({
-      url: `/api/news/update/${id}`,
+      url: `/api/news/updateById/${id}`,
       method: 'put',
       data: params
     });
