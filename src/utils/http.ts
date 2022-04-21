@@ -1,7 +1,7 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import { ElMessage } from 'element-plus';
-// import router from '@/router';
-import { getToken, removeToken } from '@/utils/cookie';
+import { getToken } from '@/utils/cookie';
+import getStatusMessage from './getStatusMessage';
 
 // 创建 axios 对象
 const service = axios.create({
@@ -53,32 +53,9 @@ export default function request (reqData: any): any {
       })
       .catch((err) => {
         console.log('error response: %o', err);
-        let result = '';
-        if (err.message === 'Network Error') {
-          result = '请求超时';
-        } else if (err && err.status) {
-          switch (err.status) {
-            case 401:
-              result = '登录状态失效，请重新登录';
-              removeToken();
-              break;
-            case 404:
-              result = '找不到目标资源';
-              break;
-            default:
-              if (err.data.msg) {
-                result = `错误提示: ${err.data.msg}`;
-              } else {
-                result = `错误状态码: ${err.data.code}`;
-              }
-              break;
-          }
-        } else {
-          result = err;
-        }
-        reject(result);
-        // console.log(result);
+        const result = getStatusMessage(err);
         ElMessage.error(result);
+        reject(result);
       });
   });
 }
