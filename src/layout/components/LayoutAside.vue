@@ -39,9 +39,7 @@ export default defineComponent({
     },
     asideList: {
       type: Array,
-      default: () => {
-        return [];
-      }
+      default: () => []
     }
   },
   setup (props) {

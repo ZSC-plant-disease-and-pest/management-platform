@@ -19,13 +19,7 @@ export default defineComponent({
   props: {
     pageList: {
       type: Object,
-      default: () => {
-        return {
-          total: 0,
-          page: 1,
-          size: 10
-        };
-      }
+      default: () => ({ total: 0, page: 1, size: 10 })
     },
     layout: {
       type: String,

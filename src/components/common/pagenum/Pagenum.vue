@@ -32,9 +32,7 @@ export default defineComponent({
     },
     pageSizes: {
       type: Array,
-      default: () => {
-        return [10, 20, 50, 100];
-      }
+      default: () => [10, 20, 50, 100]
     },
     layout: {
       type: String,
@@ -51,10 +49,12 @@ export default defineComponent({
     const handleSizeChange = (params: any) => {
       emit('handleSizeChange', params);
     };
+
     // 改变当前页面
     const handleCurrentChange = (params: any) => {
       emit('handleCurrentChange', params - 1);
     };
+
     return {
       handleSizeChange,
       handleCurrentChange

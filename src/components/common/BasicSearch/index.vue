@@ -18,9 +18,7 @@ export default defineComponent({
   props: {
     searchList: {
       type: Array,
-      default: () => {
-        return [];
-      }
+      default: () => []
     }
   },
   emits: ['topButtonClick'],

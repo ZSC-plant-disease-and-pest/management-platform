@@ -68,16 +68,12 @@ export default defineComponent({
     // 表格内容
     tableDataList: {
       type: Object,
-      default: () => {
-        return {};
-      }
+      default: () => ({})
     },
     // 表头内容
     tableColumnList: {
       type: Object,
-      default: () => {
-        return {};
-      }
+      default: () => ({})
     },
     // 是否加载中
     isLoading: {
@@ -97,16 +93,12 @@ export default defineComponent({
     // 头部按钮
     topButtonList: {
       type: Array,
-      default: () => {
-        return [];
-      }
+      default: () => []
     },
     // 表格按钮列表
     tableButtonList: {
       type: Array,
-      default: () => {
-        return [];
-      }
+      default: () => []
     }
   },
   emits: ['topButtonClick', 'tableButtonClick', 'sortChange'],
@@ -150,11 +142,7 @@ export default defineComponent({
 
     // 表格操作栏按键
     const tableButtonClick = (name: string, data: any) => {
-      if (name === 'detele') {
-        emit('topButtonClick', name, selectedIds);
-      } else {
-        emit('tableButtonClick', name, data);
-      }
+      emit('tableButtonClick', name, name === 'delete' ? selectedIds : data);
     };
 
     // 表格改变排序
@@ -163,9 +151,7 @@ export default defineComponent({
     };
 
     // 被选中行的样式
-    const tableRowStyle = (data: any) => {
-      return data.row.id === props.rowId ? 'background-color: #fafafa' : '';
-    };
+    const tableRowStyle = (data: any) => data.row.id === props.rowId ? 'background-color: #fafafa' : '';
 
     return {
       topButtonClick,

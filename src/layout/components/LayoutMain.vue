@@ -22,15 +22,7 @@ export default defineComponent({
     }
   },
   setup (props) {
-    const minHeight = computed(() => {
-      if (props.path === 'home') {
-        // 首页不需要面包屑, main 的高度放宽
-        return '100vh - 130px';
-      } else {
-        // 其他页面有面包屑, main 的高度降低
-        return '100vh - 165px';
-      }
-    });
+    const minHeight = computed(() => props.path === 'home' ? '100vh - 130px' : '100vh - 165px');
 
     return {
       minHeight

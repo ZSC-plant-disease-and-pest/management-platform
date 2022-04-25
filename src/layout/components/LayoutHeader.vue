@@ -95,10 +95,9 @@ export default defineComponent({
       }
     });
 
-    const avatarColor = computed(() => {
-      const colorArr = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
-      return colorArr[Math.floor(Math.random() * 4)];
-    });
+    const avatarColor = computed(() =>
+      ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'][Math.floor(Math.random() * 4)]
+    );
 
     // 通过路径搜索菜单模块
     const searchMenuByPath = (path: string) => {
