@@ -17,14 +17,6 @@ const system: RouteRecordRaw = {
         title: '角色信息管理'
       }
     }
-    // {
-    //   name: 'user-data',
-    //   path: 'user-data/:id',
-    //   component: () => import('@/views/admin/system/user-data/index.vue'),
-    //   meta: {
-    //     title: '用户信息管理'
-    //   }
-    // }
   ]
 };
 
