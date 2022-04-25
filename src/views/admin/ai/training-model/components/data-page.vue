@@ -119,7 +119,7 @@
       <!-- 事件控件 -->
       <el-row style="margin-top: 15px;">
         <el-col :span="16">
-          <DatasetSelect
+          <ModelDatasetSelector
             ref="diseasedatasetSelectRef"
             :key="diseaseDatasetSelectKey"
             type="disease"
@@ -192,7 +192,7 @@
       <!-- 事件控件 -->
       <el-row style="margin-top: 15px;">
         <el-col :span="16">
-          <DatasetSelect
+          <ModelDatasetSelector
             ref="pestdatasetSelectRef"
             :key="pestDatasetSelectKey"
             type="pest"
@@ -265,7 +265,7 @@
       <!-- 事件控件 -->
       <el-row style="margin-top: 15px;">
         <el-col :span="16">
-          <DatasetSelect
+          <ModelDatasetSelector
             ref="plantsdatasetSelectRef"
             :key="plantsDatasetSelectKey"
             type="plants"
@@ -450,11 +450,11 @@ import { datasetHttp } from '@/api/dataset';
 import { useRouter, useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
-import DatasetSelect from './DatasetSelect.vue';
+import ModelDatasetSelector from '@/components/selector/ModelDatasetSelector.vue';
 
 export default defineComponent({
   name: 'add-update',
-  components: { Pagenum, DatasetSelect },
+  components: { Pagenum, ModelDatasetSelector },
   emits: ['refreshForm'],
   setup (props, { emit }) {
     const route = useRoute();

@@ -21,6 +21,33 @@
         <template #header>
           <span> 系统消息 </span>
         </template>
+        <div>
+          <div class="card-table">
+            <span>昨日新增病害 12 种</span>
+            <span class="time">2022-4-8 23:59:59</span>
+          </div>
+          <div class="card-table">
+            <span>昨日新增虫害 14 种</span>
+            <span class="time">2022-4-8 23:59:59</span>
+          </div>
+          <div class="card-table">
+            <span>昨日新增植物 7 种</span>
+            <span class="time">2022-4-8 23:59:59</span>
+          </div>
+          <div class="card-table">
+            <span>昨日新增新闻 2 篇</span>
+            <span class="time">2022-4-8 23:59:59</span>
+          </div>
+          <div class="card-table">
+            <span>昨日新增视频 3 段</span>
+            <span class="time">2022-4-8 23:59:59</span>
+          </div>
+          <div class="card-table">
+            <span>昨日新增模型 0 个</span>
+            <span class="time">2022-4-8 23:59:59</span>
+          </div>
+          <BasicPage />
+        </div>
       </el-card>
     </el-col>
     <el-col :span="8">
@@ -28,6 +55,33 @@
         <template #header>
           <span> 操作日志 </span>
         </template>
+        <div>
+          <div class="card-table">
+            <span>admin新增了一条病害信息</span>
+            <span class="time">2022-4-1 16:37:41</span>
+          </div>
+          <div class="card-table">
+            <span>admin新增了一条虫害信息</span>
+            <span class="time">2022-4-1 16:29:56</span>
+          </div>
+          <div class="card-table">
+            <span>admin训练了一个模型</span>
+            <span class="time">2022-4-1 16:28:37</span>
+          </div>
+          <div class="card-table">
+            <span>admin新增了一个模型</span>
+            <span class="time">2022-4-1 16:27:06</span>
+          </div>
+          <div class="card-table">
+            <span>admin新增了一条植物信息</span>
+            <span class="time">2022-4-1 16:26:34</span>
+          </div>
+          <div class="card-table">
+            <span>admin新增了一条病害信息</span>
+            <span class="time">2022-4-1 16:25:37</span>
+          </div>
+          <BasicPage />
+        </div>
       </el-card>
     </el-col>
     <el-col :span="8">
@@ -63,8 +117,10 @@ import { defineComponent, onMounted, reactive, toRefs } from 'vue';
 import { homeHttp } from '@/api/home';
 import { diseaseOption, pestOption, plantsOption, newsArticleOption, videoOption } from './data';
 import * as echarts from 'echarts';
+import BasicPage from '@/components/common/BasicPage/index.vue';
 
 export default defineComponent({
+  components: { BasicPage },
   setup () {
     onMounted(() => {
       state.echartsIsLoading = true;
@@ -169,5 +225,16 @@ export default defineComponent({
 }
 .auth {
   color: #9b9b9b;
+}
+.card-table {
+  display: flex;
+  justify-content: space-between;
+  text-align: 30px;
+
+  .time {
+    font-size: 14px;
+    color: #999999;
+    margin-bottom: 10px;
+  }
 }
 </style>
