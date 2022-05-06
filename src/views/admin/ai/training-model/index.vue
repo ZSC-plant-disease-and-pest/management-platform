@@ -107,8 +107,10 @@ export default defineComponent({
         deleteModel(data);
       } else if (name === 'deploy') {
         // 一键部署模型
+        ElMessage.success('模型部署完成')
       } else if (name === 'train') {
         // 开始训练模型
+        ElMessage.success('开始训练成功')
       }
     };
 

@@ -171,6 +171,11 @@
         @handleCurrentChange="handleCurrentChange($event, 0)"
         :pageSizes="[30, 50, 100]"
       />
+      <!-- <BasicPage
+        :pageList="diseaseDataset"
+        @handleChange="handleChange(arguments, 0)"
+        :pageSizes="[30, 50, 100]"
+      /> -->
     </div>
 
     <!-- 虫害数据集的选择 -->
@@ -449,6 +454,7 @@ import { modelHttp, modelParams } from '@/api/model';
 import { datasetHttp } from '@/api/dataset';
 import { useRouter, useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import BasicPage from '@/components/common/BasicPage/index.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
 import ModelDatasetSelector from '@/components/selector/ModelDatasetSelector.vue';
 
@@ -602,8 +608,8 @@ export default defineComponent({
         state.pestDataset.total -= 1;
         addDatasetPagenumList(1);
       } else if (id === 2) {
-        const deleteIndex = state.diseaseDatasetList.findIndex((value: any) => value.id === datasetId);
-        state.diseaseDatasetList.splice(deleteIndex, 1);
+        const deleteIndex = state.plantsDatasetList.findIndex((value: any) => value.id === datasetId);
+        state.plantsDatasetList.splice(deleteIndex, 1);
         state.plantsDataset.total -= 1;
         addDatasetPagenumList(2);
       }
@@ -810,7 +816,7 @@ export default defineComponent({
         }
         if (state.displayPestDataset && state.pestDatasetList.length !== 0) {
           for (let i = 0; i < state.pestDatasetList.length; i++) {
-            state.diseaseDatasetList[i].type = 1;
+            state.pestDatasetList[i].type = 1;
             state.form.datasetList.push(state.pestDatasetList[i]);
           }
           recognizeTypeArr.push('虫害');
@@ -847,8 +853,39 @@ export default defineComponent({
     };
 
     const keep = () => {
-      // 直接用Key强制渲染
       state.status = 'incomplete';
+    };
+
+    // new function
+    const handleChange = (name: any, data: any, type: number) => {
+      let changeName: { total: number, page: number, size: number };
+      let changeParams: { page: number, size: number };
+      switch (type) {
+        case 0:
+          changeName = state.diseaseDataset;
+          changeParams = diseaseDatasetParams;
+          break;
+        case 1:
+          changeName = state.pestDataset;
+          changeParams = pestDatasetParams;
+          break;
+        case 2:
+          changeName = state.plantsDataset;
+          changeParams = plantsDatasetParams;
+          break;
+        default:
+          return;
+      }
+      if (name === 'size') {
+        changeName.size = data;
+        changeParams.size = data;
+        changeName.page = 1;
+        changeParams.page = 0;
+      } else if (name === 'page') {
+        changeName.page = data + 1;
+        changeParams.page = data;
+      }
+      addDatasetPagenumList(type);
     };
 
     // 分页每页大小改变
@@ -902,7 +939,8 @@ export default defineComponent({
       next,
       keep,
       handleSizeChange,
-      handleCurrentChange
+      handleCurrentChange,
+      handleChange
     };
   }
 });
