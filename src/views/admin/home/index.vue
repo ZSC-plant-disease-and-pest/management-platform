@@ -134,7 +134,7 @@
     <el-col :span="8">
       <el-card style="margin: 15px 0px; width: 100%; height: 320px;">
         <template #header>
-          <span> 病害数据 </span>
+          <span> 病害数据集 </span>
         </template>
         <div id="disease-echarts" class="echartsDiv"></div>
       </el-card>
@@ -142,7 +142,7 @@
     <el-col :span="8">
       <el-card style="margin: 15px 0px; width: 100%; height: 320px;">
         <template #header>
-          <span> 虫害数据 </span>
+          <span> 虫害数据集 </span>
         </template>
         <div id="pest-echarts" class="echartsDiv"></div>
       </el-card>
@@ -150,7 +150,7 @@
     <el-col :span="8">
       <el-card style="margin: 15px 0px; width: 100%; height: 320px;">
         <template #header>
-          <span> 植物数据 </span>
+          <span> 植物数据集 </span>
         </template>
         <div id="plants-echarts" class="echartsDiv"></div>
       </el-card>
