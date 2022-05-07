@@ -454,7 +454,7 @@ import { modelHttp, modelParams } from '@/api/model';
 import { datasetHttp } from '@/api/dataset';
 import { useRouter, useRoute } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import BasicPage from '@/components/common/BasicPage/index.vue';
+// import BasicPage from '@/components/common/BasicPage/index.vue';
 import Pagenum from '@/components/common/pagenum/Pagenum.vue';
 import ModelDatasetSelector from '@/components/selector/ModelDatasetSelector.vue';
 
