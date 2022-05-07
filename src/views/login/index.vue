@@ -68,7 +68,7 @@ export default defineComponent({
     // 数据仓库
     const state = reactive({
       loginForm: {
-        username: 'root',
+        username: '',
         password: ''
       } as userForm,
       loginFormRef: ref(),

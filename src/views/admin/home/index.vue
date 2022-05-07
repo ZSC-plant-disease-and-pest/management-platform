@@ -95,10 +95,31 @@
       </el-card>
     </el-col>
     <el-col :span="8">
-      <el-card style="margin: 15px 0px; width: 100%; height: 320px">
+      <el-card style="margin: 15px 0px; width: 100%; height: 320px; position: relative">
         <template #header>
-          <span> 模型管理 </span>
+          <span> 模型状态 </span>
         </template>
+        <div>
+          <div class="card-table">
+            <span>模型：病害模型</span>
+            <el-tag size="small" effect="dark">部署中</el-tag>
+          </div>
+          <div class="card-table">
+            <span>模型：虫害测试模型</span>
+            <el-tag type="warning" size="small" effect="dark">未训练</el-tag>
+          </div>
+          <div class="card-table">
+            <span>模型：病虫植数据模型</span>
+            <el-tag type="warning" size="small" effect="dark">未训练</el-tag>
+          </div>
+          <BasicPage
+            style="position: absolute; bottom: 20px"
+            :page-sizes="[6]"
+            small
+            :pager-count="5"
+            :pageList="modelList"
+          />
+        </div>
       </el-card>
     </el-col>
     <!-- <el-col :span="8">
@@ -245,6 +266,11 @@ export default defineComponent({
         total: 1029,
         page: 1,
         size: 6
+      },
+      modelList: {
+        total: 3,
+        page: 1,
+        size: 6
       }
     });
 
@@ -278,6 +304,7 @@ export default defineComponent({
   display: flex;
   justify-content: space-between;
   text-align: 30px;
+  height: 30px;
 
   .time {
     font-size: 14px;
