@@ -1,8 +1,8 @@
 export const diseaseOption: any = {
   title: {
-    text: '病害统计',
+    // text: '病害统计',
     top: '320px',
-    left: '46%',
+    left: '0%',
     textStyle: {
       fontSize: 14,
       fontStyle: 'normal',
@@ -17,8 +17,8 @@ export const diseaseOption: any = {
   },
   grid: {
     left: '10%',
-    right: '10%',
-    bottom: '10%',
+    right: '0%',
+    bottom: '40%',
     containLabel: true
   },
   xAxis: [{
@@ -47,9 +47,9 @@ export const diseaseOption: any = {
 
 export const pestOption: any = {
   title: {
-    text: '虫害统计',
+    // text: '虫害统计',
     top: '320px',
-    left: '46%',
+    left: '0%',
     textStyle: {
       fontSize: 14,
       fontStyle: 'normal',
@@ -64,8 +64,8 @@ export const pestOption: any = {
   },
   grid: {
     left: '10%',
-    right: '10%',
-    bottom: '10%',
+    right: '0%',
+    bottom: '40%',
     containLabel: true
   },
   xAxis: [{
@@ -97,9 +97,9 @@ export const pestOption: any = {
 
 export const plantsOption: any = {
   title: {
-    text: '植物统计',
+    // text: '植物统计',
     top: '320px',
-    left: '46%',
+    left: '0%',
     textStyle: {
       fontSize: 14,
       fontStyle: 'normal',
@@ -114,8 +114,8 @@ export const plantsOption: any = {
   },
   grid: {
     left: '10%',
-    right: '10%',
-    bottom: '10%',
+    right: '0%',
+    bottom: '40%',
     containLabel: true
   },
   xAxis: [{
